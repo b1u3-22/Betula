@@ -1,5 +1,5 @@
 <template>
-    <a :href="link">
+    <a :href="link" :target="target">
       <button class="buttonLinkContainer">
         <slot></slot>
       </button>
@@ -13,9 +13,15 @@ export default {
   components: {
 
   },
-  props: [
-      'link', 'text'
-  ],
+  props: {
+    link: {
+      type: String
+    },
+    target: {
+      type: String,
+      default: "_self"
+    }
+  },
 
   methods: {
   },

@@ -37,6 +37,10 @@
                 </div>
               </div>
             </div>
+            <div class="dashboardFinancialDocumentContainer">
+              <ButtonLink link="/futurepdf" target="_blank">Uzávěrka</ButtonLink>
+              <p class="dashboardFinancialDocumentText">Účetní uzávěrka za poslední měsíc</p>
+            </div>
           </div>
           <div v-if="debts.length" class="dashboardFinancialSubContainer">
             <h1 class="dashboardFinancialHeader">Půjčky</h1>
@@ -78,6 +82,7 @@ Maecenas a sem sem. Sed at semper orci. Nulla facilisi. Quisque tempus, nibh hen
 </template>
 <script>
 import ContentCard from '@/components/ContentCard.vue';
+import ButtonLink from '@/components/ButtonLink.vue';
 
 
 export default {
@@ -93,7 +98,8 @@ export default {
     }
   },
   components: {
-    ContentCard
+    ContentCard,
+    ButtonLink
 },
   methods: {
   },
@@ -202,6 +208,20 @@ export default {
           justify-content: flex-start;
           align-items: flex-start;
           margin: 0 7% 0 0;
+
+          .dashboardFinancialDocumentContainer {
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin-top: 20%;
+
+            .dashboardFinancialDocumentText {
+              text-align: left;
+              font-weight: 400;
+              font-size: 1rem;
+            }
+          }
 
           .dashboardFinancialHeader {
             font-weight: 700;

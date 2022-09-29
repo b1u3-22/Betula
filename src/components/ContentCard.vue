@@ -1,6 +1,6 @@
 <template>
     <div class="contentCard">
-        <BigTitle side="true" :bigText="title" :smallText="timestamp" smallTextStyle="font-size: 1rem" bigTextStyle="font-size: 3.5rem" />
+        <BigTitle side="true" :bigText="title" :smallText="timestamp" smallTextStyle="font-size: 1rem" bigTextStyle="font-size: 3rem" />
         <p class="contentCardMainText">
             <slot />
         </p>
@@ -54,5 +54,18 @@ export default {
         margin: 5% 0 0 50px;
     }
 }
+
+@media (max-width: 600px) {
+    .contentCard {
+        align-items: center;
+        width: 100%;
+
+        .contentCardMainText {
+            text-align: block;
+            margin: 5%;
+        }
+    }
+}
+
 
 </style>

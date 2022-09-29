@@ -23,6 +23,8 @@ def get_general_info():
     connection.close()
     return financials_general
 
+#------------------------------------------------------------------------------------------------------------------------------------
+
 def insert_into_general_info(property, value):
     connection = sqlite.connect("data.db")
     connection.execute("INSERT INTO general_info VALUES(NULL, ?, ?)", (property, value))
@@ -41,6 +43,8 @@ def get_general_financials():
 
     connection.close()
     return general_info
+
+#------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_general_financials(property, value):
     connection = sqlite.connect("data.db")
@@ -75,6 +79,8 @@ def get_picture_by_link(link):
     connection.close()
     return picture
 
+#------------------------------------------------------------------------------------------------------------------------------------
+
 def insert_into_pictures(link, location, description):
     connection = sqlite.connect("data.db")
     connection.execute("INSERT INTO pictures VALUES(NULL, ?, ?, ?)", (link, location, description))
@@ -93,6 +99,8 @@ def get_all_debts():
 
     connection.close()
     return debts
+
+#------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_debts(total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat):
     connection = sqlite.connect("data.db")
@@ -120,6 +128,8 @@ def get_post_by_id(id):
     connection.close()
     return post
 
+#------------------------------------------------------------------------------------------------------------------------------------
+
 def insert_into_posts(title, text):
     connection = sqlite.connect("data.db")
     connection.execute("INSERT INTO debts VALUES(NULL, ?, ?, ?)", (datetime.now(), title, text))
@@ -145,6 +155,8 @@ def get_latest_finu():
     finu = {'id': result[0], 'link': result[1], 'location': result[2], 'timestamp': result[3]}
     connection.close()
     return finu
+
+#------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_finus(link, location):
     connection = sqlite.connect("data.db")

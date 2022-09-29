@@ -15,10 +15,10 @@ def start_database():
 def get_general_info():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM general_info").fetchall()
-    financials_general = []
+    financials_general = {}
 
     for i in range(result):
-        financials_general[i] = {result[i][1]: result[i][2]}
+        financials_general[result[i][1]] = result[i][2]
 
     connection.close()
     return financials_general
@@ -28,10 +28,10 @@ def get_general_info():
 def get_general_financials():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM financials_general").fetchall()
-    general_info = []
+    general_info = {}
 
     for i in range(result):
-        general_info[i] = {result[i][1]: result[i][2]}
+        general_info[result[i]{1}] = result[i][2]
 
     connection.close()
     return general_info
@@ -41,10 +41,10 @@ def get_general_financials():
 def get_all_pictures():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM pictures").fetchall()
-    pictures = []
+    pictures = {}
 
     for i in range(result):
-        pictures[i] = {'id': result[i][0], 'link': result[i][1], 'location': result[i][2], 'description': result[i][3]}
+        pictures[result[i][0]] = {'link': result[i][1], 'location': result[i][2], 'description': result[i][3]}
 
     connection.close()
     return pictures
@@ -68,10 +68,10 @@ def get_picture_by_link(link):
 def get_all_debts():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM debts").fetchall()
-    debts = []
+    debts = {}
 
     for i in range(result):
-        debts[i] = {'id': result[i][0], 'total_debt': result[i][1], 'remaining_debt': result[i][2], 'remaining_debt_per_flat': result[i][3], 'repainment_per_flat': result[i][3]}
+        debts[result[i][0]] = {'total_debt': result[i][1], 'remaining_debt': result[i][2], 'remaining_debt_per_flat': result[i][3], 'repainment_per_flat': result[i][3]}
 
     connection.close()
     return debts
@@ -81,10 +81,10 @@ def get_all_debts():
 def get_all_posts():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM debts").fetchall()
-    posts = []
+    posts = {}
 
     for i in range(result):
-        posts[i] = {'id': result[i][0], 'timestamp': result[i][1], 'title': result[i][2], 'text': result[i][3]}
+        posts[result[i][0]] = {'timestamp': result[i][1], 'title': result[i][2], 'text': result[i][3]}
 
     connection.close()
     return posts
@@ -101,10 +101,10 @@ def get_post_by_id(id):
 def get_all_finus():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM finus").fetchall()
-    finus = []
+    finus = {}
 
     for i in range(result):
-        finus[i] = {'id': result[i][0], 'link': result[i][1], 'location': result[i][2], 'timestamp': result[i][3]}
+        finus[result[i][0]] = {'link': result[i][1], 'location': result[i][2], 'timestamp': result[i][3]}
 
     connection.close()
     return finus

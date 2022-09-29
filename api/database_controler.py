@@ -23,6 +23,8 @@ def get_general_info():
     connection.close()
     return financials_general
 
+#====================================================================================================================================
+
 def get_general_financials():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM financials_general").fetchall()
@@ -33,6 +35,8 @@ def get_general_financials():
 
     connection.close()
     return general_info
+
+#====================================================================================================================================
 
 def get_all_pictures():
     connection = sqlite.connect("data.db")
@@ -59,6 +63,8 @@ def get_picture_by_link(link):
     connection.close()
     return picture
 
+#====================================================================================================================================
+
 def get_all_debts():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM debts").fetchall()
@@ -69,6 +75,8 @@ def get_all_debts():
 
     connection.close()
     return debts
+
+#====================================================================================================================================
 
 def get_all_posts():
     connection = sqlite.connect("data.db")
@@ -88,6 +96,8 @@ def get_post_by_id(id):
     connection.close()
     return post
 
+#====================================================================================================================================
+
 def get_all_finus():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM finus").fetchall()
@@ -105,3 +115,5 @@ def get_latest_finu():
     finu = {'id': result[0], 'link': result[1], 'location': result[2], 'timestamp': result[3]}
     connection.close()
     return finu
+
+#====================================================================================================================================

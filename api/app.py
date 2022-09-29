@@ -1,6 +1,5 @@
-from crypt import methods
 import flask
-import database_controler
+import database_controller
 app = flask.Flask(__name__, static_folder = './build', static_url_path = '/')
 
 @app.route("/", methods = ["GET"])
@@ -14,3 +13,6 @@ def get_all_debts():
 @app.route("/getGeneralInfo", methods = ["GET"])
 def get_general_info():
     return database_controler.get_general_info()
+
+database_controler.start_database()
+app.run()

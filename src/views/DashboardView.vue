@@ -11,11 +11,11 @@
               <div class="dashboardFinancialQuickInfoTitle">Zůstatek na účtu</div>
               <div class="dashboardFinancialQuickInfoText">1 256 264 Kč</div>
             </div>
-            <div v-if="remainingTotalDebt !== 0" class="dashboardFinancialQuickInfoContentContainer">
+            <div v-if="remainingTotalDebt !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <div class="dashboardFinancialQuickInfoTitle">Zbývající dluh</div>
               <div class="dashboardFinancialQuickInfoText"> {{ remainingTotalDebt }} </div>
             </div>
-            <div v-if="monthlyTotalRepainmentPerFlat !== 0" class="dashboardFinancialQuickInfoContentContainer">
+            <div v-if="monthlyTotalRepainmentPerFlat !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <div class="dashboardFinancialQuickInfoTitle">Splátka na byt</div>
               <div class="dashboardFinancialQuickInfoText">{{ monthlyTotalRepainmentPerFlat }}</div>
             </div>
@@ -144,7 +144,7 @@ export default {
         display: flex;
         flex-flow: row-reverse nowrap;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         width: 100%;
 
         .dashboardFinancialButtonsContainer {
@@ -156,6 +156,7 @@ export default {
           .dashboardFinancialRollButton {
             cursor: pointer;
             transition: all 220ms ease-in-out;
+            margin: 0;
           }
         }
 
@@ -199,7 +200,7 @@ export default {
           align-items: flex-start;
           width: 100%;
           transition: all 220ms ease-in-out;
-          margin-top: -50px;
+          //margin-top: -50px;
           //animation: dashboardFinancialRollAnimation 500ms ease-in-out reverse;
 
           .dashboardFinancialSubContainer {
@@ -297,14 +298,24 @@ export default {
   width: 100%;
 }
 
+.dashboardNoMobile {
+  opacity: 1;
+  display: flex;
+}
+
 .dashboardFinancialRollUp {
   max-height: 0vh;
   opacity: 0;
+  display: none;
+  visibility: collapse;
+  margin-top: 0;
 }
 
 .dashboardFinancialRollDown {
   opacity: 1;
   max-height: 100vh;
+  display: flex;
+  margin-top: -50px;
 }
 
 .dashboardFinancialButtonRollUp {
@@ -323,6 +334,67 @@ export default {
 .dashboardFinanctialQuickInfoShowed {
   transition-delay: 220ms;
   opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    .dashboardMainContainer {
+      .dashboardFinancialContainer {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5%;
+
+        .dashboardFinancialHeaderContainer {
+          .dashboardFinancialQuickInfo {
+            .dashboardNoMobile {
+              display: none;
+            }
+          }
+        }
+
+        .dashboardFinancialHelperContainer {
+          flex-flow: column nowrap;
+          justify-content: center;
+
+          .dashboardFinancialSubContainer {
+            width: 100%;
+            align-items: center;
+
+            .dashboardFinancialDebtContainer {
+              justify-content: space-between;
+              width: 100%;
+            }
+
+            .dashboardFinancialContentContainer {
+              justify-content: center;
+              margin: 0;
+              
+              .dashboardFinancialLine {
+                display: none;
+              }
+
+              .dashboardFinancialTextContainer {
+                align-items: center;
+
+                .dashboardFinancialPartContainer {
+                  align-items: center;
+
+                  .dashboardFinancialPartHeader {
+                    text-align: center;
+                  }
+                }
+              }
+            }
+
+            .dashboardFinancialDocumentContainer {
+              margin-top: 5%;
+              align-items: center;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 </style>

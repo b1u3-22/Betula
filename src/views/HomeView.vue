@@ -82,12 +82,18 @@ export default {
     if (path.includes('home')){
         document.getElementById(path).scrollIntoView({behavior: "smooth"})
     }
+  },
 
+  created: function() {
     axios
       .get("http://127.0.0.1:5000/getGeneralInfo")
-      .then((response) =>this.generalInfo = response.data);
-
+      .then((response) => {
+        for (const [key, value] of Object.entries(response.data)){
+          this.generalInfo[key] = value.text
+        }
+      });
   },
+
   watch: {
     $route: function(to){
       let path = to.path.replace('/', '')

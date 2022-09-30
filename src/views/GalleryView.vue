@@ -53,6 +53,16 @@ export default {
     }
   },
 
+  created: function() {
+    axios
+      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .then((response) => {
+        for (const [key, value] of Object.entries(response.data)){
+          this.generalInfo[key] = value.text
+        }
+      });
+  },
+
   mounted: function() {
     window.scrollTo({top: 0, behavior: 'auto'});
     const context = require.context("@/assets/images/", false, /\.jpeg$/);
@@ -70,10 +80,6 @@ export default {
     for (let i = this.column_1.length + this.column_0.length; i < images.length; i++){
       this.column_2.push(images[i]);
     }
-
-    axios
-      .get("http://127.0.0.1:5000/getGeneralInfo")
-      .then((response) =>this.generalInfo = response.data);
   }
 }
 </script>

@@ -47,10 +47,6 @@
       Obecné
       <div class="nav-line" />
     </router-link>
-    <div class="nav-item" @click="scrollToTop()">
-      Kontakty
-      <div class="nav-line" />
-    </div>
     <div class="nav-item" @click="signOut(true)">
       Finance
       <div class="nav-line" />
@@ -137,6 +133,16 @@ export default {
       }
   },
 
+  created: function() {
+    axios
+      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .then((response) => {
+        for (const [key, value] of Object.entries(response.data)){
+          this.generalInfo[key] = value.text
+        }
+      });
+  },
+
   mounted: function() {
     let path = this.$route.path.replace('/', '');
     if (path.includes('dashboard')){
@@ -145,10 +151,6 @@ export default {
     else {
       this.atDashboard = false;
     }
-
-    axios
-      .get("http://127.0.0.1:5000/getGeneralInfo")
-      .then((response) =>this.generalInfo = response.data);
   },
 
   watch: {

@@ -3,7 +3,7 @@
     <form class="loginForm">
       <h1 class="loginFormTitle">Přihlášení</h1>
       <label class="loginFormLabel" for="username">Vaše přihlašovací jméno *</label>
-      <input class="loginFormInput" ref="username" type="text" id="username" name="username" placeholder="JanNovak" v-model="username" @keyup.enter="this.$refs.password.focus">
+      <input class="loginFormInput" ref="username" type="text" id="username" name="username" placeholder="JanNovak" v-model="username"  @keyup.enter="this.$refs.password.focus">
       <label class="loginFormLabel" for="password">Váše heslo *</label>
       <input class="loginFormInput" ref="password" type="password" id="password" name="password" placeholder="Vaše heslo" v-model="password" @keyup.enter="verifyUser()">
       <div class="loginFormBottomContainer">

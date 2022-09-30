@@ -5,10 +5,10 @@ from unittest import result
 
 def start_database():
     connection = sqlite.connect("data.db")
-    connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL)")
-    connection.execute("CREATE TABLE IF NOT EXISTS general_info(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL)")
+    connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT)")
+    connection.execute("CREATE TABLE IF NOT EXISTS general_info(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL, name TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS pictures(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT)")
-    connection.execute("CREATE TABLE IF NOT EXISTS financials_general(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL)")
+    connection.execute("CREATE TABLE IF NOT EXISTS financials_general(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL, name TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS debts(id INTEGER PRIMARY KEY, total_debt INTEGER NOT NULL, remaining_debt INTEGER NULL, remaining_debt_per_flat INTEGER NOT NULL, repayment_per_flat INTEGER NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY, timestamp TIMESTAMP, title TEXT NOT NULL, text TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS finus(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, timestamp TIMESTAMP)")
@@ -74,19 +74,19 @@ def insert_into_users(username, password, permissions, email):
 def get_general_info():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM general_info").fetchall()
-    financials_general = {}
+    general_info = {}
 
     for i in range(len(result)):
-        financials_general[result[i][1]] = result[i][2]
+        general_info[result[i][1]] = {"text": result[i][2], "name": result[i][3]}
 
     connection.close()
-    return financials_general
+    return general_info
 
 #------------------------------------------------------------------------------------------------------------------------------------
 
-def insert_into_general_info(property, value):
+def insert_into_general_info(property, value, name):
     connection = sqlite.connect("data.db")
-    connection.execute("INSERT INTO general_info VALUES(NULL, ?, ?)", (property, value))
+    connection.execute("INSERT INTO general_info VALUES(NULL, ?, ?, ?)", (property, value, name, ))
     connection.commit()
     connection.close()
 
@@ -95,19 +95,19 @@ def insert_into_general_info(property, value):
 def get_general_financials():
     connection = sqlite.connect("data.db")
     result = connection.execute("SELECT * FROM financials_general").fetchall()
-    general_info = {}
+    general_financials = {}
 
     for i in range(len(result)):
-        general_info[result[i][1]] = result[i][2]
+        general_financials[result[i][1]] = {"text": result[i][2], "name": result[i][3]}
 
     connection.close()
-    return general_info
+    return general_financials
 
 #------------------------------------------------------------------------------------------------------------------------------------
 
-def insert_into_general_financials(property, value):
+def insert_into_general_financials(property, value, name):
     connection = sqlite.connect("data.db")
-    connection.execute("INSERT INTO financials_general VALUES(NULL, ?, ?)", (property, value))
+    connection.execute("INSERT INTO financials_general VALUES(NULL, ?, ?, ?)", (property, value, name))
     connection.commit()
     connection.close()
 

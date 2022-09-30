@@ -17,7 +17,9 @@ def get_all_debts():
 def get_general_info():
     return database_controller.get_general_info()
 
-
+@app.route("/getFinancialsGeneral", methods = ["GET"])
+def get_financials_general():
+    return database_controller.get_general_financials()
 
 @app.route("/verifyUser", methods = ["POST"])
 def verify_user():

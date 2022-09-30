@@ -48,7 +48,7 @@ export default {
             title: "Přihlášení úspěšné",
             text: "Přihlásili jste se do systému"
           })
-          this.$emit('verifiedFromLogin')
+          this.$emit('verifiedFromLogin', this.username)
           this.$router.push("/dashboard")
         }
       })

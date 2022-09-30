@@ -9,7 +9,7 @@
           <template v-for="image in column_0" :key="image">
             <div class="galleryImageItem">
               <img class="galleryImage" :src="image" />
-              <div class="galleryImageOverlay"></div>
+              <div class="galleryImageOverlay">Toto je zkušební text</div>
             </div>
           </template>
         </div>
@@ -132,10 +132,10 @@ export default {
             color: $background-light;
             transition: all ease-in-out 220ms;
 
-            //&:hover {
-            //  opacity: 0.85;
-            //  background-color: $background-dark;
-            //}   TODO: FOR FUTURE USE
+            &:hover {
+              opacity: 0.85;
+              background-color: $background-dark;
+            } //   TODO: FOR FUTURE USE
           }
         }
 

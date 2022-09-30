@@ -23,5 +23,9 @@ def get_general_info():
 def verify_user():
     return database_controller.verify_user(flask.request.json["username"], flask.request.json["password"])
 
+@app.route("/getUserPermissions", methods = ["POST"])
+def get_user_permissions():
+    return database_controller.get_user_permissions(flask.request.json["username"])
+
 database_controller.start_database()
 app.run()

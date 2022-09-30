@@ -1,6 +1,6 @@
 <template>
   <notifications position="bottom right" />
-  <nav v-if="!atDashboard">
+  <nav v-if="typeOfNav === 'home'">
     <router-link to="/" class="nav-item">
       Domů
       <div class="nav-line" />
@@ -17,12 +17,13 @@
       Přihlášení
       <div class="nav-line" />
     </router-link>
-    <div v-if="verified" class="nav-item" @click="verified=false">
-      Odhlášení
+    <router-link v-if="verified" to="/dashboard" class="nav-item">
+      Systém
       <div class="nav-line" />
-    </div>
+    </router-link>
   </nav>
-  <nav v-if="atDashboard">
+
+  <nav v-if="typeOfNav === 'dashboard'">
     <router-link to="/" class="nav-item">
       Domů
       <div class="nav-line" />
@@ -31,12 +32,37 @@
       Zpět nahoru
       <div class="nav-line" />
     </div>
-    <div class="nav-item" @click="signOut">
+    <div class="nav-item" @click="signOut(true)">
       Odhlášení
       <div class="nav-line" />
     </div>
+    <router-link v-if="verified && permissions" to="/settings" class="nav-item">
+      Nastavení
+      <div class="nav-line" />
+    </router-link>
   </nav>
-  <router-view @verifiedFromLogin="verifiedFromLogin" :verified="verified" />
+
+  <nav v-if="typeOfNav === 'settings'">
+    <router-link to="/" class="nav-item">
+      Obecné
+      <div class="nav-line" />
+    </router-link>
+    <div class="nav-item" @click="scrollToTop()">
+      Kontakty
+      <div class="nav-line" />
+    </div>
+    <div class="nav-item" @click="signOut(true)">
+      Finance
+      <div class="nav-line" />
+    </div>
+    <router-link v-if="verified && permissions" to="/settings" class="nav-item">
+      Uživatelé
+      <div class="nav-line" />
+    </router-link>
+  </nav>
+
+  <router-view @verifiedFromLogin="(username) => verifiedFromLogin(username)" :verified="verified" />
+
   <footer>
     <div class="footerTextContainer">
       <div class="footerMenuContainer">
@@ -74,12 +100,25 @@ export default {
     scrollToTop: function() {
       window.scrollTo({top: 0, behavior: 'smooth'});
     },
-    verifiedFromLogin: function(){
+    verifiedFromLogin: function(username){
       this.verified = true;
+      this.username = username
+      axios
+        .post("http://127.0.0.1:5000/getUserPermissions", {"username": this.username})
+        .then((response) => {
+          if (response.data.permissions === "admin"){
+            this.permissions = true;
+          }
+          else {
+            this.permissions = false;
+          }
+        })
     },
-    signOut: function() {
+    signOut: function(redirect) {
       this.verified = false;
-      this.$router.push("/")
+      if (redirect){
+        this.$router.push("/")
+      }
       this.$notify({
         type: "success",
         title: "Odhlášení úspěšné",
@@ -90,9 +129,11 @@ export default {
 
   data: function () {
       return {
-        atDashboard: false,
+        typeOfNav: "home",
         generalInfo: {},
-        verified: false
+        verified: false,
+        permissions: false,
+        username: ""
       }
   },
 
@@ -113,11 +154,15 @@ export default {
   watch: {
     $route: function(to){
       let path = to.path.replace('/', '');
-      if (path == "dashboard"){
-        this.atDashboard = true;
+      path === '' ? path = 'home' : '';
+      if (path.includes("dashboard")){
+        this.typeOfNav = "dashboard"
       }
-      else {
-        this.atDashboard = false;
+      else if (path.includes("home")){
+        this.typeOfNav = "home"
+      }
+      else if (path.includes("settings")){
+        this.typeOfNav = "settings"
       }
     }
   }

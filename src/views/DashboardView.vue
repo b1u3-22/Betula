@@ -39,7 +39,7 @@
             </div>
             <div class="dashboardFinancialDocumentContainer">
               <ButtonLink link="/futurepdf" target="_blank">Uzávěrka</ButtonLink>
-              <p class="dashboardFinancialDocumentText">Účetní uzávěrka za poslední měsíc</p>
+              <p class="dashboardFinancialDocumentText">Účetní uzávěrka za rok {{ new Date().getFullYear() - 1 }}</p>
             </div>
           </div>
           <div v-if="debts.length" class="dashboardFinancialSubContainer">

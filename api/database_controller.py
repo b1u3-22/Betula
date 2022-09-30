@@ -28,7 +28,7 @@ def get_user_by_username(username):
         return None
 
     else:
-        return {'id': result[0], 'username': result[1], 'password': result[2], 'permissions': result[3]}
+        return {'id': result[0], 'username': result[1], 'password': result[2], 'permissions': result[3], 'email': result[4]}
 
 def verify_user(username, password):
     connection = sqlite.connect("data.db")
@@ -36,37 +36,37 @@ def verify_user(username, password):
     try:
         result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
     except:
-        return False
+        return {"verified": False}
 
     if result == []:
-        return False
+        return {"verified": False}
 
     elif result[2] == password:
-        return True
+        return {"verified": True}
 
     else:
-        return False
+        return {"verified": False}
 
 def get_user_permissions(username):
     connection = sqlite.connect("data.db")
     try:
         result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
     except:
-        return False
+        return {"permissions": "basic"}
 
     try:
         if result[3] == "admin":
-            return True
+            return {"permissions": "admin"}
 
         else:
-            return False
+            return {"permissions": "basic"}
 
     except:
-        return False
+        return {"permissions": "basic"}
 
-def insert_into_users(username, password, permissions):
+def insert_into_users(username, password, permissions, email):
     connection = sqlite.connect("data.db")
-    connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?)", (username, password, permissions, ))
+    connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, ?)", (username, password, permissions, email))
     connection.commit()
     connection.close()
 
@@ -224,3 +224,10 @@ def insert_into_finus(link, location):
     connection.close()
 
 #====================================================================================================================================
+
+
+def custom_operation(operation):
+    connection = sqlite.connect("data.db")
+    connection.execute(f"{operation}")
+    connection.commit()
+    connection.close()

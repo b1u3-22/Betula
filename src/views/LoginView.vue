@@ -33,7 +33,15 @@ export default {
     verifyUser: function(){
      axios
       .post("http://127.0.0.1:5000/verifyUser", {"username": this.username, "password": this.password})
-      .then((response) => console.log(response))
+      .then((response) => {
+        if (!response.data.verified){
+          this.$notify({
+            type: "warn",
+            title: "Přihlášení se nezdařilo",
+            text: "Špatné přihlašovací jméno nebo heslo"
+          })
+        }
+      })
     }
   }
 }

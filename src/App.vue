@@ -1,4 +1,5 @@
 <template>
+  <notifications position="bottom right" />
   <nav v-if="!atDashboard">
     <router-link to="/" class="nav-item">
       Domů

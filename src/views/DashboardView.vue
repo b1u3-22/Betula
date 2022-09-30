@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard" id="top">
     <div class="dashboardMainContainer">
       <div class="dashboardFinancialContainer">
         <div class="dashboardFinancialHeaderContainer">
@@ -157,6 +157,8 @@ export default {
             cursor: pointer;
             transition: all 220ms ease-in-out;
             margin: 0;
+            border-radius: 50%;
+            //box-shadow: 10px 10px 40px #D8D8D8;
           }
         }
 
@@ -278,7 +280,7 @@ export default {
                 .dashboardFinancialContentText {
                   font-weight: 700;
                   font-size: 1.5rem;
-                  margin: 10px 0 25px 0;
+                  margin: 5px 0 25px 0;
                   text-align: left;
                 }
               }

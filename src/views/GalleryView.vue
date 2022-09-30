@@ -2,7 +2,7 @@
   <div class="gallery">
     <div class="galleryBigContainer">
       
-      <BigTitle style="margin: 0 0 25px 0" side="false" smallText="Historie našeho domu ve fotografiích" bigText="Galerie" />
+      <BigTitle style="margin: 0 0 25px 0" side="false" :smallText="generalInfo.main_gallery_subtitle" :bigText="generalInfo.main_gallery_title" />
 
       <div class="galleryMainContainer">
         <div class="galleryColumn">
@@ -35,7 +35,7 @@
 </template>
 <script>
 import BigTitle from '@/components/BigTitle.vue';
-
+import axios from 'axios';
 // @ is an alias to /src
 
 
@@ -48,7 +48,8 @@ export default {
     return {
       column_0: [],
       column_1: [],
-      column_2: []
+      column_2: [],
+      generalInfo: {}
     }
   },
 
@@ -68,6 +69,10 @@ export default {
     for (let i = this.column_1.length + this.column_0.length; i < images.length; i++){
       this.column_2.push(images[i]);
     }
+
+    axios
+      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .then((response) =>this.generalInfo = response.data);
   }
 }
 </script>

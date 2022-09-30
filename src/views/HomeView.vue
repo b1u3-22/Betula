@@ -2,15 +2,13 @@
   <div class="home">
     <img :src="require(`@/assets/images/photo62.jpeg`)" class="landingPageImage" />
     <div id="home" class="landingPageContainer">
-      <h1 class="homeTitle">Bytové družstvo</h1>
-      <h2 class="homeSubtitle">Břízová 186 - 189, Lutín</h2>
+      <h1 class="homeTitle">{{ generalInfo.title }}</h1>
+      <h2 class="homeSubtitle">{{ generalInfo.subtitle }}</h2>
     </div>
     <div id="home-gallery" class="homeGalleryContainer">
       <div class="homeGalleryLeftContainer">
-        <BigTitle side="true" smallText="Galerie" bigText="Něco o nás"/>
-        <p class="homeGalleryText">Sed egestas, lorem ac dictum sagittis, sem mauris ultrices neque, eget ornare justo ex ac lacus. 
-
-Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+        <BigTitle side="true" :smallText="generalInfo.gallery_subtitle" :bigText="generalInfo.gallery_title"/>
+        <p class="homeGalleryText">{{ generalInfo.gallery_text }}</p>
         <ButtonLink style="margin: 0 0 0 56px;" link="gallery">Celá galerie</ButtonLink>
       </div>
       <div class="homeGalleryRightContainer">
@@ -22,25 +20,25 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
       </div>
     </div>
     <div id="home-contact" class="homeContactContainer">
-      <BigTitle side="false" smallText="kontakt" bigText="Napište nám" />
+      <BigTitle side="false" :smallText="generalInfo.contact_subtitle" :bigText="generalInfo.contact_title" />
       <div class="homeContactContentContainer">
         <div class="homeContactLeftContainer">
           <h3 class="homeContactSubtitle">Kontaktní informace</h3>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/house.svg`)" />
-            <div class="homeContactItemText">Břízová 186 - 189, Lutín, 783 49</div>
+            <div class="homeContactItemText">{{ generalInfo.address }}</div>
           </div>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/phone.svg`)" />
-            <div class="homeContactItemText">+420 156 564 456</div>
+            <div class="homeContactItemText">{{ generalInfo.mobile_phone_0 }}</div>
           </div>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/phone.svg`)" />
-            <div class="homeContactItemText">+420 156 564 456</div>
+            <div class="homeContactItemText">{{ generalInfo.mobile_phone_1 }}</div>
           </div>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/mail.svg`)" />
-            <div class="homeContactItemText">info@betula.cz</div>
+            <div class="homeContactItemText">{{ generalInfo.email_0 }}</div>
           </div>
         </div>
         <form class="homeContactForm">
@@ -65,6 +63,7 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
 // @ is an alias to /src
 import BigTitle from '@/components/BigTitle.vue';
 import ButtonLink from '@/components/ButtonLink.vue';
+import axios from 'axios';
 
 export default {
   name: 'HomeView',
@@ -72,12 +71,22 @@ export default {
     BigTitle,
     ButtonLink
   },
+  data: function(){
+    return {
+      generalInfo: {}
+    }
+  },
   mounted: function() {
     let path = this.$route.path.replace('/', '');
     path === '' ? path = 'home' : '';
     if (path.includes('home')){
         document.getElementById(path).scrollIntoView({behavior: "smooth"})
     }
+
+    axios
+      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .then((response) =>this.generalInfo = response.data);
+
   },
   watch: {
     $route: function(to){

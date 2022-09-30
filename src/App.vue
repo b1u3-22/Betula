@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav v-if="!atDashboard">
     <router-link to="/" class="nav-item">
       Domů
       <div class="nav-line" />
@@ -17,6 +17,20 @@
       <div class="nav-line" />
     </router-link>
   </nav>
+  <nav v-if="atDashboard">
+    <router-link to="/" class="nav-item">
+      Domů
+      <div class="nav-line" />
+    </router-link>
+    <div class="nav-item" @click="scrollToTop()">
+      Zpět nahoru
+      <div class="nav-line" />
+    </div>
+    <div class="nav-item">
+      Odhlášení
+      <div class="nav-line" />
+    </div>
+  </nav>
   <router-view />
   <footer>
     <div class="footerTextContainer">
@@ -29,15 +43,69 @@
       </div>
       <div class="footerMenuContainer">
         <h4 class="footerTitle">Kontakt</h4>
-        <p class="footerItem">Lorem Ipsum</p>
-        <p class="footerItem">Lorem Ipsum</p>
-        <p class="footerItem">Lorem Ipsum</p>
-        <p class="footerItem">Lorem Ipsum</p>
+        <p class="footerItem">{{ generalInfo.address }}</p>
+        <p class="footerItem">{{ generalInfo.mobile_phone_0 }}</p>
+        <p class="footerItem">{{ generalInfo.mobile_phone_1 }}</p>
+        <p class="footerItem">{{ generalInfo.email_0 }}</p>
       </div>
     </div>
-    <div class="footerCopyright">© Jiří Sedlák 2022</div>
+    <div class="footerCopyright">© Jiří Sedlák {{ new Date().getFullYear() }}</div>
   </footer>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'App',
+  components: {
+    
+  },
+  props: [
+    
+  ],
+
+  methods: {
+    scrollToTop: function() {
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    }
+  },
+
+  data: function () {
+      return {
+        atDashboard: false,
+        generalInfo: {}
+      }
+  },
+
+  mounted: function() {
+    let path = this.$route.path.replace('/', '');
+    if (path.includes('dashboard')){
+        this.atDashboard = true;
+    }
+    else {
+      this.atDashboard = false;
+    }
+
+    axios
+      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .then((response) =>this.generalInfo = response.data);
+  },
+
+  watch: {
+    $route: function(to){
+      let path = to.path.replace('/', '');
+      if (path == "dashboard"){
+        this.atDashboard = true;
+      }
+      else {
+        this.atDashboard = false;
+      }
+    }
+  }
+}
+
+</script>
 
 <style lang="scss">
 
@@ -48,6 +116,7 @@ html {
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
   font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -94,6 +163,7 @@ nav {
   text-decoration: none;
   color: $background-light;
   margin: 0 2%;
+  cursor: pointer;
 
     .nav-line {
       display: inline;

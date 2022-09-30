@@ -1,8 +1,10 @@
 from datetime import datetime
 import sqlite3 as sqlite
+from unittest import result
 
 def start_database():
     connection = sqlite.connect("data.db")
+    connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS general_info(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS pictures(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT)")
     connection.execute("CREATE TABLE IF NOT EXISTS financials_general(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL)")
@@ -11,6 +13,16 @@ def start_database():
     connection.execute("CREATE TABLE IF NOT EXISTS finus(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, timestamp TIMESTAMP)")
     connection.commit()
     connection.close()
+
+
+def get_user_by_username(username):
+    connection = sqlite.connect("data.db")
+    result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+    if result == []:
+        return None
+
+    else:
+        return {'id': result[0], 'username': result[1], 'password': result[2], 'permissions': result[3]}
 
 def get_general_info():
     connection = sqlite.connect("data.db")

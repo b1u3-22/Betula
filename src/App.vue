@@ -13,10 +13,14 @@
       Kontakt
       <div class="nav-line" />
     </router-link> 
-    <router-link to="/login" class="nav-item">
+    <router-link v-if="!verified" to="/login" class="nav-item">
       Přihlášení
       <div class="nav-line" />
     </router-link>
+    <div v-if="verified" class="nav-item" @click="verified=false">
+      Odhlášení
+      <div class="nav-line" />
+    </div>
   </nav>
   <nav v-if="atDashboard">
     <router-link to="/" class="nav-item">
@@ -27,12 +31,12 @@
       Zpět nahoru
       <div class="nav-line" />
     </div>
-    <div class="nav-item">
+    <div class="nav-item" @click="signOut">
       Odhlášení
       <div class="nav-line" />
     </div>
   </nav>
-  <router-view />
+  <router-view @verifiedFromLogin="verifiedFromLogin" :verified="verified" />
   <footer>
     <div class="footerTextContainer">
       <div class="footerMenuContainer">
@@ -68,14 +72,27 @@ export default {
 
   methods: {
     scrollToTop: function() {
-      window.scrollTo({top: 0, behavior: 'smooth'})
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    },
+    verifiedFromLogin: function(){
+      this.verified = true;
+    },
+    signOut: function() {
+      this.verified = false;
+      this.$router.push("/")
+      this.$notify({
+        type: "success",
+        title: "Odhlášení úspěšné",
+        text: "Odhlásili jste se ze systému"
+      })
     }
   },
 
   data: function () {
       return {
         atDashboard: false,
-        generalInfo: {}
+        generalInfo: {},
+        verified: false
       }
   },
 
@@ -117,7 +134,6 @@ html {
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
   font-size: 16px;
-  scroll-behavior: smooth;
 }
 
 body {

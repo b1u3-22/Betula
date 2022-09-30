@@ -41,6 +41,16 @@ export default {
             text: "Špatné přihlašovací jméno nebo heslo"
           })
         }
+
+        else {
+          this.$notify({
+            type: "success",
+            title: "Přihlášení úspěšné",
+            text: "Přihlásili jste se do systému"
+          })
+          this.$emit('verifiedFromLogin')
+          this.$router.push("/dashboard")
+        }
       })
     }
   }

@@ -83,10 +83,16 @@ Maecenas a sem sem. Sed at semper orci. Nulla facilisi. Quisque tempus, nibh hen
 <script>
 import ContentCard from '@/components/ContentCard.vue';
 import ButtonLink from '@/components/ButtonLink.vue';
+import { getCurrentInstance } from 'vue';
 
 
 export default {
   name: 'DashboardView',
+  props: {
+    verified: {
+      type: Boolean
+    }
+  },
   data: function() {
     return {
       financialRolledUp: true,
@@ -100,9 +106,17 @@ export default {
   components: {
     ContentCard,
     ButtonLink
-},
+  },
+
   methods: {
   },
+
+  created: function(){
+    if (!getCurrentInstance().parent.ctx.$parent.verified){
+      this.$router.push("/login")
+    }
+  },
+
   mounted: function(){
     this.debts = [{wholeDebt: 2000000, remainingDebt: 300500, remainingDebtPerFlat: 60000, monthlyRepainmentPerFlat: 500}, {wholeDebt: 3000000, remainingDebt: 600500, remainingDebtPerFlat: 90000, monthlyRepainmentPerFlat: 1500}];
     

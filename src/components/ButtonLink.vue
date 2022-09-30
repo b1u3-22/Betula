@@ -1,9 +1,9 @@
 <template>
-    <a :href="link" :target="target">
+    <div @click="goTo">
       <button class="buttonLinkContainer">
         <slot></slot>
       </button>
-    </a>  
+    </div>  
     
 </template>
 
@@ -24,6 +24,9 @@ export default {
   },
 
   methods: {
+    goTo: function() {
+      this.$router.push(this.link)
+    }
   },
 
   data: function () {

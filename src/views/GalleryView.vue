@@ -54,6 +54,7 @@ export default {
   },
 
   mounted: function() {
+    window.scrollTo({top: 0, behavior: 'auto'});
     const context = require.context("@/assets/images/", false, /\.jpeg$/);
     const images = context.keys().map(context);
     let imgs_per_clmn = Math.floor(images.length / 3);

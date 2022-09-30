@@ -18,7 +18,12 @@ def start_database():
 
 def get_user_by_username(username):
     connection = sqlite.connect("data.db")
-    result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+
+    try:
+        result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+    except:
+        return None
+
     if result == []:
         return None
 
@@ -27,7 +32,12 @@ def get_user_by_username(username):
 
 def verify_user(username, password):
     connection = sqlite.connect("data.db")
-    result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+
+    try:
+        result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+    except:
+        return False
+
     if result == []:
         return False
 
@@ -39,7 +49,10 @@ def verify_user(username, password):
 
 def get_user_permissions(username):
     connection = sqlite.connect("data.db")
-    result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+    try:
+        result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+    except:
+        return False
 
     try:
         if result[3] == "admin":

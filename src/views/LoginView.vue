@@ -2,27 +2,40 @@
   <div class="login">
     <form class="loginForm">
       <h1 class="loginFormTitle">Přihlášení</h1>
-      <label class="loginFormLabel" for="email">Váš email nebo přihlašovací jméno *</label>
-      <input class="loginFormInput" type="email" id="email" name="email" placeholder="jannovak@seznam.cz">
+      <label class="loginFormLabel" for="username">Vaše přihlašovací jméno *</label>
+      <input class="loginFormInput" type="text" id="username" name="username" placeholder="JanNovak" v-model="username">
       <label class="loginFormLabel" for="password">Váše heslo *</label>
-      <input class="loginFormInput" type="password" id="password" name="password" placeholder="Vaše heslo">
+      <input class="loginFormInput" type="password" id="password" name="password" placeholder="Vaše heslo" v-model="password">
       <div class="loginFormBottomContainer">
         <div class="loginFormWarning">* Toto pole je povinné</div>
-        <ButtonLink text="Přihlásit" />
+        <ButtonAction @click="verifyUser()">Přihlásit</ButtonAction>
       </div>
-      
     </form>
   </div>
 </template>
 <script>
-import ButtonLink from '@/components/ButtonLink.vue';
+import ButtonAction from '@/components/ButtonAction.vue';
+import axios from 'axios';
 // @ is an alias to /src
 
 export default {
   name: 'LoginView',
   components: {
-    ButtonLink
-  } 
+    ButtonAction
+  },
+  data: function() {
+    return {
+      username: "",
+      password: ""
+    }
+  },
+  methods: {
+    verifyUser: function(){
+     axios
+      .post("http://127.0.0.1:5000/verifyUser", {"username": this.username, "password": this.password})
+      .then((response) => console.log(response))
+    }
+  }
 }
 </script>
 

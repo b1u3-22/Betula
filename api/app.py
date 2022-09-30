@@ -17,5 +17,11 @@ def get_all_debts():
 def get_general_info():
     return database_controller.get_general_info()
 
+
+
+@app.route("/verifyUser", methods = ["POST"])
+def verify_user():
+    return database_controller.verify_user(flask.request.json["username"], flask.request.json["password"])
+
 database_controller.start_database()
 app.run()

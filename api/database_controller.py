@@ -1,4 +1,5 @@
 from datetime import datetime
+from multiprocessing import connection
 import sqlite3 as sqlite
 from unittest import result
 
@@ -23,6 +24,39 @@ def get_user_by_username(username):
 
     else:
         return {'id': result[0], 'username': result[1], 'password': result[2], 'permissions': result[3]}
+
+def verify_user(username, password):
+    connection = sqlite.connect("data.db")
+    result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+    if result == []:
+        return False
+
+    elif result[2] == password:
+        return True
+
+    else:
+        return False
+
+def get_user_permissions(username):
+    connection = sqlite.connect("data.db")
+    result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
+
+    try:
+        if result[3] == "admin":
+            return True
+
+        else:
+            return False
+
+    except:
+        return False
+
+def insert_into_users(username, password, permissions):
+    connection = sqlite.connect("data.db")
+    connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?)", (username, password, permissions, ))
+    connection.commit()
+    connection.close()
+
 
 def get_general_info():
     connection = sqlite.connect("data.db")

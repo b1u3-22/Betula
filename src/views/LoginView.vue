@@ -3,9 +3,9 @@
     <form class="loginForm">
       <h1 class="loginFormTitle">Přihlášení</h1>
       <label class="loginFormLabel" for="username">Vaše přihlašovací jméno *</label>
-      <input class="loginFormInput" type="text" id="username" name="username" placeholder="JanNovak" v-model="username">
+      <input class="loginFormInput" ref="username" type="text" id="username" name="username" placeholder="JanNovak" v-model="username" @keyup.enter="this.$refs.password.focus">
       <label class="loginFormLabel" for="password">Váše heslo *</label>
-      <input class="loginFormInput" type="password" id="password" name="password" placeholder="Vaše heslo" v-model="password">
+      <input class="loginFormInput" ref="password" type="password" id="password" name="password" placeholder="Vaše heslo" v-model="password" @keyup.enter="verifyUser()">
       <div class="loginFormBottomContainer">
         <div class="loginFormWarning">* Toto pole je povinné</div>
         <ButtonAction @click="verifyUser()">Přihlásit</ButtonAction>
@@ -40,6 +40,11 @@ export default {
             title: "Přihlášení se nezdařilo",
             text: "Špatné přihlašovací jméno nebo heslo"
           })
+
+          this.username = "";
+          this.password = "";
+
+          this.$refs.username.focus();
         }
 
         else {
@@ -53,6 +58,9 @@ export default {
         }
       })
     }
+  },
+  mounted: function() {
+    this.$refs.username.focus()
   }
 }
 </script>

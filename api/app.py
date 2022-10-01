@@ -29,5 +29,10 @@ def verify_user():
 def get_user_permissions():
     return database_controller.get_user_permissions(flask.request.json["username"])
 
+@app.route("/getAllUsers", methods = ["GET"])
+def get_all_users():
+    return database_controller.get_all_users()
+
+
 database_controller.start_database()
 app.run()

@@ -5,7 +5,7 @@ from unittest import result
 
 def start_database():
     connection = sqlite.connect("data.db")
-    connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT)")
+    connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT, status TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS general_info(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL, name TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS pictures(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT)")
     connection.execute("CREATE TABLE IF NOT EXISTS financials_general(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL, name TEXT NOT NULL)")
@@ -41,7 +41,7 @@ def verify_user(username, password):
     if result == []:
         return {"verified": False}
 
-    elif result[2] == password:
+    elif result[2] == password and result[5] == "active":
         return {"verified": True}
 
     else:
@@ -64,11 +64,25 @@ def get_user_permissions(username):
     except:
         return {"permissions": "basic"}
 
-def insert_into_users(username, password, permissions, email):
+def get_all_users():
     connection = sqlite.connect("data.db")
-    connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, ?)", (username, password, permissions, email))
+    result = connection.execute("SELECT * FROM users").fetchall()
+    users = {}
+
+    print(result)
+
+    for i in range(len(result)):
+        users[result[i][1]] = {"password": result[i][2], "permissions": result[i][3], "email": result[i][4], "status": result[i][5], "id": result[i][0]}
+
+    connection.close()
+    return users
+
+def insert_into_users(username, password, permissions, email, status = "blocked"):
+    connection = sqlite.connect("data.db")
+    connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, ?, ?)", (username, password, permissions, email, status))
     connection.commit()
     connection.close()
+
 
 
 def get_general_info():

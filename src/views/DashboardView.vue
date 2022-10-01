@@ -9,7 +9,7 @@
           <div :class="{dashboardFinanctialQuickInfoShowed: financialRolledUp, dashboardFinanctialQuickInfoHidden: !financialRolledUp}" class="dashboardFinancialQuickInfo">
             <div class="dashboardFinancialQuickInfoContentContainer">
               <div class="dashboardFinancialQuickInfoTitle">Zůstatek na účtu</div>
-              <div class="dashboardFinancialQuickInfoText">1 256 264 Kč</div>
+              <div class="dashboardFinancialQuickInfoText">{{ balance }}</div>
             </div>
             <div v-if="remainingTotalDebt !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <div class="dashboardFinancialQuickInfoTitle">Zbývající dluh</div>
@@ -51,7 +51,7 @@
                   <div class="dashboardFinancialTextContainer">
                     <div class="dashboardFinancialPartContainer">
                       <h2 class="dashboardFinancialPartHeader">Čerpaná částka</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.wholeDebt }}</p>
+                      <p class="dashboardFinancialContentText">{{ debt.totalDebt }}</p>
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <h2 class="dashboardFinancialPartHeader">Zbývající částka</h2>
@@ -63,7 +63,7 @@
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <h2 class="dashboardFinancialPartHeader">Měsíční splátka na byt</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.monthlyRepainmentPerFlat }}</p>
+                      <p class="dashboardFinancialContentText">{{ debt.repaimentPerFlat }}</p>
                     </div>
                   </div>
                 </div>
@@ -84,7 +84,7 @@ Maecenas a sem sem. Sed at semper orci. Nulla facilisi. Quisque tempus, nibh hen
 import ContentCard from '@/components/ContentCard.vue';
 import ButtonLink from '@/components/ButtonLink.vue';
 import { getCurrentInstance } from 'vue';
-
+import axios from 'axios';
 
 export default {
   name: 'DashboardView',
@@ -96,8 +96,8 @@ export default {
   data: function() {
     return {
       financialRolledUp: true,
-      accountNumber: "2698 6426 6642 / 0880",
-      balance: 1254850,
+      accountNumber: "",
+      balance: 0,
       debts: [],
       remainingTotalDebt: 0, 
       monthlyTotalRepainmentPerFlat: 0
@@ -118,12 +118,30 @@ export default {
   },
 
   mounted: function(){
-    this.debts = [{wholeDebt: 2000000, remainingDebt: 300500, remainingDebtPerFlat: 60000, monthlyRepainmentPerFlat: 500}, {wholeDebt: 3000000, remainingDebt: 600500, remainingDebtPerFlat: 90000, monthlyRepainmentPerFlat: 1500}];
-    
-    for(let debt of this.debts){
-      this.remainingTotalDebt += debt.remainingDebt;
-      this.monthlyTotalRepainmentPerFlat += debt.monthlyRepainmentPerFlat;
-    }
+    axios
+      .get("http://127.0.0.1:5000/getAllDebts")
+      .then((response) => {
+        for (const [key, value] of Object.entries(response.data)){
+            this.debts.push({
+                totalDebt: value.total_debt,
+                remainingDebt: value.remaining_debt,
+                remainingDebtPerFlat: value.remaining_debt_per_flat,
+                repaimentPerFlat: value.repainment_per_flat,
+                debtId: key
+            })
+
+            this.remainingTotalDebt += value.total_debt;
+            this.monthlyTotalRepainmentPerFlat += value.repainment_per_flat;
+          }      
+      });
+
+    axios
+      .get("http://127.0.0.1:5000/getFinancialsGeneral")
+      .then((response) => {
+        console.log(response.data)
+          this.accountNumber = response.data.account_number.text;
+          this.balance = response.data.account_balance.text;
+      });
   }
 }
 
@@ -258,8 +276,7 @@ export default {
             flex-flow: row nowrap;
             justify-content: flex-start;
             align-items: stretch;
-            margin: 0 20% 0 0;
-            min-width: 50%;
+            margin: 0 5% 0 0;
 
             .dashboardFinancialLine {
               width: 6px;
@@ -377,13 +394,14 @@ export default {
             align-items: center;
 
             .dashboardFinancialDebtContainer {
-              justify-content: space-between;
+              justify-content: space-evenly;
               width: 100%;
             }
 
             .dashboardFinancialContentContainer {
               justify-content: center;
               margin: 0;
+              width: 30%;
               
               .dashboardFinancialLine {
                 display: none;

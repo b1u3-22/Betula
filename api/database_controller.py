@@ -1,7 +1,5 @@
 from datetime import datetime
-from multiprocessing import connection
 import sqlite3 as sqlite
-from unittest import result
 
 def start_database():
     connection = sqlite.connect("data.db")
@@ -77,12 +75,34 @@ def get_all_users():
     connection.close()
     return users
 
-def insert_into_users(username, password, permissions, email, status = "blocked"):
+def insert_into_users(username, password, permissions, email, status):
     connection = sqlite.connect("data.db")
     connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, ?, ?)", (username, password, permissions, email, status))
     connection.commit()
     connection.close()
 
+def patch_user(user_id, username, password, permissions, email, status): 
+    connection = sqlite.connect("data.db")
+    connection.execute("UPDATE users SET username = ?, password = ?, permissions = ?, email = ?, status = ? WHERE id = ?", (username, password, permissions, email, status, user_id))
+    connection.commit()
+    connection.close()
+
+def delete_from_users(id):
+    connection = sqlite.connect("data.db")
+    connection.execute("DELETE FROM users WHERE id = ?", (id, ))
+    connection.commit()
+    connection.close()
+
+
+def check_if_user_exists(id):
+    connection = sqlite.connect("data.db")
+    result = connection.execute("SELECT * FROM users WHERE id = ?", (id, )).fetchall()
+    
+    if result == []:
+        return False
+
+    else:
+        return True
 
 
 def get_general_info():
@@ -104,6 +124,12 @@ def insert_into_general_info(property, value, name):
     connection.commit()
     connection.close()
 
+def patch_general_info(property, value):
+    connection = sqlite.connect("data.db")
+    connection.execute("UPDATE general_info SET value = ? WHERE property = ?", (value, property))
+    connection.commit()
+    connection.close()
+
 #====================================================================================================================================
 
 def get_general_financials():
@@ -122,6 +148,12 @@ def get_general_financials():
 def insert_into_general_financials(property, value, name):
     connection = sqlite.connect("data.db")
     connection.execute("INSERT INTO financials_general VALUES(NULL, ?, ?, ?)", (property, value, name))
+    connection.commit()
+    connection.close()
+
+def patch_financials_general(property, value):
+    connection = sqlite.connect("data.db")
+    connection.execute("UPDATE financials_general SET value = ? WHERE property = ?", (value, property))
     connection.commit()
     connection.close()
 
@@ -173,11 +205,33 @@ def get_all_debts():
     connection.close()
     return debts
 
+def check_if_debt_exists(id):
+    connection = sqlite.connect("data.db")
+    result = connection.execute("SELECT * FROM debts WHERE id = ?", (id, )).fetchall()
+    
+    if result == []:
+        return False
+
+    else:
+        return True
+
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_debts(total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat):
     connection = sqlite.connect("data.db")
     connection.execute("INSERT INTO debts VALUES(NULL, ?, ?, ?, ?)", (total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat))
+    connection.commit()
+    connection.close()
+
+def patch_debt(id, total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat): 
+    connection = sqlite.connect("data.db")
+    connection.execute("UPDATE debts SET total_debt = ?, remaining_debt = ?, remaining_debt_per_flat = ?, repayment_per_flat = ? WHERE id = ?", (total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat, id))
+    connection.commit()
+    connection.close()
+
+def delete_from_debts(id):
+    connection = sqlite.connect("data.db")
+    connection.execute("DELETE FROM debts WHERE id = ?", (id, ))
     connection.commit()
     connection.close()
 

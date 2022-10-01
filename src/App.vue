@@ -36,28 +36,37 @@
       Odhlášení
       <div class="nav-line" />
     </div>
-    <router-link v-if="verified && permissions" to="/settings" class="nav-item">
+    <router-link v-if="verified && permissions" to="/settings-general" class="nav-item">
       Nastavení
       <div class="nav-line" />
     </router-link>
   </nav>
 
   <nav v-if="typeOfNav === 'settings'">
-    <router-link to="/" class="nav-item">
+    <router-link to="/settings-general" class="nav-item">
       Obecné
       <div class="nav-line" />
     </router-link>
-    <div class="nav-item" @click="signOut(true)">
+    <router-link to="/settings-finance" class="nav-item">
       Finance
       <div class="nav-line" />
-    </div>
-    <router-link v-if="verified && permissions" to="/settings" class="nav-item">
+    </router-link>
+    <router-link to="/settings-users" class="nav-item">
       Uživatelé
+      <div class="nav-line" />
+    </router-link>
+    <router-link to="/dashboard" class="nav-item">
+      Zpět
       <div class="nav-line" />
     </router-link>
   </nav>
 
-  <router-view @verifiedFromLogin="(username) => verifiedFromLogin(username)" :verified="verified" />
+  <router-view 
+    @verifiedFromLogin="(username) => verifiedFromLogin(username)"
+    :verified="verified"
+    :permission="permissions"
+    :key="routerViewKey"
+    />
 
   <footer>
     <div class="footerTextContainer">
@@ -129,7 +138,8 @@ export default {
         generalInfo: {},
         verified: false,
         permissions: false,
-        username: ""
+        username: "",
+        routerViewKey: 0
       }
   },
 

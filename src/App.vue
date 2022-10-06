@@ -72,10 +72,10 @@
     <div class="footerTextContainer">
       <div class="footerMenuContainer">
         <h4 class="footerTitle">Menu</h4>
-        <a class="footerItem">Domů</a>
-        <a class="footerItem">Galerie</a>
-        <a class="footerItem">Kontakty</a>
-        <a class="footerItem">Přihlášení</a>
+        <a href="/" class="footerItem">Domů</a>
+        <a href="/gallery" class="footerItem">Galerie</a>
+        <a href="/home-contact" class="footerItem">Kontakty</a>
+        <a href="/dashboard" class="footerItem">Systém</a>
       </div>
       <div class="footerMenuContainer">
         <h4 class="footerTitle">Kontakt</h4>
@@ -297,6 +297,8 @@ footer {
         font-size: 1rem;
         font-weight: 400;
         cursor: pointer;
+        text-decoration: none;
+        color: black;
       }
     }
   }

@@ -60,6 +60,76 @@
       </router-link>
     </template>
   </nav>
+  <nav class="mobileNav">
+    <div class="mobileNavHeader">
+      <div class="mobileNavTitle">Menu</div>
+      <div class="mobileNavHamburgerContainer" @click="toggleMobileNav">
+        <div class="mobileNavHamburgerLine" :class="{mobileNavHamburgerLineTop: mobileNavActive}" />
+        <div class="mobileNavHamburgerLine" :class="{mobileNavHamburgerLineMiddle: mobileNavActive}"/>
+        <div class="mobileNavHamburgerLine" :class="{mobileNavHamburgerLineBot: mobileNavActive}"/>
+      </div>
+    </div>
+    <div class="mobileNavItems" :class="{mobileNavItemsVisible: mobileNavActive}">
+      <template v-if="typeOfNav === 'home'">
+        <router-link to="/" class="nav-item">
+          Domů
+          <div class="nav-line" />
+        </router-link>
+        <router-link to="/home-gallery" class="nav-item">
+          Galerie
+          <div class="nav-line" />
+        </router-link>
+        <router-link to="/home-contact" class="nav-item">
+          Kontakt
+          <div class="nav-line" />
+        </router-link> 
+        <router-link v-if="!verified" to="/login" class="nav-item">
+          Přihlášení
+          <div class="nav-line" />
+        </router-link>
+        <router-link v-if="verified" to="/dashboard" class="nav-item">
+          Systém
+          <div class="nav-line" />
+        </router-link>
+      </template>
+      <template v-if="typeOfNav === 'dashboard'">
+        <router-link to="/" class="nav-item">
+          Domů
+          <div class="nav-line" />
+        </router-link>
+        <div class="nav-item" @click="scrollToTop()">
+          Zpět nahoru
+          <div class="nav-line" />
+        </div>
+        <div class="nav-item" @click="signOut(true)">
+          Odhlášení
+          <div class="nav-line" />
+        </div>
+        <router-link v-if="verified && permissions" to="/settings-general" class="nav-item">
+          Nastavení
+          <div class="nav-line" />
+        </router-link>
+      </template>
+      <template v-if="typeOfNav === 'settings'">
+        <router-link to="/settings-general" class="nav-item">
+          Obecné
+          <div class="nav-line" />
+        </router-link>
+        <router-link to="/settings-finance" class="nav-item">
+          Finance
+          <div class="nav-line" />
+        </router-link>
+        <router-link to="/settings-users" class="nav-item">
+          Uživatelé
+          <div class="nav-line" />
+        </router-link>
+        <router-link to="/dashboard" class="nav-item">
+          Zpět
+          <div class="nav-line" />
+        </router-link>
+      </template>
+    </div>
+  </nav>
 
   <router-view 
     @verifiedFromLogin="(username) => verifiedFromLogin(username)"
@@ -129,6 +199,9 @@ export default {
         title: "Odhlášení úspěšné",
         text: "Odhlásili jste se ze systému"
       })
+    },
+    toggleMobileNav: function() {
+      this.mobileNavActive = !this.mobileNavActive
     }
   },
 
@@ -139,7 +212,8 @@ export default {
         verified: false,
         permissions: false,
         username: "",
-        routerViewKey: 0
+        routerViewKey: 0, 
+        mobileNavActive: false
       }
   },
 
@@ -165,6 +239,10 @@ export default {
 
   watch: {
     $route: function(to){
+      if (this.mobileNavActive){
+        this.mobileNavActive = !this.mobileNavActive
+      }
+
       let path = to.path.replace('/', '');
       path === '' ? path = 'home' : '';
       if (path.includes("dashboard")){
@@ -207,7 +285,7 @@ body {
   background-color: $background-light;
 }
 
-nav {
+.desktopNav {
   padding: 15px;
   position: fixed;
   top: 0;
@@ -219,48 +297,129 @@ nav {
   background-color: $background-dark;
   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.25);
   z-index: 999999;
+}
+
+.mobileNav {
+  width: 100vw;
+  display: none;
+  visibility: hidden;
+  flex-flow: column nowrap;
+  justify-content:  flex-start;
+  align-items: flex-start;
+  position: fixed;
+  background-color: $background-dark;
+  z-index: 999999;
+
+  .mobileNavHeader {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    height: 56px;
+
+    .mobileNavTitle {
+      color: $background-light;
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    .mobileNavHamburgerContainer {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+
+      .mobileNavHamburgerLine {
+        width: 34px;
+        height: 4px;
+        border-radius: 4px;
+        background-color: $background-light;
+        margin: 4px 0;
+        transition: all 220ms ease-in-out;
+      }
+
+      .mobileNavHamburgerLineTop {
+        margin-bottom: -4px;
+        transform: rotate(45deg);
+      }
+
+      .mobileNavHamburgerLineMiddle {
+        margin: 0;
+        opacity: 0;
+      }
+
+      .mobileNavHamburgerLineBot {
+        margin-top: -4px;
+        transform: rotate(-45deg);
+      }
+    }
+  }
+
+  .mobileNavItems {
+    display: none;
+    visibility: collapse;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 0 15px 0;
+
+    .nav-item {
+      font-size: 1.7rem;
+      margin: 5px 0;
+    }
+  }
+
+  .mobileNavItemsVisible {
+    display: flex;
+    visibility: visible;
+    animation: mobileNavSlideDown 220ms ease-in-out forwards;
+  }
+}
+
+.router-link-exact-active {
+  .nav-line {
+    width: 100% !important;
+  }
+}
+
+.nav-item {
+font-weight: 600;
+font-size: 1.125rem;
+display: flex;
+flex-flow: column nowrap;
+align-items: flex-end;
+justify-content: flex-start;
+width: fit-content;
+text-decoration: none;
+color: $background-light;
+margin: 0 2%;
+cursor: pointer;
+
+  .nav-line {
+    display: inline;
+    width: 0%;
+    height: 3px;
+    background-color: $primary;
+    transition: all 200ms ease-in-out;
+  }
+
+  &:hover {
+    align-items: flex-start;
+  }
+
+  &:hover > .nav-line{
+    width: 100%;
+
+  }
 
   .router-link-exact-active {
-    .nav-line {
-      width: 100% !important;
-    }
+    color: $primary
   }
 
-  .nav-item {
-  font-weight: 600;
-  font-size: 1.125rem;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-end;
-  justify-content: flex-start;
-  width: fit-content;
-  text-decoration: none;
-  color: $background-light;
-  margin: 0 2%;
-  cursor: pointer;
-
-    .nav-line {
-      display: inline;
-      width: 0%;
-      height: 3px;
-      background-color: $primary;
-      transition: all 200ms ease-in-out;
-    }
-
-    &:hover {
-      align-items: flex-start;
-    }
-
-    &:hover > .nav-line{
-      width: 100%;
-
-    }
-
-    .router-link-exact-active {
-      color: $primary
-    }
-
-  }
 }
 
 footer {
@@ -304,6 +463,20 @@ footer {
   }
 }
 
+@keyframes mobileNavSlideDown {
+  from {
+    opacity: 0;
+    //transform: translateY(-50px);
+    max-height: 0;
+  }
+
+  to {
+    opacity: 1;
+    //transform: translateY(0);
+    max-height: 200px;
+  }
+}
+
 @media (max-width: 1000px) {
   html {
     font-size: 12px;
@@ -319,6 +492,16 @@ footer {
 @media (max-width: 600px) {
   html {
     font-size: 14px;
+  }
+
+  .desktopNav {
+    display: none;
+    visibility: collapse;
+  }
+
+  .mobileNav {
+    display: flex;
+    visibility: visible;
   }
 
   footer {

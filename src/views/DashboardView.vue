@@ -1,5 +1,9 @@
 <template>
   <div class="dashboard" id="top">
+    <div class="dashboardAddPostButton">
+      <img class="dashboardAddPostButtonIcon" :src="require('@/assets/icons/circlePlusIcon.svg')"/>
+      <div class="dashboardAddPostButtonText">Přidat příspěvek</div>
+    </div>
     <div class="dashboardMainContainer">
       <div class="dashboardFinancialContainer">
         <div class="dashboardFinancialHeaderContainer">
@@ -158,6 +162,33 @@ export default {
   min-height: 74vh;
   margin: 0;
   overflow-x: hidden;
+
+  .dashboardAddPostButton {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: $primary;
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 15px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.25);
+    z-index: 999999;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    .dashboardAddPosetButtonIcon {
+      height: 50px;
+    }
+
+    .dashboardAddPostButtonText {
+      font-weight: 700;
+      color: $background-light;
+      margin-left: 5px;
+      font-size: 1.2rem;
+    }
+  }
 
   .dashboardMainContainer {
     display: flex;
@@ -373,6 +404,13 @@ export default {
 
 @media (max-width: 600px) {
   .dashboard {
+    .dashboardAddPostButton {
+      border-radius: 50%;
+
+      .dashboardAddPostButtonText {
+        display: none;
+      }
+    }
     .dashboardMainContainer {
       .dashboardFinancialContainer {
         width: 100%;

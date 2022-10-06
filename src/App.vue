@@ -40,6 +40,10 @@
         Nastavení
         <div class="nav-line" />
       </router-link>
+      <div v-if="verified && permissions" to="/settings-general" class="nav-item">
+        Přidat příspěvek
+        <div class="nav-line" />
+      </div>
     </template>
     <template v-if="typeOfNav === 'settings'">
       <router-link to="/settings-general" class="nav-item">
@@ -109,6 +113,10 @@
           Nastavení
           <div class="nav-line" />
         </router-link>
+        <div v-if="verified && permissions" to="/settings-general" class="nav-item">
+          Přidat příspěvek
+          <div class="nav-line" />
+        </div>
       </template>
       <template v-if="typeOfNav === 'settings'">
         <router-link to="/settings-general" class="nav-item">

@@ -1,64 +1,64 @@
 <template>
   <notifications position="bottom right" />
-  <nav v-if="typeOfNav === 'home'">
-    <router-link to="/" class="nav-item">
-      Domů
-      <div class="nav-line" />
-    </router-link>
-    <router-link to="/home-gallery" class="nav-item">
-      Galerie
-      <div class="nav-line" />
-    </router-link>
-    <router-link to="/home-contact" class="nav-item">
-      Kontakt
-      <div class="nav-line" />
-    </router-link> 
-    <router-link v-if="!verified" to="/login" class="nav-item">
-      Přihlášení
-      <div class="nav-line" />
-    </router-link>
-    <router-link v-if="verified" to="/dashboard" class="nav-item">
-      Systém
-      <div class="nav-line" />
-    </router-link>
-  </nav>
-
-  <nav v-if="typeOfNav === 'dashboard'">
-    <router-link to="/" class="nav-item">
-      Domů
-      <div class="nav-line" />
-    </router-link>
-    <div class="nav-item" @click="scrollToTop()">
-      Zpět nahoru
-      <div class="nav-line" />
-    </div>
-    <div class="nav-item" @click="signOut(true)">
-      Odhlášení
-      <div class="nav-line" />
-    </div>
-    <router-link v-if="verified && permissions" to="/settings-general" class="nav-item">
-      Nastavení
-      <div class="nav-line" />
-    </router-link>
-  </nav>
-
-  <nav v-if="typeOfNav === 'settings'">
-    <router-link to="/settings-general" class="nav-item">
-      Obecné
-      <div class="nav-line" />
-    </router-link>
-    <router-link to="/settings-finance" class="nav-item">
-      Finance
-      <div class="nav-line" />
-    </router-link>
-    <router-link to="/settings-users" class="nav-item">
-      Uživatelé
-      <div class="nav-line" />
-    </router-link>
-    <router-link to="/dashboard" class="nav-item">
-      Zpět
-      <div class="nav-line" />
-    </router-link>
+  <nav class="desktopNav">
+    <template v-if="typeOfNav === 'home'">
+      <router-link to="/" class="nav-item">
+        Domů
+        <div class="nav-line" />
+      </router-link>
+      <router-link to="/home-gallery" class="nav-item">
+        Galerie
+        <div class="nav-line" />
+      </router-link>
+      <router-link to="/home-contact" class="nav-item">
+        Kontakt
+        <div class="nav-line" />
+      </router-link> 
+      <router-link v-if="!verified" to="/login" class="nav-item">
+        Přihlášení
+        <div class="nav-line" />
+      </router-link>
+      <router-link v-if="verified" to="/dashboard" class="nav-item">
+        Systém
+        <div class="nav-line" />
+      </router-link>
+    </template>
+    <template v-if="typeOfNav === 'dashboard'">
+      <router-link to="/" class="nav-item">
+        Domů
+        <div class="nav-line" />
+      </router-link>
+      <div class="nav-item" @click="scrollToTop()">
+        Zpět nahoru
+        <div class="nav-line" />
+      </div>
+      <div class="nav-item" @click="signOut(true)">
+        Odhlášení
+        <div class="nav-line" />
+      </div>
+      <router-link v-if="verified && permissions" to="/settings-general" class="nav-item">
+        Nastavení
+        <div class="nav-line" />
+      </router-link>
+    </template>
+    <template v-if="typeOfNav === 'settings'">
+      <router-link to="/settings-general" class="nav-item">
+        Obecné
+        <div class="nav-line" />
+      </router-link>
+      <router-link to="/settings-finance" class="nav-item">
+        Finance
+        <div class="nav-line" />
+      </router-link>
+      <router-link to="/settings-users" class="nav-item">
+        Uživatelé
+        <div class="nav-line" />
+      </router-link>
+      <router-link to="/dashboard" class="nav-item">
+        Zpět
+        <div class="nav-line" />
+      </router-link>
+    </template>
   </nav>
 
   <router-view 

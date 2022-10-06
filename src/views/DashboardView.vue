@@ -118,6 +118,8 @@ export default {
   },
 
   mounted: function(){
+    window.scrollTo({top: 0, behavior: 'auto'});
+
     axios
       .get("http://127.0.0.1:5000/getAllDebts")
       .then((response) => {

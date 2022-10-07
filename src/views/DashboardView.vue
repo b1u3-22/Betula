@@ -77,9 +77,9 @@
         </div>
       </div>
       <div class="dashboardContentContainer">
-        <ContentCard timestamp="12:23:52 29.8. 2022" title="Test Announcement">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sit amet est laoreet, sagittis lorem volutpat, molestie velit. Quisque at ligula a massa tristique rhoncus. Aliquam porta, dolor nec ullamcorper mollis, lacus enim congue mi, quis imperdiet dui orci a ex. Nunc aliquet mi sed tortor tincidunt, sed venenatis ipsum feugiat. Etiam nec rutrum urna, sit amet faucibus eros. Praesent odio tortor, consectetur ac suscipit sit amet, ultrices a lectus. Donec et convallis nisi. Vestibulum et posuere enim, at facilisis mauris. Etiam ut suscipit lorem. Etiam ut posuere tellus, ac auctor quam. Nullam urna magna, ultricies non nibh ac, commodo sodales lorem.
-
-Maecenas a sem sem. Sed at semper orci. Nulla facilisi. Quisque tempus, nibh hendrerit porttitor rutrum, nulla ipsum malesuada mauris, vel finibus erat felis vel nibh. Fusce luctus tellus facilisis, bibendum lacus non, mollis quam. Quisque gravida ipsum ac magna congue tincidunt. Aenean auctor ut augue eget viverra. Aenean odio mi, sollicitudin id sodales non, vestibulum in enim. Phasellus turpis velit, fringilla at suscipit ac, sagittis molestie nisl. Aliquam consequat purus sapien, in eleifend metus pharetra ac. Ut sed egestas est. Mauris sodales mi quam, ac sagittis ex ultrices et.</ContentCard>
+        <template v-for="(item, index) in posts" :key="item.postID">
+          <ContentCard :id="'post' + index" :title="item.postTitle" :timestamp="item.timestamp">{{item.postText}}</ContentCard>
+        </template>
       </div>
     </div>
   </div>
@@ -104,13 +104,14 @@ export default {
       balance: 0,
       debts: [],
       remainingTotalDebt: 0, 
-      monthlyTotalRepainmentPerFlat: 0
+      monthlyTotalRepainmentPerFlat: 0,
+      posts: []
     }
   },
   components: {
     ContentCard,
-    ButtonLink
-  },
+    ButtonLink,
+},
 
   methods: {
   },
@@ -141,6 +142,21 @@ export default {
           }      
       });
 
+      axios
+      .get("http://127.0.0.1:5000/getAllPosts")
+      .then((response) => {
+        for (const [key, value] of Object.entries(response.data)){
+            this.posts.push({
+                postTitle: value.postTitle,
+                postText: value.postText,
+                timestamp: value.timestamp,
+                postID: key
+            })
+          }      
+
+          console.log()
+      });
+
     axios
       .get("http://127.0.0.1:5000/getFinancialsGeneral")
       .then((response) => {
@@ -165,8 +181,8 @@ export default {
 
   .dashboardAddPostButton {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    bottom: 5px;
+    left: 5px;
     background-color: $primary;
     display: flex;
     flex-flow: row nowrap;

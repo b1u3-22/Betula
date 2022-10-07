@@ -416,8 +416,8 @@ import { getCurrentInstance } from 'vue';
 
     .settingsSaveButtonContainer {
         position: fixed;
-        bottom: 20px;
-        left: 20px;
+        bottom: 5px;
+        left: 5px;
         height: 50px;
         background-color: $primary;
         display: flex;

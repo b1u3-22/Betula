@@ -1,5 +1,5 @@
 <template>
-  <notifications position="bottom right" />
+  <notifications classes="notifications" position="bottom right" />
   <nav class="desktopNav">
     <template v-if="typeOfNav === 'home'">
       <router-link to="/" class="nav-item">
@@ -142,14 +142,17 @@
           <div class="nav-line" />
         </router-link>
       </template>
+      <template v-if="typeOfNav === 'addpost'">
+        <router-link to="dashboard" class="nav-item">
+          Zpět
+          <div class="nav-line" />
+        </router-link>
+      </template>
     </div>
   </nav>
 
   <router-view 
     @verifiedFromLogin="(username) => verifiedFromLogin(username)"
-    :verified="verified"
-    :permission="permissions"
-    :key="routerViewKey"
     />
 
   <footer>
@@ -300,6 +303,36 @@ body {
   text-align: center;
   color: black;
   background-color: $background-light;
+}
+
+.notifications {
+  margin: 0 5px 5px;
+  padding: 15px;
+  color: #ffffff;
+  background: $primary;
+
+  .notification-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .notification-content {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  // types (green, amber, red)
+  &.success {
+    background: #68cd86;
+  }
+
+  &.warn {
+    background: #ffb648;
+  }
+
+  &.error {
+    background: #e54d42;
+  }
 }
 
 .desktopNav {

@@ -33,6 +33,10 @@ def get_user_permissions():
 def get_all_users():
     return database_controller.get_all_users()
 
+@app.route("/getAllPosts", methods = ["GET"])
+def get_all_posts():
+    return database_controller.get_all_posts()
+
 @app.route("/patchGeneralInfo", methods = ["PATCH"])
 def patch_general_info():
     for property, value in flask.request.json.items():
@@ -75,6 +79,9 @@ def patch_debts():
 
     return flask.Response(status=200)
 
+@app.route("/newPost", methods=["POST"])
+def new_post():
+    database_controller.insert_into_posts(flask.request.json.title, flask.request.json.text)
 
 database_controller.start_database()
 app.run()

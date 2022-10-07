@@ -239,11 +239,11 @@ def delete_from_debts(id):
 
 def get_all_posts():
     connection = sqlite.connect("data.db")
-    result = connection.execute("SELECT * FROM debts").fetchall()
+    result = connection.execute("SELECT * FROM posts").fetchall()
     posts = {}
 
     for i in range(len(result)):
-        posts[result[i][0]] = {'timestamp': result[i][1], 'title': result[i][2], 'text': result[i][3]}
+        posts[result[i][0]] = {'timestamp': result[i][1], 'postTitle': result[i][2], 'postText': result[i][3]}
 
     connection.close()
     return posts
@@ -259,7 +259,7 @@ def get_post_by_id(id):
 
 def insert_into_posts(title, text):
     connection = sqlite.connect("data.db")
-    connection.execute("INSERT INTO debts VALUES(NULL, ?, ?, ?)", (datetime.now(), title, text))
+    connection.execute("INSERT INTO posts VALUES(NULL, ?, ?, ?)", (datetime.now().strftime("%d.%m. %Y  %H:%M:%S"), title, text))
     connection.commit()
     connection.close()
 

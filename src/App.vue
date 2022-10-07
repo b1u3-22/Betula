@@ -40,10 +40,10 @@
         Nastavení
         <div class="nav-line" />
       </router-link>
-      <div v-if="verified && permissions" to="/settings-general" class="nav-item">
+      <router-link v-if="verified && permissions" to="/add-post" class="nav-item">
         Přidat příspěvek
         <div class="nav-line" />
-      </div>
+      </router-link>
     </template>
     <template v-if="typeOfNav === 'settings'">
       <router-link to="/settings-general" class="nav-item">
@@ -59,6 +59,12 @@
         <div class="nav-line" />
       </router-link>
       <router-link to="/dashboard" class="nav-item">
+        Zpět
+        <div class="nav-line" />
+      </router-link>
+    </template>
+    <template v-if="typeOfNav === 'addpost'">
+      <router-link to="dashboard" class="nav-item">
         Zpět
         <div class="nav-line" />
       </router-link>
@@ -113,10 +119,10 @@
           Nastavení
           <div class="nav-line" />
         </router-link>
-        <div v-if="verified && permissions" to="/settings-general" class="nav-item">
+        <router-link v-if="verified && permissions" to="/add-post" class="nav-item">
           Přidat příspěvek
           <div class="nav-line" />
-        </div>
+        </router-link>
       </template>
       <template v-if="typeOfNav === 'settings'">
         <router-link to="/settings-general" class="nav-item">
@@ -261,6 +267,9 @@ export default {
       }
       else if (path.includes("settings")){
         this.typeOfNav = "settings"
+      }
+      else if (path.includes("add-post")){
+        this.typeOfNav = "addpost"
       }
     }
   }

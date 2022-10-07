@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard" id="top">
-    <div class="dashboardAddPostButton">
+    <div class="dashboardAddPostButton" @click="this.$router.push('add-post')">
       <img class="dashboardAddPostButtonIcon" :src="require('@/assets/icons/circlePlusIcon.svg')"/>
       <div class="dashboardAddPostButtonText">Přidat příspěvek</div>
     </div>

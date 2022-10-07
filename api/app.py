@@ -1,3 +1,4 @@
+import os
 import flask
 import database_controller
 from flask_cors import CORS
@@ -84,4 +85,7 @@ def new_post():
     database_controller.insert_into_posts(flask.request.json.title, flask.request.json.text)
 
 database_controller.start_database()
-app.run()
+app.run(
+    host = "0.0.0.0"
+    port = os.environ.get("PORT", 80)
+)

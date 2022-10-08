@@ -37,6 +37,10 @@ def get_all_users():
 @app.route("/getAllPosts", methods = ["GET"])
 def get_all_posts():
     return database_controller.get_all_posts()
+@app.route("/getAllPictures", methods=["GET"])
+def get_all_pictures():
+    return database_controller.get_all_pictures()
+
 
 @app.route("/patchGeneralInfo", methods = ["PATCH"])
 def patch_general_info():
@@ -84,9 +88,9 @@ def patch_debts():
 def new_post():
     database_controller.insert_into_posts(flask.request.json.title, flask.request.json.text)
 
-@app.route('/images/<path:path>', methods=["POST"])
+@app.route('/images/<path:path>', methods=["GET"])
 def send_image(path):
-    return flask.send_from_directory('../photos/', path)
+    return flask.send_from_directory(os.path.abspath('../../photos'), path)
 
 database_controller.start_database()
 app.run(

@@ -114,19 +114,38 @@
         </div>
         <div class="settingsContentContainer" id="settings-images">
             <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Galerie" bigText="Správa fotek" side="false" />
-            <form class="settingsUploadContainer">
-                <h3>Přetáhněte své soubory sem</h3>
-                <label>Nebo klikněte na tlačítko</label>
-                <input id="imageUpload" name="imageUpload" type="file"/>
-            </form>
             <form class="settingsForm">
-                <template>
+                <template v-for="(item, index) in picturesInfo" :key="item.pictureID">
                     <div class="settingsRowContainer">
-                        <label class="settingsLabel" for="theonebelow"></label>
-                        <input class="settingsInput" type="text" id="item.property" name="item.property" placeholder="item.oldValue"/>
+                        <div class="settingsImagesHelper">
+                            <div class="settingsImagesColumn">
+                                <img :src="item.link" class="settingsImagesPreview"/>
+                            </div>
+                            <div class="settingsImagesColumn">
+                                <label class="settingsLabelImages" :for="'pictureDesc' + index">Popis</label>
+                                <input class="settingsInput" type="text" :id="'pictureDesc' + index" :name="'pictureDesc' + index" v-model="picturesInfo[index].newDescription" :placeholder="item.oldDescription"/>
+                            </div>
+                        </div>
+                        <div class="settingsImagesHelper">
+                            <div class="settingsImagesColumn">
+                                <label class="settingsLabelImages">Smazat</label>
+                                <img class="settingsImagesDeleteButton" :src="require('@/assets/icons/deleteForeverIcon.svg')" />
+                            </div>
+                            <div class="settingsImagesColumn">
+                                <label class="settingsLabelImages">Na hlavní stránce</label>
+                                <input type="checkbox" class="settingsImagesCheckbox" true-value="true" false-value="" v-model="picturesInfo[index].onMainPage" />
+                                <div class="settingsImagesRealCheckbox" />
+                            </div>
+                            <div class="settingsImagesColumn">
+                                <label class="settingsLabelImages">Na pozadí</label>
+                                <input type="checkbox" class="settingsImagesCheckbox" true-value="true" false-value="" v-model="picturesInfo[index].isBackground" />
+                                <div class="settingsImagesRealCheckbox" />
+                            </div>
+                        </div>
                     </div>
                 </template>
             </form>
+            <FileUpload style="margin-top: 5%;"></FileUpload>
         </div>
     </div>
 </template>
@@ -136,13 +155,15 @@ import axios from 'axios';
 import BigTitle from '@/components/BigTitle.vue';
 import ButtonAction from '@/components/ButtonAction.vue';
 import { getCurrentInstance } from 'vue';
+import FileUpload from '@/components/FileUpload.vue';
   // @ is an alias to /src
   
   export default {
     name: 'SettingsView',
     components: {
     BigTitle,
-    ButtonAction
+    ButtonAction,
+    FileUpload
 },
     data: function() {
       return {
@@ -151,7 +172,9 @@ import { getCurrentInstance } from 'vue';
         accountInfo: [],
         accountInfoBackUp: [],
         debtsInfo: [],
-        debtsInfoBackUp: []
+        debtsInfoBackUp: [],
+        picturesInfo: [], 
+        picturesInfoBackUp: []
       }
     },
     methods: {
@@ -412,6 +435,22 @@ import { getCurrentInstance } from 'vue';
             }       
             this.debtsInfoBackUp = this.debtsInfo.slice();
         });
+
+        axios
+        .get("http://127.0.0.1:5000/getAllPictures")
+        .then((response) => {
+            for (const [key, value] of Object.entries(response.data)){
+                this.picturesInfo.push({
+                    pictureID: key,
+                    link: value.link,
+                    oldDescription: value.description,
+                    newDescription: "",
+                    isBackground: value.is_background,
+                    onMainPage: value.on_mainpage
+                })
+            }       
+            this.picturesInfoBackUp = this.picturesInfo.slice();
+        });
     },
   }
 </script>
@@ -467,6 +506,40 @@ import { getCurrentInstance } from 'vue';
         align-items: center;
         //box-shadow: 10px 10px 40px #D8D8D8;
         margin-bottom: 5%;
+
+        .settingsUploadContainer {
+            border: #F1F1F1 dashed 5px;
+            border-radius: 5px;
+            width: 100%;
+            padding: 5%;
+            box-sizing: border-box;
+
+            .settingsFileUpload {
+                background-position: center;
+                transition: background 400ms;
+                border: none;
+                padding: 8px 14px;
+                background-color: $primary;
+                box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
+                cursor: pointer;
+                text-decoration: none;
+                font-size: 0.875;
+                font-weight: 700;
+                color: $background-light;
+                font-family: 'Montserrat', sans-serif;
+
+
+                &:hover {
+                    background: $primary radial-gradient(circle, transparent 1%, $primary 1%) center/15000%;
+                }
+
+                &:active {
+                    background-color: $secondary;
+                    background-size: 100%;
+                    transition: background 0ms;
+                }
+            }
+        }
 
         .settingsForm {
             display: flex;
@@ -576,8 +649,7 @@ import { getCurrentInstance } from 'vue';
                     border: none;
                     border-bottom: solid 2px $background-dark;
                     background-color: $background-light;
-                    max-width: 30%;
-                    width: 500px;
+                    width: 150px;
                     color: $background-dark;
                     font-size: 1.125rem;
                     font-weight: 500;
@@ -699,6 +771,57 @@ import { getCurrentInstance } from 'vue';
     }
   }
 
+.settingsImagesHelper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+
+    .settingsImagesColumn {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 0 15px 0 0;
+
+        .settingsImagesRealCheckbox {
+            z-index: 0;
+            height: 1.125rem;
+            width: 1.125rem;
+            border-radius: 50%;
+            border: solid $primary 3px;
+        }
+
+        .settingsImagesCheckbox {
+            z-index: 1;
+            opacity: 0;
+            height: 1.125rem;
+            width: 1.125rem;
+            margin: 0 0 -1.125rem 0;
+            cursor: pointer;
+
+            &:checked ~ .settingsImagesRealCheckbox {
+                background-color: $primary;
+            }
+        }
+
+        .settingsLabelImages {
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: left;
+            color: $primary;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .settingsImagesPreview {
+            height: 75px;
+            width: 75px;    
+            object-fit: cover;
+        }
+    }
+}
+
 .list-enter-active {
     transition: all 220ms ease-in-out;
 }
@@ -731,7 +854,7 @@ import { getCurrentInstance } from 'vue';
 
 .list-leave-from {
     opacity: 1;
-    transform: translatX(0px, 0);
+    transform: translate(0px, 0);
     max-height: 250px
 }
 

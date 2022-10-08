@@ -165,7 +165,7 @@ def get_all_pictures():
     pictures = {}
 
     for i in range(len(result)):
-        pictures[result[i][0]] = {'link': result[i][1], 'location': result[i][2], 'description': result[i][3]}
+        pictures[result[i][0]] = {'link': result[i][1], 'location': result[i][2], 'description': result[i][3], 'is_background': result[i][4], 'on_mainpage': result[i][5]}
 
     connection.close()
     return pictures
@@ -186,9 +186,9 @@ def get_picture_by_link(link):
 
 #------------------------------------------------------------------------------------------------------------------------------------
 
-def insert_into_pictures(link, location, description):
+def insert_into_pictures(link, location, description, is_background, on_mainpage):
     connection = sqlite.connect("data.db")
-    connection.execute("INSERT INTO pictures VALUES(NULL, ?, ?, ?)", (link, location, description))
+    connection.execute("INSERT INTO pictures VALUES(NULL, ?, ?, ?, ?, ?)", (link, location, description, is_background, on_mainpage))
     connection.commit()
     connection.close()
 

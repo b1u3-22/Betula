@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img :src="require(`@/assets/images/photo62.jpeg`)" class="landingPageImage" />
+    <img src="http://localhost:5000/images/photo1.jpeg" class="landingPageImage" />
     <div id="home" class="landingPageContainer">
       <h1 class="homeTitle">{{ generalInfo.title }}</h1>
       <h2 class="homeSubtitle">{{ generalInfo.subtitle }}</h2>

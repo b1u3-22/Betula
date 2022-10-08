@@ -68,7 +68,7 @@
         </div>
         <div class="settingsContentContainer" id="settings-users">
             <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Uživatelé" bigText="Přehled uživatelských účtů" side="false" />
-            <form class="settingsForm">
+            <form class="settingsForm" autocomplete="off">
                 <TransitionGroup name="list">
                     <template v-for="(item, index) in accountInfo" :key="item.userId">
                         <div class="settingsRowContainer settingRowContainerAnimation">
@@ -110,6 +110,22 @@
                 <div class="settingActionButtonContainer">
                     <ButtonAction @click="newAccount">Nový uživatel</ButtonAction>
                 </div>
+            </form>
+        </div>
+        <div class="settingsContentContainer" id="settings-images">
+            <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Galerie" bigText="Správa fotek" side="false" />
+            <form class="settingsUploadContainer">
+                <h3>Přetáhněte své soubory sem</h3>
+                <label>Nebo klikněte na tlačítko</label>
+                <input id="imageUpload" name="imageUpload" type="file"/>
+            </form>
+            <form class="settingsForm">
+                <template>
+                    <div class="settingsRowContainer">
+                        <label class="settingsLabel" for="theonebelow"></label>
+                        <input class="settingsInput" type="text" id="item.property" name="item.property" placeholder="item.oldValue"/>
+                    </div>
+                </template>
             </form>
         </div>
     </div>

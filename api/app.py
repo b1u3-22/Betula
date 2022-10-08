@@ -3,7 +3,7 @@ import flask
 import database_controller
 from flask_cors import CORS
 
-app = flask.Flask(__name__, static_folder = './build', static_url_path = '/')
+app = flask.Flask(__name__, static_folder = '../dist', static_url_path = '/')
 cors = CORS(app)
 
 @app.route("/", methods = ["GET"])
@@ -84,8 +84,12 @@ def patch_debts():
 def new_post():
     database_controller.insert_into_posts(flask.request.json.title, flask.request.json.text)
 
+@app.route('/images/<path:path>', methods=["POST"])
+def send_image(path):
+    return flask.send_from_directory('../photos/', path)
+
 database_controller.start_database()
 app.run(
-    host = "0.0.0.0"
-    port = os.environ.get("PORT", 80)
+    host = "0.0.0.0",
+    port = os.environ.get("PORT", 5000)
 )

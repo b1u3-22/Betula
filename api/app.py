@@ -1,7 +1,9 @@
 import os
+import io
 import flask
 import database_controller
 from flask_cors import CORS
+from PIL import Image
 
 app = flask.Flask(__name__, static_folder = '../dist', static_url_path = '/')
 cors = CORS(app)
@@ -37,10 +39,10 @@ def get_all_users():
 @app.route("/getAllPosts", methods = ["GET"])
 def get_all_posts():
     return database_controller.get_all_posts()
+
 @app.route("/getAllPictures", methods=["GET"])
 def get_all_pictures():
     return database_controller.get_all_pictures()
-
 
 @app.route("/patchGeneralInfo", methods = ["PATCH"])
 def patch_general_info():
@@ -91,6 +93,15 @@ def new_post():
 @app.route('/images/<path:path>', methods=["GET"])
 def send_image(path):
     return flask.send_from_directory(os.path.abspath('../../photos'), path)
+
+@app.route('/uploadNewImages', methods=["PUT"])
+def new_images():
+    image = Image.open(io.BytesIO(flask.request.data))
+    image_name = f"{database_controller.get_new_picture_id()}.{image.format.lower()}"
+    image.save(f"{os.path.abspath('../../photos')}/{image_name}")
+    database_controller.insert_into_pictures(f"http://127.0.0.1:5000/images/{image_name}", "", "", "false", "false")
+    
+    return flask.Response(status=200)
 
 database_controller.start_database()
 app.run(

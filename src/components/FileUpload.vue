@@ -61,6 +61,9 @@ export default {
             }
         }
 
+        console.log(newFiles)
+        console.log(uploadedFiles)
+
         for (let i = 0; i < newFiles.length; i++) {
             newFiles[i].url = URL.createObjectURL(newFiles[i]);
         }   
@@ -83,15 +86,25 @@ export default {
     },
     onManualUpload: function(e){
        this.filterNewFiles(e.target.files);
+       console.log(e)
     },
-    uploadFiles: function(){
-        this.$emit("uploadFiles", this.files)
+    uploadFiles: async function(){
+        let convertedFiles = []
+
+        for (let file of this.files){
+            convertedFiles.push(new File([await fetch(file.url).then(r => r.blob())], file.name,
+            {
+                type: file.type, 
+                lastModified: new Date().getTime()
+            }))
+        }
+        this.$emit("uploadFiles", convertedFiles)
     }
   },
 
   data: function () {
       return {
-          active: false,
+          active: false,    
           activeTimeout: null,
           files: []
       }

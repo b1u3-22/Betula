@@ -474,6 +474,9 @@ import FileUpload from '@/components/FileUpload.vue';
                         "Content-Type": file.type
                     }
                 })
+                .then(() => {
+                    this.getAllPictures();
+                })
             }
         }
     },

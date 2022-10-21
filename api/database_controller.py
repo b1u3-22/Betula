@@ -184,6 +184,11 @@ def get_picture_by_link(link):
     connection.close()
     return picture
 
+def get_new_picture_id():
+    connection = sqlite.connect("data.db")
+    result = connection.execute("SELECT MAX(id) FROM pictures").fetchone()[0]
+    return result + 1
+
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_pictures(link, location, description, is_background, on_mainpage):

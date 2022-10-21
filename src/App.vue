@@ -296,6 +296,74 @@ body {
   padding: 0;
 }
 
+h1 {
+  font-size: 6.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+h2 {
+  font-size: 3.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+h3 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+h4 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+h5 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+p {
+  font-weight: 400;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+input {
+  border: none;
+  border-bottom: solid 2px $background-dark;
+  background-color: $background-light;
+  color: $background-dark;
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 10px 0;
+  transition: all 220ms ease-in-out;
+  font-family: 'Montserrat', sans-serif;
+  resize: none;
+  
+
+  &:focus {
+  outline: none;
+  border-color: $primary;
+  }
+
+  &::placeholder {
+  color: #A7A7A7;
+  font-weight: 400;
+  }
+}
+
+label {
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: left;
+  color: $primary;
+  margin-top: 10px;
+}
+
 #app {
   font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -437,17 +505,17 @@ body {
 }
 
 .nav-item {
-font-weight: 600;
-font-size: 1.125rem;
-display: flex;
-flex-flow: column nowrap;
-align-items: flex-end;
-justify-content: flex-start;
-width: fit-content;
-text-decoration: none;
-color: $background-light;
-margin: 0 2%;
-cursor: pointer;
+  font-weight: 600;
+  font-size: 1.125rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: fit-content;
+  text-decoration: none;
+  color: $background-light;
+  margin: 0 2%;
+  cursor: pointer;
 
   .nav-line {
     display: inline;

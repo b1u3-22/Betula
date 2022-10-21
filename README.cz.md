@@ -1,6 +1,6 @@
 ![Betula](assets/readme_banner.png)
 
-:uk: English version can be found [here](Betula/README.md)
+:uk: English version can be found [here](README.md)
 
 **Moderní, Opensource a lehce přístupný systém pro bytová družstva**
 

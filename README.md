@@ -1,4 +1,4 @@
-![Betula](Betula/assets/readme_banner.png)
+![Betula](assets/readme_banner.png)
 
 :czech_republic: Českou verzi popisu naleznete [zde](Betula/README.cz.md)
 

@@ -1,4 +1,4 @@
-![Betula](Betula/assets/readme_banner.png)
+![Betula](assets/readme_banner.png)
 
 :uk: English version can be found [here](Betula/README.md)
 

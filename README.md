@@ -1,10 +1,24 @@
-![Betula](assets/readme_banner.png)
-
-:czech_republic: Českou verzi popisu naleznete [zde](README.cz.md)
-
-**Open source, modern and accesible system for housing associations**
-
-[Overview](#overview--) • [Features](#features--) • [Installation](#installation--) • [Demo](#demo--) • [Screenshots](#screenshots--)
+<p align="center">
+    <img src="assets/readme_banner.png"/>
+</p>
+<p align="center">
+    Českou verzi můžete nalézt
+    <a href="README.cz.md"> zde</a>
+</p>
+<p align="center">
+    <b>Open source, modern and accesible system for housing associations</b>
+</p>
+<p align="center">
+    <a href="#overview--">Overview</a>
+    •
+    <a href="#functions--">Functions</a>
+    •
+    <a href="#instalaction--">Instalation</a>
+    •
+    <a href="#demo--">Demo</a>
+    •
+    <a href="#screenshots--">Screenshots</a>
+</p>
 
 ## Overview :book:
 Betula is a system for housing associations, creating a place to share information with it's members and display basic information about the particular association.
@@ -59,7 +73,7 @@ services:
 ```
 
 ## Demo :house:
-*TO BE ADDED*
+> To be added
 
 ## Screenshots :framed_picture:
-*TO BE ADDED*
+> To be added

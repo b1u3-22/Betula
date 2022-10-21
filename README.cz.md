@@ -1,10 +1,24 @@
-![Betula](assets/readme_banner.png)
-
-:uk: English version can be found [here](README.md)
-
-**Moderní, Opensource a lehce přístupný systém pro bytová družstva**
-
-[Přehled](#přehled--) • [Funkce](#funkce--) • [Instalace](#installation--) • [Demo](#demo--) • [Obrázky](#obrázky--)
+<p align="center">
+    <img src="assets/readme_banner.png"/>
+</p>
+<p align="center">
+    English version can be found
+    <a href="README.md"> here</a>
+</p>
+<p align="center">
+    <b>Moderní, Opensource a lehce přístupný systém pro bytová družstva</b>
+</p>
+<p align="center">
+    <a href="#přehled--">Přehled</a>
+    •
+    <a href="#funkce--">Funkce</a>
+    •
+    <a href="#instalace--">Instalace</a>
+    •
+    <a href="#demo--">Demo</a>
+    •
+    <a href="#screenshoty--">Screenshoty</a>
+</p>
 
 ## Přehled :book:
 Betula je informační systém pro bytová družstva. Vytváří prostor pro sdílení informací nejen se širokým světem, ale také pouze se členy daného družstva.
@@ -66,7 +80,7 @@ services:
 ```
 
 ## Demo :house:
-*TO BE ADDED*
+> Bude přidáno
 
 ## Obrázky :framed_picture:
-*TO BE ADDED*
+> Bude přidáno

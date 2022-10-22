@@ -9,15 +9,15 @@
     <b>Open source, modern and accesible system for housing associations</b>
 </p>
 <p align="center">
-    <a href="#overview--">Overview</a>
+    <a href="#Overview">Overview</a>
     •
-    <a href="#functions--">Functions</a>
+    <a href="#Functions">Functions</a>
     •
-    <a href="#instalaction--">Instalation</a>
+    <a href="#Instalation">Instalation</a>
     •
-    <a href="#demo--">Demo</a>
+    <a href="#Demo">Demo</a>
     •
-    <a href="#screenshots--">Screenshots</a>
+    <a href="#Screenshots">Screenshots</a>
 </p>
 
 ## Overview :book:
@@ -62,10 +62,10 @@ Betula can be installed using **Docker** :whale2: using one of the automatically
 version: "3.4"
 services:
   betula:
-    image: ghcr.io/b1u3-22/betula:stable
+    image: b1u3-22/betula:stable
     container_name: betula
     ports:
-      - 80:80
+      - 80:5000
     volumes:
       betula_config:/config
       betula_images:/images

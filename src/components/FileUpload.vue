@@ -86,7 +86,7 @@ export default {
     },
     onManualUpload: function(e){
        this.filterNewFiles(e.target.files);
-       console.log(e)
+       e.target.files.length = 0;
     },
     uploadFiles: async function(){
         let convertedFiles = []
@@ -98,6 +98,8 @@ export default {
                 lastModified: new Date().getTime()
             }))
         }
+        this.files.length = 0;
+
         this.$emit("uploadFiles", convertedFiles)
     }
   },
@@ -220,6 +222,7 @@ export default {
         z-index: 2;
         opacity: 0;
         transition: all 220ms ease-in-out;
+        opacity: 1;
     }
 }
 

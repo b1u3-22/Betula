@@ -115,35 +115,37 @@
         <div class="settingsContentContainer" id="settings-images">
             <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Galerie" bigText="Správa fotek" side="false" />
             <form class="settingsForm">
-                <template v-for="(item, index) in picturesInfo" :key="item.pictureID">
-                    <div class="settingsRowContainer">
-                        <div class="settingsSide">
-                            <div class="settingsColumn">
-                                <img :src="item.link" class="settingsImagesPreview"/>
+                <TransitionGroup name="list">
+                    <template v-for="(item, index) in picturesInfo" :key="item.pictureID">
+                        <div class="settingsRowContainer settingRowContainerAnimation">
+                            <div class="settingsSide">
+                                <div class="settingsColumn">
+                                    <img :src="item.link" class="settingsImagesPreview"/>
+                                </div>
+                                <div class="settingsColumn">
+                                    <label class="settingsLabel" :for="'pictureDesc' + index">Popis</label>
+                                    <input class="settingsInput" type="text" :id="'pictureDesc' + index" :name="'pictureDesc' + index" v-model="picturesInfo[index].newDescription" :placeholder="item.oldDescription"/>
+                                </div>
                             </div>
-                            <div class="settingsColumn">
-                                <label class="settingsLabel" :for="'pictureDesc' + index">Popis</label>
-                                <input class="settingsInput" type="text" :id="'pictureDesc' + index" :name="'pictureDesc' + index" v-model="picturesInfo[index].newDescription" :placeholder="item.oldDescription"/>
+                            <div class="settingsButtons">
+                                <div class="settingsButton">
+                                    <label class="settingsLabel">Smazat</label>
+                                    <img class="settingsButtonIcon" @click="deleteImage(index)" :src="require('@/assets/icons/deleteForeverIcon.svg')" />
+                                </div>
+                                <div class="settingsButton">
+                                    <label class="settingsLabel">Na hlavní stránce</label>
+                                    <input type="checkbox" class="settingsCheckbox" true-value="true" false-value="false" :disabled="getEnabledImages() > 2 && picturesCheckboxes[index] !== 'true'" v-model="picturesCheckboxes[index]" />
+                                    <div class="settingsCheckboxCosmetic" />
+                                </div>
+                                <div class="settingsButton">
+                                    <label class="settingsLabel">Na pozadí</label>
+                                    <input type="radio" class="settingsCheckbox" name="settingsRadioGroupImages" :value="item.pictureID" v-model="picturesBackground" />
+                                    <div class="settingsCheckboxCosmetic" />
+                                </div>
                             </div>
                         </div>
-                        <div class="settingsButtons">
-                            <div class="settingsButton">
-                                <label class="settingsLabel">Smazat</label>
-                                <img class="settingsButtonIcon" :src="require('@/assets/icons/deleteForeverIcon.svg')" />
-                            </div>
-                            <div class="settingsButton">
-                                <label class="settingsLabel">Na hlavní stránce</label>
-                                <input type="checkbox" class="settingsCheckbox" true-value="true" false-value="" v-model="picturesInfo[index].onMainPage" />
-                                <div class="settingsCheckboxCosmetic" />
-                            </div>
-                            <div class="settingsButton">
-                                <label class="settingsLabel">Na pozadí</label>
-                                <input type="checkbox" class="settingsCheckbox" true-value="true" false-value="" v-model="picturesInfo[index].isBackground" />
-                                <div class="settingsCheckboxCosmetic" />
-                            </div>
-                        </div>
-                    </div>
-                </template>
+                    </template>
+                </TransitionGroup>
             </form>
             <FileUpload @uploadFiles="uploadImages" style="margin-top: 5%;"></FileUpload>
         </div>
@@ -174,7 +176,9 @@ import FileUpload from '@/components/FileUpload.vue';
         debtsInfo: [],
         debtsInfoBackUp: [],
         picturesInfo: [], 
-        picturesInfoBackUp: []
+        picturesInfoBackUp: [],
+        picturesCheckboxes: [],
+        picturesBackground: 0,
       }
     },
     methods: {
@@ -266,11 +270,17 @@ import FileUpload from '@/components/FileUpload.vue';
                     this.picturesInfo.push({
                         pictureID: key,
                         link: value.link,
-                        oldDescription: value.description,
+                        oldDescription: value.description !== "" ? value.description : "Titulek fotky",
                         newDescription: "",
-                        isBackground: value.is_background,
-                        onMainPage: value.on_mainpage
                     })
+
+                    if (value.is_background === "true"){
+                        console.log(key)
+                        console.log(value.is_background)
+                        this.picturesBackground = key
+                    }
+
+                    this.picturesCheckboxes.push(value.on_mainpage)
                 }       
                 this.picturesInfoBackUp = this.picturesInfo.slice();
             });
@@ -287,7 +297,6 @@ import FileUpload from '@/components/FileUpload.vue';
 
             if (this.accountInfo.length > 1){
                 this.accountInfo.splice(index, 1);
-                console.log(this.accountInfo)
             }
 
             else {
@@ -436,7 +445,33 @@ import FileUpload from '@/components/FileUpload.vue';
         },
 
         saveImagesInfo(){
+            let imageChanges = {}
+            let imageFound = false;
 
+            for (let picture of this.picturesInfoBackUp) {
+                imageFound = false;
+                for (let newPicture of this.picturesInfo) {
+                    if (picture.pictureID === newPicture.pictureID){
+                        imageFound = true;
+                        break;
+                    }
+                }
+                if (!imageFound){
+                    imageChanges[picture.pictureID] = "deleted";
+                }
+            }
+
+            for (let i = 0; i < this.picturesInfo.length; i++){
+                imageChanges[this.picturesInfo[i].pictureID] = {
+                    description: this.picturesInfo[i].newDescription == "" || this.picturesInfo[i].newDescription == "Titulek fotky" ? this.picturesInfo[i].oldDescription : this.picturesInfo[i].newDescription,
+                    is_background: this.picturesBackground == this.picturesInfo[i].pictureID ? "true" : "false",
+                    on_mainpage: this.picturesCheckboxes[i], 
+                }
+            }
+
+            console.log(imageChanges)
+
+            axios.patch("http://127.0.0.1:5000/patchImages", imageChanges)
         },
 
         saveAll: function() {
@@ -455,8 +490,15 @@ import FileUpload from '@/components/FileUpload.vue';
                 //this.$router.push("/dashboard")
 
                 setTimeout(() => {
-                    this.getAll()
+                    this.getGeneralInfo();
+                    this.getFinancialInfo();
+                    this.getUserInfo();
+                    this.getDebtsInfo();
                 }, 50)
+
+                setTimeout(() => {
+                    this.getImagesInfo();
+                }, 150)
             }
             catch {
                 this.$notify({
@@ -474,10 +516,25 @@ import FileUpload from '@/components/FileUpload.vue';
                         "Content-Type": file.type
                     }
                 })
-                .then(() => {
-                    this.getAllPictures();
-                })
             }
+            setTimeout(() => {
+                this.getImagesInfo();
+            }, 100)
+        },
+
+        getEnabledImages: function(){
+            let result = 0;
+            for (let i = 0; i < this.picturesCheckboxes.length; i++){
+                if (this.picturesCheckboxes[i] === 'true'){
+                    result++;
+                }
+            }
+            return result;
+        },
+
+        deleteImage(index){
+            this.picturesInfo.splice(index, 1);
+            this.picturesCheckboxes.splice(index, 1);
         }
     },
     watch:  {
@@ -670,6 +727,7 @@ align-items: center;
     height: 75px;
     width: 75px;    
     object-fit: cover;
+    margin: 5px 5px 5px 0;
 }
 
 .list-enter-active {

@@ -97,11 +97,32 @@ def send_image(path):
 @app.route('/uploadNewImages', methods=["PUT"])
 def new_images():
     image = Image.open(io.BytesIO(flask.request.data))
-    image_name = f"{database_controller.get_new_picture_id()}.{image.format.lower()}"
-    image.save(f"{os.path.abspath('../../photos')}/{image_name}")
-    database_controller.insert_into_pictures(f"http://127.0.0.1:5000/images/{image_name}", "", "", "false", "false")
+    image_name = f"{database_controller.generate_picture_name()}.{image.format.lower()}"
+    image_path = f"{os.path.abspath('../../photos')}/{image_name}"
+    image_link = f"http://127.0.0.1:5000/images/{image_name}"
+    database_controller.insert_into_pictures(image_link, image_path, "", "false", "false")
+    image.save(image_path)
     
     return flask.Response(status=200)
+
+@app.route("/patchImages", methods=["PATCH"])
+def patch_images():
+    for id, image in flask.request.json.items():
+        if image == "deleted":
+            database_controller.delete_from_pictures(id)
+
+        else:
+            database_controller.patch_picture(id, image["description"], image["is_background"], image["on_mainpage"])
+
+    return flask.Response(status=200)
+
+@app.route("/getBackgroundImage", methods=["GET"])
+def get_background_image():
+    return database_controller.get_background_picture()
+
+@app.route("/getGalleryImages", methods=["GET"])
+def get_gallery_image():
+    return database_controller.get_gallery_pictures()
 
 database_controller.start_database()
 app.run(

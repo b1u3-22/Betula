@@ -1,8 +1,12 @@
 from datetime import datetime
 import sqlite3 as sqlite
+import uuid
+import os
+
+database_path = f"{os.path.abspath('../../data')}/data.db"
 
 def start_database():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT, status TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS general_info(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL, name TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS pictures(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT)")
@@ -15,7 +19,7 @@ def start_database():
 
 
 def get_user_by_username(username):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
 
     try:
         result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
@@ -29,7 +33,7 @@ def get_user_by_username(username):
         return {'id': result[0], 'username': result[1], 'password': result[2], 'permissions': result[3], 'email': result[4]}
 
 def verify_user(username, password):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
 
     try:
         result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
@@ -46,7 +50,7 @@ def verify_user(username, password):
         return {"verified": False}
 
 def get_user_permissions(username):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     try:
         result = connection.execute("SELECT * FROM users WHERE username = ?", (username, )).fetchall()[0]
     except:
@@ -63,11 +67,9 @@ def get_user_permissions(username):
         return {"permissions": "basic"}
 
 def get_all_users():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM users").fetchall()
     users = {}
-
-    print(result)
 
     for i in range(len(result)):
         users[result[i][1]] = {"password": result[i][2], "permissions": result[i][3], "email": result[i][4], "status": result[i][5], "id": result[i][0]}
@@ -76,26 +78,26 @@ def get_all_users():
     return users
 
 def insert_into_users(username, password, permissions, email, status):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, ?, ?)", (username, password, permissions, email, status))
     connection.commit()
     connection.close()
 
 def patch_user(user_id, username, password, permissions, email, status): 
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("UPDATE users SET username = ?, password = ?, permissions = ?, email = ?, status = ? WHERE id = ?", (username, password, permissions, email, status, user_id))
     connection.commit()
     connection.close()
 
 def delete_from_users(id):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("DELETE FROM users WHERE id = ?", (id, ))
     connection.commit()
     connection.close()
 
 
 def check_if_user_exists(id):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM users WHERE id = ?", (id, )).fetchall()
     
     if result == []:
@@ -106,7 +108,7 @@ def check_if_user_exists(id):
 
 
 def get_general_info():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM general_info").fetchall()
     general_info = {}
 
@@ -119,13 +121,13 @@ def get_general_info():
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_general_info(property, value, name):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("INSERT INTO general_info VALUES(NULL, ?, ?, ?)", (property, value, name, ))
     connection.commit()
     connection.close()
 
 def patch_general_info(property, value):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("UPDATE general_info SET value = ? WHERE property = ?", (value, property))
     connection.commit()
     connection.close()
@@ -133,7 +135,7 @@ def patch_general_info(property, value):
 #====================================================================================================================================
 
 def get_general_financials():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM financials_general").fetchall()
     general_financials = {}
 
@@ -146,13 +148,13 @@ def get_general_financials():
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_general_financials(property, value, name):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("INSERT INTO financials_general VALUES(NULL, ?, ?, ?)", (property, value, name))
     connection.commit()
     connection.close()
 
 def patch_financials_general(property, value):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("UPDATE financials_general SET value = ? WHERE property = ?", (value, property))
     connection.commit()
     connection.close()
@@ -160,7 +162,7 @@ def patch_financials_general(property, value):
 #====================================================================================================================================
 
 def get_all_pictures():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM pictures").fetchall()
     pictures = {}
 
@@ -171,36 +173,64 @@ def get_all_pictures():
     return pictures
 
 def get_picture_by_id(id):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM pictures WHERE id = ?", (id, )).fetchall()[0]
     picture = {'id': result[0], 'link': result[1], 'location': result[2], 'description': result[3]}
     connection.close()
     return picture
 
 def get_picture_by_link(link):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM pictures WHERE link = ?", (link, )).fetchall()[0]
     picture = {'id': result[0], 'link': result[1], 'location': result[2], 'description': result[3]}
     connection.close()
     return picture
 
-def get_new_picture_id():
-    connection = sqlite.connect("data.db")
-    result = connection.execute("SELECT MAX(id) FROM pictures").fetchone()[0]
-    return result + 1
+def get_background_picture():
+    connection = sqlite.connect(database_path)
+    result = connection.execute("SELECT * FROM pictures WHERE is_background = 'true'").fetchall()[0]
+    picture = {'link': result[1]}
+    connection.close()
+    return picture
+
+def get_gallery_pictures():
+    connection = sqlite.connect(database_path)
+    result = connection.execute("SELECT * FROM pictures WHERE on_mainpage = 'true'").fetchall()
+    pictures = {}
+
+    for i in range(len(result)):
+        pictures[result[i][0]] = {'link': result[i][1]}
+
+    connection.close()
+    return pictures
 
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_pictures(link, location, description, is_background, on_mainpage):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("INSERT INTO pictures VALUES(NULL, ?, ?, ?, ?, ?)", (link, location, description, is_background, on_mainpage))
     connection.commit()
     connection.close()
 
+def delete_from_pictures(id):
+    connection = sqlite.connect(database_path)
+    connection.execute("DELETE FROM pictures WHERE id = ?", (id, ))
+    connection.commit()
+    connection.close()
+
+def patch_picture(id, description, is_background, on_mainpage):
+    connection = sqlite.connect(database_path)
+    connection.execute("UPDATE pictures SET description = ?, is_background = ?, on_mainpage = ? WHERE id = ?", (description, is_background, on_mainpage, id))
+    connection.commit()
+    connection.close()
+
+def generate_picture_name():
+    return str(uuid.uuid1()).replace("-", "")
+
 #====================================================================================================================================
 
 def get_all_debts():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM debts").fetchall()
     debts = {}
 
@@ -211,7 +241,7 @@ def get_all_debts():
     return debts
 
 def check_if_debt_exists(id):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM debts WHERE id = ?", (id, )).fetchall()
     
     if result == []:
@@ -223,19 +253,19 @@ def check_if_debt_exists(id):
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_debts(total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("INSERT INTO debts VALUES(NULL, ?, ?, ?, ?)", (total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat))
     connection.commit()
     connection.close()
 
 def patch_debt(id, total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat): 
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("UPDATE debts SET total_debt = ?, remaining_debt = ?, remaining_debt_per_flat = ?, repayment_per_flat = ? WHERE id = ?", (total_debt, remaining_debt, remaining_debt_per_flat, repayment_per_flat, id))
     connection.commit()
     connection.close()
 
 def delete_from_debts(id):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("DELETE FROM debts WHERE id = ?", (id, ))
     connection.commit()
     connection.close()
@@ -243,7 +273,7 @@ def delete_from_debts(id):
 #====================================================================================================================================
 
 def get_all_posts():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM posts").fetchall()
     posts = {}
 
@@ -254,7 +284,7 @@ def get_all_posts():
     return posts
 
 def get_post_by_id(id):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM posts WHERE id = ?", (id, )).fetchall()[0]
     post = {'id': result[0], 'timestamp': result[1], 'title': result[2], 'text': result[3]}
     connection.close()
@@ -263,7 +293,7 @@ def get_post_by_id(id):
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_posts(title, text):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("INSERT INTO posts VALUES(NULL, ?, ?, ?)", (datetime.now().strftime("%d.%m. %Y  %H:%M:%S"), title, text))
     connection.commit()
     connection.close()
@@ -271,7 +301,7 @@ def insert_into_posts(title, text):
 #====================================================================================================================================
 
 def get_all_finus():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM finus").fetchall()
     finus = {}
 
@@ -282,7 +312,7 @@ def get_all_finus():
     return finus
 
 def get_latest_finu():
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     result = connection.execute("SELECT * FROM table ORDER BY id DESC LIMIT 1").fetchall()[0]
     finu = {'id': result[0], 'link': result[1], 'location': result[2], 'timestamp': result[3]}
     connection.close()
@@ -291,7 +321,7 @@ def get_latest_finu():
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def insert_into_finus(link, location):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute("INSERT INTO finus VALUES(NULL, ?, ?, ?)", (link, location, datetime.now()))
     connection.commit()
     connection.close()
@@ -300,7 +330,7 @@ def insert_into_finus(link, location):
 
 
 def custom_operation(operation):
-    connection = sqlite.connect("data.db")
+    connection = sqlite.connect(database_path)
     connection.execute(f"{operation}")
     connection.commit()
     connection.close()

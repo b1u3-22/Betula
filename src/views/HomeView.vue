@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img src="http://localhost:5000/images/photo1.jpeg" class="landingPageImage" />
+    <img :src="backgroundImage" class="landingPageImage" />
     <div id="home" class="landingPageContainer">
       <h1 class="homeTitle">{{ generalInfo.title }}</h1>
       <h2 class="homeSubtitle">{{ generalInfo.subtitle }}</h2>
@@ -13,9 +13,9 @@
       </div>
       <div class="homeGalleryRightContainer">
           <figure>
-            <img :src="require(`@/assets/images/photo61.jpeg`)"/>
-            <img :src="require(`@/assets/images/photo1.jpeg`)"/>
-            <img :src="require(`@/assets/images/photo62.jpeg`)"/>
+            <img :src="galleryImages[0]"/>
+            <img :src="galleryImages[1]"/>
+            <img :src="galleryImages[2]"/>
           </figure>
       </div>
     </div>
@@ -73,7 +73,9 @@ export default {
   },
   data: function(){
     return {
-      generalInfo: {}
+      generalInfo: {},
+      backgroundImage: "",
+      galleryImages: []
     }
   },
   mounted: function() {
@@ -91,6 +93,21 @@ export default {
         for (const [key, value] of Object.entries(response.data)){
           this.generalInfo[key] = value.text
         }
+      });
+
+    axios
+    .get("http://127.0.0.1:5000/getGalleryImages")
+    .then((response) => {
+      for (let image of Object.entries(response.data)){
+        this.galleryImages.push(image[1].link)  
+      }
+    });
+
+    axios
+    .get("http://127.0.0.1:5000/getBackgroundImage")
+    .then((response) => {
+        this.backgroundImage = response.data.link
+
       });
   },
 

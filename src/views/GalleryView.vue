@@ -6,26 +6,26 @@
 
       <div class="galleryMainContainer">
         <div class="galleryColumn">
-          <template v-for="image in column_0" :key="image">
+          <template v-for="image in column_0" :key="image.pictureID">
             <div class="galleryImageItem">
-              <img class="galleryImage" :src="image" />
-              <div class="galleryImageOverlay">Toto je zkušební text</div>
+              <img class="galleryImage" :src="image.link" />
+              <div v-if="image.description != '' && image.description != 'Titulek fotky'" class="galleryImageOverlay">{{ image.description }}</div>
             </div>
           </template>
         </div>
         <div class="galleryColumn">
-          <template v-for="image in column_1" :key="image">
+          <template v-for="image in column_1" :key="image.pictureID">
             <div class="galleryImageItem">
-              <img class="galleryImage" :src="image" />
-              <div class="galleryImageOverlay"></div>
+              <img class="galleryImage" :src="image.link" />
+              <div v-if="image.description != '' && image.description != 'Titulek fotky'" class="galleryImageOverlay">{{ image.description }}</div>
             </div>
           </template>
         </div>
         <div class="galleryColumn">
-          <template v-for="image in column_2" :key="image">
+          <template v-for="image in column_2" :key="image.pictureID">
             <div class="galleryImageItem">
-              <img class="galleryImage" :src="image" />
-              <div class="galleryImageOverlay"></div>
+              <img class="galleryImage" :src="image.link" />
+              <div v-if="image.description != '' && image.description != 'Titulek fotky'" class="galleryImageOverlay">{{ image.description }}</div>
             </div>
           </template>
         </div>
@@ -49,7 +49,8 @@ export default {
       column_0: [],
       column_1: [],
       column_2: [],
-      generalInfo: {}
+      generalInfo: {},
+      pictures: []
     }
   },
 
@@ -61,25 +62,38 @@ export default {
           this.generalInfo[key] = value.text
         }
       });
+
+      
   },
 
   mounted: function() {
     window.scrollTo({top: 0, behavior: 'auto'});
-    const context = require.context("@/assets/images/", false, /\.jpeg$/);
-    const images = context.keys().map(context);
-    let imgs_per_clmn = Math.floor(images.length / 3);
 
-    for (let i = 0; i < imgs_per_clmn; i++) {
-      this.column_0.push(images[i]);
-    }
+    axios
+    .get("http://127.0.0.1:5000/getAllPictures")
+    .then((response) => {
+        for (const [key, value] of Object.entries(response.data)){
+            this.pictures.push({
+                pictureID: key,
+                link: value.link,
+                description: value.description,
+            })
+        }  
+        let imgs_per_clmn = Math.floor(this.pictures.length / 3);
+        console.log(this.pictures.length)
 
-    for (let i = this.column_0.length; i < imgs_per_clmn + this.column_0.length; i++) {
-      this.column_1.push(images[i]);
-    } 
+        for (let i = 0; i < imgs_per_clmn; i++) {
+          this.column_0.push(this.pictures[i]);
+        }
 
-    for (let i = this.column_1.length + this.column_0.length; i < images.length; i++){
-      this.column_2.push(images[i]);
-    }
+        for (let i = this.column_0.length; i < imgs_per_clmn + this.column_0.length; i++) {
+          this.column_1.push(this.pictures[i]);
+        } 
+
+        for (let i = this.column_1.length + this.column_0.length; i < this.pictures.length; i++){
+          this.column_2.push(this.pictures[i]);
+        }
+    });
   }
 }
 </script>
@@ -137,6 +151,7 @@ export default {
             opacity: 0;
             color: $background-light;
             transition: all ease-in-out 220ms;
+            cursor: pointer;
 
             &:hover {
               opacity: 0.85;

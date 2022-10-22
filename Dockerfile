@@ -22,5 +22,9 @@ RUN pip install gunicorn
 
 WORKDIR /betula/api
 
+#create directories for images and data
+RUN mkdir /data
+RUN mkdir /photos
+
 #run with wsgi server
-CMD ["gunicorn", "--bind" "0.0.0.0:80", "app:app"]
+CMD [ "gunicorn", "-b", "0.0.0.0:5000", "app:app" ]

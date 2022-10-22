@@ -125,7 +125,9 @@ def get_gallery_image():
     return database_controller.get_gallery_pictures()
 
 database_controller.start_database()
-app.run(
-    host = "0.0.0.0",
-    port = os.environ.get("PORT", 5000)
-)
+
+if __name__ == "__main__":
+    app.run(
+        host = "0.0.0.0", 
+        port = os.environ.get('PORT', 5000)
+        )

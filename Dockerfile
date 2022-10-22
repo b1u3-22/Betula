@@ -26,5 +26,7 @@ WORKDIR /betula/api
 RUN mkdir /data
 RUN mkdir /photos
 
+EXPOSE 5000
+
 #run with wsgi server
 CMD [ "gunicorn", "-b", "0.0.0.0:5000", "app:app" ]

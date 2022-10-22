@@ -32,5 +32,5 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ github.actor }}/betula:latest
+          tags: ghcr.io/${{ github.actor }}/betula:latest
 

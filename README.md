@@ -62,14 +62,20 @@ Betula can be installed using **Docker** :whale2: using one of the automatically
 version: "3.4"
 services:
   betula:
-    image: b1u3-22/betula:stable
-    container_name: betula
-    ports:
-      - 80:5000
-    volumes:
-      betula_config:/config
-      betula_images:/images
-    restart: unless-stopped
+   image: b1u322/betula:stable # or ghcr.io/b1u3-22/betula:stable
+   container_name: betula
+   ports:
+     - 80:5000
+   volumes:
+     - betula_config:/config
+     - betula_images:/images
+   restart: unless-stopped
+  
+volumes:
+  betula_config:
+    driver: local
+  betula_images:
+    driver: local
 ```
 
 ## Demo :house:

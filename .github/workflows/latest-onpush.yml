@@ -17,34 +17,34 @@ jobs:
         uses: docker/setup-qemu-action@v1
       -
         name: Build Image
-          id: build_image
-          uses: redhat-actions/buildah-build@v2
-          with:
-            image: betula
-            tags: latest
-            platforms: linux/amd64, linux/arm64
-            containerfiles: |
+        id: build_image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: betula
+          tags: latest
+          platforms: linux/amd64, linux/arm64
+          containerfiles: |
               ./Containerfile
       -
         name: Push To GHCR
-          id: push_to_ghcr
-          uses: redhat-actions/push-to-registry@v2
-          with:
-            image: ${{ steps.build_image.outputs.image }}
-            tags: ${{ steps.build_image.outputs.tags }}
-            registry: ghcr.io/${{ gihub.actor }}
-            username: ${{ gihub.actor }}
-            password: ${{ secrets.DOCKER_TOKEN }}
+        id: push_to_ghcr
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build_image.outputs.image }}
+          tags: ${{ steps.build_image.outputs.tags }}
+          registry: ghcr.io/${{ gihub.actor }}
+          username: ${{ gihub.actor }}
+          password: ${{ secrets.DOCKER_TOKEN }}
       -
         name: Push To Dockerhub
-          id: push_to_dockerhub
-          uses: redhat-actions/push-to-registry@v2
-          with:
-            image: ${{ steps.build_image.outputs.image }}
-            tags: ${{ steps.build_image.outputs.tags }}
-            registry: ${{ secrets.DOCKERHUB_USERNAME }}
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
+        id: push_to_dockerhub
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build_image.outputs.image }}
+          tags: ${{ steps.build_image.outputs.tags }}
+          registry: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
         
         
 

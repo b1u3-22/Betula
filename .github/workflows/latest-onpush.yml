@@ -24,7 +24,7 @@ jobs:
           tags: latest
           platforms: linux/amd64, linux/arm64
           containerfiles: |
-              ./Containerfile
+              ./Dockerfile
       -
         name: Push To GHCR
         id: push_to_ghcr

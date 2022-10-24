@@ -7,10 +7,13 @@ database_path = f"{os.path.abspath('../../data')}/data.db"
 
 def start_database():
     connection = sqlite.connect(database_path)
-    connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT, status TEXT NOT NULL)")
-    connection.execute("CREATE TABLE IF NOT EXISTS general_info(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL, name TEXT NOT NULL)")
-    connection.execute("CREATE TABLE IF NOT EXISTS pictures(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT)")
-    connection.execute("CREATE TABLE IF NOT EXISTS financials_general(id INTEGER PRIMARY KEY, property TEXT NOT NULL, value TEXT NOT NULL, name TEXT NOT NULL)")
+    connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT, status TEXT NOT NULL, dark_mode TEXT NOT NULL)")
+    connection.execute("CREATE TABLE IF NOT EXISTS phones(id INTEGER PRIMARY KEY, number TEXT NOT NULL")
+    connection.execute("CREATE TABLE IF NOT EXISTS emails(id INTEGER PRIMARY KEY, address TEXT NOT NULL")
+    connection.execute("CREATE TABLE IF NOT EXISTS visibility(id INTEGER PRIMARY KEY, section TEXT NOT NULL, status TEXT NOT NULL")
+    connection.execute("CREATE TABLE IF NOT EXISTS texts(id INTEGER PRIMARY KEY, name TEXT NOT NULL, text TEXT NOT NULL")
+    connection.execute("CREATE TABLE IF NOT EXISTS images(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT)")
+    connection.execute("CREATE TABLE IF NOT EXISTS bank_account(id INTEGER PRIMARY KEY, name TEXT NOT NULL, value TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS debts(id INTEGER PRIMARY KEY, total_debt INTEGER NOT NULL, remaining_debt INTEGER NULL, remaining_debt_per_flat INTEGER NOT NULL, repayment_per_flat INTEGER NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY, timestamp TIMESTAMP, title TEXT NOT NULL, text TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS finus(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, timestamp TIMESTAMP)")
@@ -106,125 +109,189 @@ def check_if_user_exists(id):
     else:
         return True
 
+#====================================================================================================================================
 
-def get_general_info():
+def get_all_phones():
     connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM general_info").fetchall()
-    general_info = {}
+    result = connection.execute("SELECT * FROM phones").fetchall()[0]
+    phones = {}
 
-    for i in range(len(result)):
-        general_info[result[i][1]] = {"text": result[i][2], "name": result[i][3]}
+    for phone in result:
+        phones[phone[0]] = phone[1]
 
     connection.close()
-    return general_info
+    return phones
 
-#------------------------------------------------------------------------------------------------------------------------------------
-
-def insert_into_general_info(property, value, name):
+def delete_from_phones(id):
     connection = sqlite.connect(database_path)
-    connection.execute("INSERT INTO general_info VALUES(NULL, ?, ?, ?)", (property, value, name, ))
+    connection.execute("DELETE FROM phones WHERE id = ?", (id, ))
     connection.commit()
     connection.close()
 
-def patch_general_info(property, value):
+#------------------------------------------------------------------------------------------------------------------------------------
+
+def insert_into_phones(number):
     connection = sqlite.connect(database_path)
-    connection.execute("UPDATE general_info SET value = ? WHERE property = ?", (value, property))
+    connection.execute("INSERT INTO phones VALUES(NULL, ?)", (number))
     connection.commit()
     connection.close()
 
 #====================================================================================================================================
 
-def get_general_financials():
+def get_all_emails():
     connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM financials_general").fetchall()
-    general_financials = {}
+    result = connection.execute("SELECT * FROM phones").fetchall()[0]
+    emails = {}
 
-    for i in range(len(result)):
-        general_financials[result[i][1]] = {"text": result[i][2], "name": result[i][3]}
+    for email in result:
+        emails[email[0]] = email[1]
 
     connection.close()
-    return general_financials
+    return emails
 
-#------------------------------------------------------------------------------------------------------------------------------------
-
-def insert_into_general_financials(property, value, name):
+def delete_from_emails(id):
     connection = sqlite.connect(database_path)
-    connection.execute("INSERT INTO financials_general VALUES(NULL, ?, ?, ?)", (property, value, name))
+    connection.execute("DELETE FROM emails WHERE id = ?", (id, ))
     connection.commit()
     connection.close()
 
-def patch_financials_general(property, value):
+#------------------------------------------------------------------------------------------------------------------------------------
+
+def insert_into_emails(number):
     connection = sqlite.connect(database_path)
-    connection.execute("UPDATE financials_general SET value = ? WHERE property = ?", (value, property))
+    connection.execute("INSERT INTO phones VALUES(NULL, ?)", (number))
     connection.commit()
     connection.close()
 
 #====================================================================================================================================
 
-def get_all_pictures():
+def get_all_visibility():
     connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM pictures").fetchall()
-    pictures = {}
+    result = connection.execute("SELECT * FROM visiblity").fetchall()[0]
+    visibilities = {}
 
-    for i in range(len(result)):
-        pictures[result[i][0]] = {'link': result[i][1], 'location': result[i][2], 'description': result[i][3], 'is_background': result[i][4], 'on_mainpage': result[i][5]}
+    for visibility in result:
+        visibilities[visibility[1]] = visibility[2]
 
     connection.close()
-    return pictures
-
-def get_picture_by_id(id):
-    connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM pictures WHERE id = ?", (id, )).fetchall()[0]
-    picture = {'id': result[0], 'link': result[1], 'location': result[2], 'description': result[3]}
-    connection.close()
-    return picture
-
-def get_picture_by_link(link):
-    connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM pictures WHERE link = ?", (link, )).fetchall()[0]
-    picture = {'id': result[0], 'link': result[1], 'location': result[2], 'description': result[3]}
-    connection.close()
-    return picture
-
-def get_background_picture():
-    connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM pictures WHERE is_background = 'true'").fetchall()[0]
-    picture = {'link': result[1]}
-    connection.close()
-    return picture
-
-def get_gallery_pictures():
-    connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM pictures WHERE on_mainpage = 'true'").fetchall()
-    pictures = {}
-
-    for i in range(len(result)):
-        pictures[result[i][0]] = {'link': result[i][1]}
-
-    connection.close()
-    return pictures
+    return visibilities
 
 #------------------------------------------------------------------------------------------------------------------------------------
 
-def insert_into_pictures(link, location, description, is_background, on_mainpage):
+def change_visibility(section, status):
     connection = sqlite.connect(database_path)
-    connection.execute("INSERT INTO pictures VALUES(NULL, ?, ?, ?, ?, ?)", (link, location, description, is_background, on_mainpage))
+    connection.execute("UPDATE visibility SET status = ? WHERE section = ?", (status, section, ))
     connection.commit()
     connection.close()
 
-def delete_from_pictures(id):
+#====================================================================================================================================
+
+def get_all_texts():
     connection = sqlite.connect(database_path)
-    connection.execute("DELETE FROM pictures WHERE id = ?", (id, ))
+    result = connection.execute("SELECT * FROM texts").fetchall()[0]
+    texts = {}
+
+    for text in result:
+        texts[text[1]] = text[2]
+
+    connection.close()
+    return texts
+
+#------------------------------------------------------------------------------------------------------------------------------------
+
+def change_text(name, text):
+    connection = sqlite.connect(database_path)
+    connection.execute("UPDATE texts SET text = ? WHERE name = ?", (text, name, ))
     connection.commit()
     connection.close()
 
-def patch_picture(id, description, is_background, on_mainpage):
+#====================================================================================================================================
+
+def get_bank_account():
     connection = sqlite.connect(database_path)
-    connection.execute("UPDATE pictures SET description = ?, is_background = ?, on_mainpage = ? WHERE id = ?", (description, is_background, on_mainpage, id))
+    result = connection.execute("SELECT * FROM bank_account").fetchall()[0]
+    bank_account = {}
+
+    for detail in bank_account:
+        bank_account[detail[1]] = detail[2]
+
+    connection.close()
+    return bank_account
+
+#------------------------------------------------------------------------------------------------------------------------------------
+
+def change_bank_account(name, value):
+    connection = sqlite.connect(database_path)
+    connection.execute("UPDATE bank_account SET value = ? WHERE name = ?", (value, name, ))
     connection.commit()
     connection.close()
 
-def generate_picture_name():
+#====================================================================================================================================
+
+def get_all_images():
+    connection = sqlite.connect(database_path)
+    result = connection.execute("SELECT * FROM images").fetchall()
+    images = {}
+
+    for i in range(len(result)):
+        images[result[i][0]] = {'link': result[i][1], 'location': result[i][2], 'description': result[i][3], 'is_background': result[i][4], 'on_mainpage': result[i][5]}
+
+    connection.close()
+    return images
+
+def get_image_by_id(id):
+    connection = sqlite.connect(database_path)
+    result = connection.execute("SELECT * FROM images WHERE id = ?", (id, )).fetchall()[0]
+    image = {'id': result[0], 'link': result[1], 'location': result[2], 'description': result[3]}
+    connection.close()
+    return image
+
+def get_image_by_link(link):
+    connection = sqlite.connect(database_path)
+    result = connection.execute("SELECT * FROM images WHERE link = ?", (link, )).fetchall()[0]
+    image = {'id': result[0], 'link': result[1], 'location': result[2], 'description': result[3]}
+    connection.close()
+    return image
+
+def get_background_image():
+    connection = sqlite.connect(database_path)
+    result = connection.execute("SELECT * FROM images WHERE is_background = 'true'").fetchall()[0]
+    image = {'link': result[1]}
+    connection.close()
+    return image
+
+def get_gallery_images():
+    connection = sqlite.connect(database_path)
+    result = connection.execute("SELECT * FROM images WHERE on_mainpage = 'true'").fetchall()
+    images = {}
+
+    for i in range(len(result)):
+        images[result[i][0]] = {'link': result[i][1]}
+
+    connection.close()
+    return images
+
+#------------------------------------------------------------------------------------------------------------------------------------
+
+def insert_into_images(link, location, description, is_background, on_mainpage):
+    connection = sqlite.connect(database_path)
+    connection.execute("INSERT INTO images VALUES(NULL, ?, ?, ?, ?, ?)", (link, location, description, is_background, on_mainpage))
+    connection.commit()
+    connection.close()
+
+def delete_from_images(id):
+    connection = sqlite.connect(database_path)
+    connection.execute("DELETE FROM images WHERE id = ?", (id, ))
+    connection.commit()
+    connection.close()
+
+def patch_image(id, description, is_background, on_mainpage):
+    connection = sqlite.connect(database_path)
+    connection.execute("UPDATE images SET description = ?, is_background = ?, on_mainpage = ? WHERE id = ?", (description, is_background, on_mainpage, id))
+    connection.commit()
+    connection.close()
+
+def generate_image_name():
     return str(uuid.uuid1()).replace("-", "")
 
 #====================================================================================================================================

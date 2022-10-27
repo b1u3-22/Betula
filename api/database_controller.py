@@ -8,12 +8,7 @@ database_path = f"{os.path.abspath('../../data')}/data.db"
 def start_database():
     connection = sqlite.connect(database_path)
     connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT, status TEXT NOT NULL, dark_mode TEXT NOT NULL)")
-    connection.execute("CREATE TABLE IF NOT EXISTS phones(id INTEGER PRIMARY KEY, number TEXT NOT NULL")
-    connection.execute("CREATE TABLE IF NOT EXISTS emails(id INTEGER PRIMARY KEY, address TEXT NOT NULL")
-    connection.execute("CREATE TABLE IF NOT EXISTS visibility(id INTEGER PRIMARY KEY, section TEXT NOT NULL, status TEXT NOT NULL")
-    connection.execute("CREATE TABLE IF NOT EXISTS texts(id INTEGER PRIMARY KEY, name TEXT NOT NULL, text TEXT NOT NULL")
-    connection.execute("CREATE TABLE IF NOT EXISTS images(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT)")
-    connection.execute("CREATE TABLE IF NOT EXISTS bank_account(id INTEGER PRIMARY KEY, name TEXT NOT NULL, value TEXT NOT NULL)")
+    connection.execute("CREATE TABLE IF NOT EXISTS images(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT, is_background TEXT NOT NULL, on_homepage TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS debts(id INTEGER PRIMARY KEY, total_debt INTEGER NOT NULL, remaining_debt INTEGER NULL, remaining_debt_per_flat INTEGER NOT NULL, repayment_per_flat INTEGER NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY, timestamp TIMESTAMP, title TEXT NOT NULL, text TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS finus(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, timestamp TIMESTAMP)")
@@ -75,7 +70,7 @@ def get_all_users():
     users = {}
 
     for i in range(len(result)):
-        users[result[i][1]] = {"password": result[i][2], "permissions": result[i][3], "email": result[i][4], "status": result[i][5], "id": result[i][0]}
+        users[result[i][0]] = {"password": result[i][2], "permissions": result[i][3], "email": result[i][4], "status": result[i][5], "username": result[i][1]}
 
     connection.close()
     return users
@@ -234,7 +229,8 @@ def get_all_images():
     images = {}
 
     for i in range(len(result)):
-        images[result[i][0]] = {'link': result[i][1], 'location': result[i][2], 'description': result[i][3], 'is_background': result[i][4], 'on_mainpage': result[i][5]}
+        if (images[result[i][4]] != "true" and images[result[i][5]] != "true"):
+            images[result[i][0]] = {'link': result[i][1], 'description': result[i][3]}
 
     connection.close()
     return images
@@ -302,20 +298,10 @@ def get_all_debts():
     debts = {}
 
     for i in range(len(result)):
-        debts[result[i][0]] = {'total_debt': result[i][1], 'remaining_debt': result[i][2], 'remaining_debt_per_flat': result[i][3], 'repainment_per_flat': result[i][3]}
+        debts[result[i][0]] = {'total': result[i][1], 'remaining': result[i][2], 'remainingPerFlat': result[i][3], 'repaymentPerFlat': result[i][3]}
 
     connection.close()
     return debts
-
-def check_if_debt_exists(id):
-    connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM debts WHERE id = ?", (id, )).fetchall()
-    
-    if result == []:
-        return False
-
-    else:
-        return True
 
 #------------------------------------------------------------------------------------------------------------------------------------
 
@@ -395,7 +381,7 @@ def insert_into_finus(link, location):
 
 #====================================================================================================================================
 
-
+# FOR DEV PURPOSES ONLY
 def custom_operation(operation):
     connection = sqlite.connect(database_path)
     connection.execute(f"{operation}")

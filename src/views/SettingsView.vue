@@ -1,797 +1,408 @@
 <template>
     <div class="settings">
-        <div class="settingsSaveButtonContainer" @click="saveAll">
-            <img class="settingsSaveButtonIcon" :src="require('@/assets/icons/save.svg')" />
-            <div class="settingsSaveButtonText">Uložit všechny změny</div>
-        </div>
-        <div class="settingsContentContainer" id="settings-general">
-            <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Obecné" bigText="Základní informace" side="false" />
-            <form class="settingsForm">
-                <template v-for="(item, index) in basicInfo" :key="item.property">
-                    <div class="settingsRowContainer">
-                        <label class="settingsLabelSimple" :for="item.property">{{ item.name }}</label>
-                        <input class="settingsInput" type="text" :id="item.property" :name="item.property" :placeholder="item.oldValue" v-model="basicInfo[index].newValue"/>
-                    </div>
-                </template>
-            </form>
-        </div>
-        <div class="settingsContentContainer" id="settings-finance">
-            <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Finance" bigText="Základní informace" side="false" />
-            <form class="settingsForm">
-                <template v-for="(item, index) in financeInfo" :key="item.property">
-                    <div class="settingsRowContainer">
-                        <label class="settingsLabelSimple" :for="item.property">{{ item.name }}</label>
-                        <input class="settingsInput" type="text" :id="item.property" :name="item.property" :placeholder="item.oldValue" v-model="basicInfo[index].newValue"/>
-                    </div>
-                </template>
-            </form>
-        </div>
-        <div class="settingsContentContainer">
-            <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Finance" bigText="Půjčky" side="false" />
-            <form class="settingsForm">
-                <TransitionGroup name="list">
-                    <template v-for="(item, index) in debtsInfo" :key="item.debtId">
-                        <div class="settingsRowContainer">
-                            <div class="settingsSide">
-                                <div class="settingsColumn" style="margin-right: 20px">
-                                    <label class="settingsLabel" :for="'total_debt' + index">Čerpaná částka</label>
-                                    <input class="settingsInput" type="number" :id="'total_debt' + index" name="total_debt" :placeholder="item.totalDebtOld" v-model="debtsInfo[index].totalDebtNew"/>
-                                </div>
-                                <div class="settingsColumn">
-                                    <label class="settingsLabel" :for="'remaining_debt' + index">Zbývající částka</label>
-                                    <input class="settingsInput" type="number" :id="'remaining_debt' + index" name="remaining_debt" :placeholder="item.remainingDebtOld" v-model="debtsInfo[index].remainingDebtNew"/>
-                                </div>
-                            </div>
-                            <div class="settingsSide">
-                                <div class="settingsColumn" style="margin-right: 20px">
-                                    <label class="settingsLabel" :for="'remaining_debt_per_flat' + index">Částka na byt</label>
-                                    <input class="settingsInput" type="number" :id="'remaining_debt_per_flat' + index" name="remaining_debt_per_flat" :placeholder="item.remainingDebtPerFlatOld" v-model="debtsInfo[index].remainingDebtPerFlatNew"/>
-                                </div>
-                                <div class="settingsColumn">
-                                    <label class="settingsLabel" :for="'repainment_per_flat' + index">Splátka na byt</label>
-                                    <input class="settingsInput" type="number" :id="'repainment_per_flat' + index" name="text" :placeholder="item.repaimentPerFlatOld" v-model="debtsInfo[index].repaimentPerFlatNew"/>
-                                </div>
-                                <div class="settingsButtons">
-                                    <div class="settingsButton">
-                                        <label class="settingsLabel">Smazat</label>
-                                        <img :src="require(`@/assets/icons/deleteForeverIcon.svg`)" class="settingsButtonIcon" @click="deleteDebt(debtsInfo[index].debtId, index)" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </TransitionGroup>
-                <div class="settingActionButtonContainer">
-                    <ButtonAction @click="newDebt">Nová půjčka</ButtonAction>
+        <div class="settingsWrapper">
+          <BigTitle bigText="Domovské stránky" smallText="Nastavení" side="false"/>
+          <form class="settingsColumn settingsCard">
+            <h2>Uvítací sekce</h2>
+            <div class="settingsRow">
+              <label class="labelBlack">Nadpis</label>
+              <input type="text" v-model="config.homePage.landingSection.title" />
+            </div>  
+            <div class="settingsRow">
+              <label class="labelBlack">Podnadpis</label>
+              <input type="text" v-model="config.homePage.landingSection.subtitle" />
+            </div>    
+            <h3>Pozadí</h3>
+            <div class="settingsRow">
+              <img class="imagePreview" :src="config.homePage.landingSection.background" />
+              <div class="settingsButtonsRow">
+                <label class="settingsButton" for="settingsBackgroundUpload">
+                  Nahrát
+                  <img class="settingsButtonIcon" :src="require('@/assets/icons/upload.svg')" />
+                  <input style="display: none" type="file" name="settingsBackgroundUpload" id="settingsBackgroundUpload" />
+                </label>
+                <div class="settingsButton">
+                  <label>Smazat</label>
+                  <img class="settingsButtonIcon" :src="require('@/assets/icons/delete.svg')" />
                 </div>
-            </form>
-        </div>
-        <div class="settingsContentContainer" id="settings-users">
-            <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Uživatelé" bigText="Přehled uživatelských účtů" side="false" />
-            <form class="settingsForm" autocomplete="off">
-                <TransitionGroup name="list">
-                    <template v-for="(item, index) in accountInfo" :key="item.userId">
-                        <div class="settingsRowContainer settingRowContainerAnimation">
-                            <div class="settingsSide">
-                                <div class="settingsColumn" style="margin-right: 20px">
-                                    <label class="settingsLabel" :for="'username' + index">Uživatelské jméno</label>
-                                    <input class="settingsInput" type="text" :id="'username' + index" name="username" :placeholder="item.oldUsername" v-model="accountInfo[index].newUsername"/>
-                                </div>
-                                <div class="settingsColumn">
-                                    <label class="settingsLabel" :for="'password' + index">Heslo</label>
-                                    <input class="settingsInput" type="password" :id="'password' + index" name="password" placeholder="Uživatelské heslo" v-model="accountInfo[index].newPassword"/>
-                                </div>
-                            </div>
-                            <div class="settingsSide" style="justify-content: flex-end">
-                                <div class="settingsButtons">
-                                    <div class="settingsButton">
-                                        <label class="settingsLabel">Smazat</label>
-                                        <img :src="require(`@/assets/icons/deleteForeverIcon.svg`)" class="settingsButtonIcon" @click="deleteAccount(accountInfo[index].userId, index)" />
-                                    </div>
-                                    <div class="settingsButton">
-                                        <label class="settingsLabel">Aktivní</label>
-                                        <input type="checkbox" class="settingsCheckbox" v-model="accountInfo[index].status" true-value="active" false-value="blocked" :disabled="accountInfo.length < 2"  />
-                                        <div class="settingsCheckboxCosmetic"/>
-                                    </div>
-                                    <div class="settingsButton">
-                                        <label class="settingsLabel">Admin</label>
-                                        <input type="checkbox" class="settingsCheckbox" v-model="accountInfo[index].admin" true-value="admin" false-value="basic" :disabled="accountInfo.length < 2" />
-                                        <div class="settingsCheckboxCosmetic"/>
-                                    </div>
-                                </div>
-                                <div class="settingsColumn">
-                                    <label class="settingsLabel" :for="'email' + index">Emailová adresa</label>
-                                    <input class="settingsInput" type="email" :id="'email' + index" name="email" :placeholder="item.oldEmail" v-model="accountInfo[index].newEmail"/>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </TransitionGroup>
-                <div class="settingActionButtonContainer">
-                    <ButtonAction @click="newAccount">Nový uživatel</ButtonAction>
+              </div>
+            </div>
+          </form>
+          <form class="settingsColumn settingsCard">
+            <h2>Sekce galerie</h2>
+            <div class="settingsRow">
+              <label class="labelBlack">Zobrazovat sekci galerie</label>
+              <ToggleButton :isChecked="config.homePage.gallerySection.visible" v-model:checked="config.homePage.gallerySection.visible" />
+            </div>  
+            <div class="settingsColumn" v-if="config.homePage.gallerySection.visible">
+              <div class="settingsRow">
+                <label class="labelBlack">Nadpis</label>
+                <input type="text" v-model="config.galleryPage.title" />
+              </div>  
+              <div class="settingsRow">
+                <label class="labelBlack">Podnadpis</label>
+                <input type="text" v-model="config.homePage.gallerySection.subtitle" />
+              </div> 
+              <div class="settingsRow">
+                <label class="labelBlack">Text</label>
+                <textarea v-model="config.homePage.gallerySection.text" />
+              </div>      
+              <h3>Fotografie</h3>
+              <div class="settingsRow">
+                <label class="labelBlack">Zobrazovat fotografie</label>
+                <ToggleButton :isChecked="config.homePage.gallerySection.images.visible" v-model:checked="config.homePage.gallerySection.images.visible" />
+              </div>  
+              <div class="settingsColumn" v-if="config.homePage.gallerySection.images.visible" >
+                <div class="settingsRow" v-for="image of config.homePage.gallerySection.images.images" :key="image">
+                  <img class="imagePreview" :src="image" />
+                  <div class="settingsButtonsRow">
+                    <label class="settingsButton" for="settingsBackgroundUpload">
+                      Nahrát
+                      <img class="settingsButtonIcon" :src="require('@/assets/icons/upload.svg')" />
+                      <input style="display: none" type="file" name="settingsBackgroundUpload" id="settingsBackgroundUpload" />
+                    </label>
+                    <div class="settingsButton">
+                      <label>Smazat</label>
+                      <img class="settingsButtonIcon" :src="require('@/assets/icons/delete.svg')" />
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>
+          </form>
+          <form class="settingsCard">
+            <h2>Kontaktní sekce</h2>
+            <div class="settingsRow">
+              <label class="labelBlack">Zobrazovat kontaktní sekci</label>
+              <ToggleButton :isChecked="config.homePage.contactSection.visible" v-model:checked="config.homePage.contactSection.visible" />
+            </div>
+            <div v-if="config.homePage.contactSection.visible" class="settingsColumn">  
+              <div class="settingsRow">
+                  <label class="labelBlack">Nadpis</label>
+                  <input type="text" v-model="config.homePage.contactSection.title" />
+                </div>  
+                <div class="settingsRow">
+                  <label class="labelBlack">Podnadpis</label>
+                  <input type="text" v-model="config.homePage.contactSection.subtitle" />
+                </div> 
+                <div class="settingsRow">
+                  <label class="labelBlack">Adresa</label>
+                  <input type="text" v-model="config.homePage.contactSection.address" />
+                </div>  
+                <div class="settingsRow">
+                  <label class="labelBlack">IČO</label>
+                  <input type="text" v-model="config.homePage.contactSection.ico" />
+                </div> 
+                <div class="settingsRow">
+                  <label class="labelBlack">DIČ</label>
+                  <input type="text" v-model="config.homePage.contactSection.dic" />
+                </div> 
+                <div class="settingsRow">
+                  <label class="labelBlack">Email</label>
+                  <input type="text" v-model="config.homePage.contactSection.email" />
+                </div> 
+                <div class="settingsRow">
+                  <label class="labelBlack">Telefonní číslo</label>
+                  <input type="text" v-model="config.homePage.contactSection.phone" />
+                </div> 
+                <div class="settingsRow">
+                  <label class="labelBlack">Zobrazovat kontaktní formulář</label>
+                  <ToggleButton :isChecked="config.homePage.contactSection.contactForm.visible" v-model:checked="config.homePage.contactSection.contactForm.visible" />
                 </div>
+                <div v-if="config.homePage.contactSection.contactForm.visible" class="settingsColumn">
+                  <div class="settingsRow">
+                    <label class="labelBlack">Odesílající email</label>
+                    <input type="text" />
+                  </div> 
+                </div>
+              </div>
             </form>
-        </div>
-        <div class="settingsContentContainer" id="settings-images">
-            <BigTitle smallTextStyle="font-size: 0.8rem" bigTextStyle="font-size: 2.8rem" smallText="Galerie" bigText="Správa fotek" side="false" />
-            <form class="settingsForm">
-                <TransitionGroup name="list">
-                    <template v-for="(item, index) in picturesInfo" :key="item.pictureID">
-                        <div class="settingsRowContainer settingRowContainerAnimation">
-                            <div class="settingsSide">
-                                <div class="settingsColumn">
-                                    <img :src="item.link" class="settingsImagesPreview"/>
-                                </div>
-                                <div class="settingsColumn">
-                                    <label class="settingsLabel" :for="'pictureDesc' + index">Popis</label>
-                                    <input class="settingsInput" type="text" :id="'pictureDesc' + index" :name="'pictureDesc' + index" v-model="picturesInfo[index].newDescription" :placeholder="item.oldDescription"/>
-                                </div>
-                            </div>
-                            <div class="settingsButtons">
-                                <div class="settingsButton">
-                                    <label class="settingsLabel">Smazat</label>
-                                    <img class="settingsButtonIcon" @click="deleteImage(index)" :src="require('@/assets/icons/deleteForeverIcon.svg')" />
-                                </div>
-                                <div class="settingsButton">
-                                    <label class="settingsLabel">Na hlavní stránce</label>
-                                    <input type="checkbox" class="settingsCheckbox" true-value="true" false-value="false" :disabled="getEnabledImages() > 2 && picturesCheckboxes[index] !== 'true'" v-model="picturesCheckboxes[index]" />
-                                    <div class="settingsCheckboxCosmetic" />
-                                </div>
-                                <div class="settingsButton">
-                                    <label class="settingsLabel">Na pozadí</label>
-                                    <input type="radio" class="settingsCheckbox" name="settingsRadioGroupImages" :value="item.pictureID" v-model="picturesBackground" />
-                                    <div class="settingsCheckboxCosmetic" />
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </TransitionGroup>
-            </form>
-            <FileUpload @uploadFiles="uploadImages" style="margin-top: 5%;"></FileUpload>
+            <BigTitle bigText="Stránky galerie" smallText="Nastavení" side="false"/>
+            <form class="settingsColumn settingsCard">
+              <div class="settingsRow">
+                <label class="labelBlack">Nadpis</label>
+                <input type="text" v-model="config.galleryPage.title" />
+              </div>  
+              <div class="settingsRow">
+                <label class="labelBlack">Podnadpis</label>
+                <input type="text" v-model="config.galleryPage.subtitle" />
+              </div>    
+              <h3>Fotografie</h3>
+              <FileUpload>Nahrajte nové fotografie přetáhnutím</FileUpload>
+              <div class="settingsRow" style="margin-top: 15px">
+                <div class="settingsRow" style="justify-content: flex-start">
+                  <img class="imagePreview" src="https://picsum.photos/500" style="margin-right: 15px" />
+                  <div class="settingsColumn" style="width: fit-content; align-items: flex-start">
+                    <label>Popisek</label>
+                    <input />
+                  </div>
+                </div>
+                
+                <div class="settingsButtonsRow">
+                  <div class="settingsButton">
+                    <label>Smazat</label>
+                    <img class="settingsButtonIcon" :src="require('@/assets/icons/delete.svg')" />
+                  </div>
+                </div>
+              </div>
+          </form>
+          <BigTitle bigText="Systémové stránky" smallText="Nastavení" side="false"/>
+          <form class="settingsColumn settingsCard">
+            <h2>Finanční sekce</h2>
+            <div class="settingsRow">
+              <label class="labelBlack">Zobrazovat finační shrnutí</label>
+              <ToggleButton :isChecked="config.dashboardPage.financeSection.visible" v-model:checked="config.dashboardPage.financeSection.visible" />
+            </div> 
+            <div v-if="config.dashboardPage.financeSection.visible" class="settingsColumn">
+              <div class="settingsRow">
+                <label class="labelBlack">Číslo účtu</label>
+                <input type="text" v-model="config.dashboardPage.financeSection.accountNumber" />
+              </div> 
+              <div class="settingsRow">
+                <label class="labelBlack">Zůstatek na účtu</label>
+                <input type="text" v-model="config.dashboardPage.financeSection.balance" />
+              </div> 
+              <div class="settingsRow">
+                <label class="labelBlack">Zobrazovat půjčky</label>
+                <ToggleButton :isChecked="config.dashboardPage.financeSection.debts.visible" v-model:checked="config.dashboardPage.financeSection.debts.visible" />
+              </div> 
+              <div v-if="config.dashboardPage.financeSection.debts.visible" class="settingsColumn">
+                <h3>Půjčky</h3>
+                <template v-for="(debt, key) of debts" :key="key">
+                  <div v-if="!key.startsWith('deleted')" class="settingsRow">
+                    <div class="settingsColumn" style="align-items: flex-start">
+                      <label>Čerpaná částka</label>
+                      <input class="settingsInput" type="text" v-model="debt.total" />
+                    </div>
+                    <div class="settingsColumn" style="align-items: flex-start">
+                      <label>Zbývající částka</label>
+                      <input class="settingsInput" type="text" v-model="debt.remaining" />
+                    </div>
+                    <div class="settingsColumn" style="align-items: flex-start">
+                      <label>Částka na byt</label>
+                      <input class="settingsInput" type="text" v-model="debt.remainingPerFlat" />
+                    </div>
+                    <div class="settingsColumn" style="align-items: flex-start">
+                      <label>Splátka na byt</label>
+                      <input class="settingsInput" type="text" v-model="debt.repaymentPerFlat" />
+                    </div>
+                    <div @click="deleteDebt(key)" class="settingsButton">
+                      <label>Smazat</label>
+                      <img class="settingsButtonIcon" :src="require('@/assets/icons/delete.svg')" />
+                    </div>
+                  </div>
+                </template>
+                <div class="settingsRow" style="justify-content: center">
+                  <ButtonAction style="margin-right: 15px" @click="addDebt">Přidat novou půjčku</ButtonAction>
+                  <ButtonAction @click="updateDebts">Uložit půjčky</ButtonAction>
+                </div>
+              </div>
+            </div>
+          </form>
+          <form class="settingsColumn settingsCard">
+            <h2>Sekce uživatelských účtů</h2>
+          </form>
         </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios';
 import BigTitle from '@/components/BigTitle.vue';
-import ButtonAction from '@/components/ButtonAction.vue';
-import { getCurrentInstance } from 'vue';
 import FileUpload from '@/components/FileUpload.vue';
-  // @ is an alias to /src
-  
-  export default {
-    name: 'SettingsView',
-    components: {
+import ToggleButton from '@/components/ToggleButton.vue';
+import ButtonAction from '@/components/ButtonAction.vue';
+import axios from 'axios';
+
+
+export default {
+  name: 'SettingsView',
+  components: {
     BigTitle,
-    ButtonAction,
-    FileUpload
+    ToggleButton,
+    FileUpload,
+    ButtonAction
 },
-    data: function() {
-      return {
-        basicInfo: [],
-        financeInfo: [],
-        accountInfo: [],
-        accountInfoBackUp: [],
-        debtsInfo: [],
-        debtsInfoBackUp: [],
-        picturesInfo: [], 
-        picturesInfoBackUp: [],
-        picturesCheckboxes: [],
-        picturesBackground: 0,
+  data: function(){
+    return {
+      config: {},
+      images: {},
+      debts: {},
+      users: {}
+    }
+  },
+
+  methods: {
+    getConfig: function() {
+      axios.get("/getConfig")
+        .then((response) => {
+          console.log(response);
+          this.config = response.data;
+        })
+    },
+
+    addDebt: function() {
+      let biggestKey = 0;
+
+      for (let key of Object.keys(this.debts)){
+        let number = key.replace(/[^0-9]/g,'');
+        if (number >= biggestKey){
+          biggestKey = parseInt(number);
+        }
+      }
+
+      biggestKey += 1;
+
+      this.debts["new" + biggestKey] = {
+        "total": 0,
+        "remaining": 0,
+        "remainingPerFlat": 0,
+        "repaymentPerFlat": 0
+      }
+
+      console.log(this.debts)
+    },
+
+    deleteDebt: function(key) {
+      if (key.startsWith('new')){
+        delete this.debts[key];
+      }
+      else {
+        this.debts['deleted' + key] = this.debts[key];
+        delete this.debts[key];
       }
     },
-    methods: {
-        getGeneralInfo: function(){
-            axios
-            .get("http://127.0.0.1:5000/getGeneralInfo")
-            .then((response) => {
-                this.basicInfo.length = 0;
-                for (const [key, value] of Object.entries(response.data)){
-                    this.basicInfo.push({
-                        property: key,
-                        name: value.name,
-                        oldValue: value.text, 
-                        newValue: ""
-                    })
-                }
-            });
-        },
 
-        getFinancialInfo: function(){
-            axios
-            .get("http://127.0.0.1:5000/getFinancialsGeneral")
-            .then((response) => {
-                this.financeInfo.length = 0;
-                for (const [key, value] of Object.entries(response.data)){
-                    this.financeInfo.push({
-                        property: key, 
-                        name: value.name, 
-                        oldValue: value.text, 
-                        newValue: ""
-                    })
-                }
-            });
-        },
-
-        getUserInfo: function(){
-            axios
-            .get("http://127.0.0.1:5000/getAllUsers")
-            .then((response) => {
-                this.accountInfo.length = 0;
-                this.accountInfoBackUp.length = 0;
-                for (const [key, value] of Object.entries(response.data)){
-                    this.accountInfo.push({
-                        oldUsername: key, 
-                        newUsername: "", 
-                        oldPassword: value.password, 
-                        newPassword: "", 
-                        status: value.status, 
-                        admin: value.permissions,
-                        oldEmail: value.email !== '' ? value.email : "Emailová adresa",
-                        newEmail: "",
-                        userId: value.id
-                    })
-                }       
-                this.accountInfoBackUp = this.accountInfo.slice();
-            });
-        },
-
-        getDebtsInfo: function(){
-            axios
-            .get("http://127.0.0.1:5000/getAllDebts")
-            .then((response) => {
-                this.debtsInfo.length = 0;
-                this.debtsInfoBackUp.length = 0;
-                for (const [key, value] of Object.entries(response.data)){
-                    this.debtsInfo.push({
-                        totalDebtOld: value.total_debt,
-                        totalDebtNew: "",
-                        remainingDebtOld: value.remaining_debt,
-                        remainingDebtNew: "",
-                        remainingDebtPerFlatOld: value.remaining_debt_per_flat,
-                        remainingDebtPerFlatNew: "",
-                        repaimentPerFlatOld: value.repainment_per_flat,
-                        repaimentPerFlatNew: "",
-                        debtId: key
-                    })
-                }       
-                this.debtsInfoBackUp = this.debtsInfo.slice();
-            });
-        },
-
-        getImagesInfo: function(){
-            axios
-            .get("http://127.0.0.1:5000/getAllPictures")
-            .then((response) => {
-                this.picturesInfo.length = 0;
-                this.picturesInfoBackUp.length = 0;
-                for (const [key, value] of Object.entries(response.data)){
-                    this.picturesInfo.push({
-                        pictureID: key,
-                        link: value.link,
-                        oldDescription: value.description !== "" ? value.description : "Titulek fotky",
-                        newDescription: "",
-                    })
-
-                    if (value.is_background === "true"){
-                        console.log(key)
-                        console.log(value.is_background)
-                        this.picturesBackground = key
-                    }
-
-                    this.picturesCheckboxes.push(value.on_mainpage)
-                }       
-                this.picturesInfoBackUp = this.picturesInfo.slice();
-            });
-        },
-
-        getAll: function(){
-            this.getGeneralInfo();
-            this.getFinancialInfo();
-            this.getDebtsInfo();
-            this.getImagesInfo();
-        },
-
-        deleteAccount: function(id, index) {
-
-            if (this.accountInfo.length > 1){
-                this.accountInfo.splice(index, 1);
-            }
-
-            else {
-                this.$notify({
-                    type: "error",
-                    title: "Tento účet nelze smazat",
-                    text: "V Systému musí být aspoň jeden uživatel"
-                })
-            }
-        },
-
-        newAccount: function() {
-            let id = 0
-
-            for (let user of this.accountInfo){
-                if (user.userId > id) {
-                    id = user.userId;
-                }
-            }
-
-            id += 1000
-
-            this.accountInfo.push({
-                newUsername: "",
-                oldUsername: "Nový uživatel",
-                oldPassword: "Heslo",
-                newPassword: "",
-                status: "blocked",
-                admin: "basic", 
-                oldEmail: "Emailová adresa",
-                newEmail: "",
-                userId: id
-            })
-        
-        },
-
-        deleteDebt: function(id, index){
-            this.debtsInfo.splice(index, 1)
-        },
-
-        newDebt: function() {
-            let id = 0
-
-            for (let debt of this.debtsInfo){
-                if (debt.debtId > id) {
-                    id = parseInt(debt.debtId);
-                }
-            }
-
-            id += 1000
-
-            this.debtsInfo.push({
-                totalDebtOld: "Nová půjčka",
-                totalDebtNew: "",
-                remainingDebtOld: "Zbývá doplatit",
-                remainingDebtNew: "",
-                remainingDebtPerFlatOld: "Částka na byt",
-                remainingDebtPerFlatNew: "",
-                repaimentPerFlatOld: "Splátka na byt",
-                repaimentPerFlatNew: "",
-                debtId: id
-            })
-        },
-
-        saveGeneralInfo(){
-            let basicInfoToSave = {}
-
-            for (let info of this.basicInfo){
-                if (info.newValue !== "" && info.newValue !== info.oldValue){
-                    basicInfoToSave[info.property] = info.newValue;
-                }
-            }
-
-            axios.patch("http://127.0.0.1:5000/patchGeneralInfo", basicInfoToSave)
-        },
-
-        saveFinancialInfo(){
-            let financeInfoToSave = {}
-
-            for (let info of this.financeInfo) {
-                if (info.newValue !== "" && info.newValue !== info.oldValue){
-                    financeInfoToSave[info.property] = info.newValue;
-                }
-            }
-
-            axios.patch("http://127.0.0.1:5000/patchFinancialsGeneral", financeInfoToSave)
-        },
-        saveUserInfo(){
-            let userChanges = {}
-            let userFound = false;
-
-            for (let user of this.accountInfoBackUp) {
-                userFound = false;
-                for (let newUser of this.accountInfo) {
-                    if (user.userId === newUser.userId){
-                        userFound = true;
-                        break;
-                    }
-                }
-                if (!userFound){
-                    userChanges[user.userId] = "deleted";
-                }
-            }
-
-            // Update all users
-            for (let user of this.accountInfo){
-                userChanges[user.userId] = {
-                    username: user.newUsername !== "" && user.newUsername !== user.oldUsername ? user.newUsername : user.oldUsername,
-                    password: user.newPassword !== "" && user.newPassword !== user.oldPassword ? user.newPassword : user.oldPassword,
-                    permissions: user.admin,
-                    status: user.status,
-                    email: user.newEmail !== "" && user.newEmail !== user.oldEmail ? user.newEmail : user.oldEmail === "Emailová adresa" ? "" : user.oldEmail
-                }
-            }
-
-            axios.patch("http://127.0.0.1:5000/patchUsers", userChanges)
-        },
-
-        saveDebtsInfo(){
-            let debtChanges = {}
-            let debtFound = false;
-
-            for (let debt of this.debtsInfoBackUp) {
-                debtFound = false;
-                for (let newDebt of this.debtsInfo) {
-                    if (debt.debtId === newDebt.debtId){
-                        debtFound = true;
-                        break;
-                    }
-                }
-                if (!debtFound){
-                    debtChanges[debt.debtId] = "deleted";
-                }
-            }
-
-            for (let debt of this.debtsInfo){
-                debtChanges[debt.debtId] = {
-                    total_debt: debt.totalDebtNew !== "" && debt.totalDebtNew !== debt.totalDebtOld ? debt.totalDebtNew : debt.totalDebtOld,
-                    remaining_debt: debt.remainingDebtNew !== "" && debt.remainingDebtNew !== debt.remainingDebtOld ? debt.remainingDebtNew : debt.remainingDebtOld,
-                    remaining_debt_per_flat: debt.remainingDebtPerFlatNew !== "" && debt.remainingDebtPerFlatNew !== debt.remainingDebtPerFlatOld ? debt.remainingDebtPerFlatNew : debt.remainingDebtPerFlatOld,
-                    repainment_per_flat: debt.repaimentPerFlatNew !== "" && debt.repaimentPerFlatNew !== debt.repaimentPerFlatOld ? debt.repaimentPerFlatNew : debt.repaimentPerFlatOld
-                }
-            }
-
-            axios.patch("http://127.0.0.1:5000/patchDebts", debtChanges)
-        },
-
-        saveImagesInfo(){
-            let imageChanges = {}
-            let imageFound = false;
-
-            for (let picture of this.picturesInfoBackUp) {
-                imageFound = false;
-                for (let newPicture of this.picturesInfo) {
-                    if (picture.pictureID === newPicture.pictureID){
-                        imageFound = true;
-                        break;
-                    }
-                }
-                if (!imageFound){
-                    imageChanges[picture.pictureID] = "deleted";
-                }
-            }
-
-            for (let i = 0; i < this.picturesInfo.length; i++){
-                imageChanges[this.picturesInfo[i].pictureID] = {
-                    description: this.picturesInfo[i].newDescription == "" || this.picturesInfo[i].newDescription == "Titulek fotky" ? this.picturesInfo[i].oldDescription : this.picturesInfo[i].newDescription,
-                    is_background: this.picturesBackground == this.picturesInfo[i].pictureID ? "true" : "false",
-                    on_mainpage: this.picturesCheckboxes[i], 
-                }
-            }
-
-            console.log(imageChanges)
-
-            axios.patch("http://127.0.0.1:5000/patchImages", imageChanges)
-        },
-
-        saveAll: function() {
-            try {
-                this.saveGeneralInfo();
-                this.saveFinancialInfo();
-                this.saveDebtsInfo();
-                this.saveImagesInfo();
-            
-                this.$notify({
-                    type: "success",
-                    title: "Uloženo",
-                    text: "Všechna nastavení byla uložena"
-                })
-
-                //this.$router.push("/dashboard")
-
-                setTimeout(() => {
-                    this.getGeneralInfo();
-                    this.getFinancialInfo();
-                    this.getUserInfo();
-                    this.getDebtsInfo();
-                }, 50)
-
-                setTimeout(() => {
-                    this.getImagesInfo();
-                }, 150)
-            }
-            catch {
-                this.$notify({
-                    type: "error",
-                    title: "Chyba",
-                    text: "Při ukládání došlo k chybě"
-                })
-            }
-        },
-
-        uploadImages: function(files){
-            for (let file of files){
-                axios.put("http://127.0.0.1:5000/uploadNewImages", file, {
-                    headers: {
-                        "Content-Type": file.type
-                    }
-                })
-            }
-            setTimeout(() => {
-                this.getImagesInfo();
-            }, 100)
-        },
-
-        getEnabledImages: function(){
-            let result = 0;
-            for (let i = 0; i < this.picturesCheckboxes.length; i++){
-                if (this.picturesCheckboxes[i] === 'true'){
-                    result++;
-                }
-            }
-            return result;
-        },
-
-        deleteImage(index){
-            this.picturesInfo.splice(index, 1);
-            this.picturesCheckboxes.splice(index, 1);
-        }
+    getDebts: function() {
+      axios.get("/getAllDebts")
+        .then((response) => {
+          this.debts = response.data
+        })
     },
-    watch:  {
-        'accountInfo.length'(){
-            if (this.accountInfo.length <= 1){
-                this.accountInfo[0].admin = "admin";
-                this.accountInfo[0].status = "active";
-            }
-        },
 
-        $route: function(to){
-            let path = to.path.replace('/', '')
-            path === '' ? path = 'home' : '';
-            if (path.includes('settings')){
-                document.getElementById(path).scrollIntoView({behavior: "smooth"})
-            }
-        }
-    },
-    created: function() {
-        if (!getCurrentInstance().parent.ctx.$parent.verified){
-            this.$router.push("/login")
-        }
-        else if (!getCurrentInstance().parent.ctx.$parent.permissions){
-            this.$router.push("/dashboard")
-        }
-    },
-    mounted: function() {
-        window.scrollTo({top: 0, behavior: 'auto'});
-        this.getGeneralInfo();
-        this.getFinancialInfo();
-        this.getUserInfo();
-        this.getDebtsInfo();
-        this.getImagesInfo();
-    },
+    updateDebts: function() {
+      axios.patch("/updateDebts", this.debts)
+    }
+  },
+
+  created: function() {
+    this.getConfig();
+    this.getDebts();
+  },
+
+  mounted: function() {
+
   }
+}
 </script>
-  
-  <style scoped lang="scss">
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
-  @import "@/assets/colors.scss";
-  
-.settingsRowContainer {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    border-bottom: 1px solid #D8D8D8;
-    transition: all 220ms ease-in-out;
+
+<style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import "@/assets/colors.scss";
+
+.settings {
+  padding: 90px 0 0 0;
+  min-height: 74vh;
+  margin: 0;
+  overflow-x: hidden;
 }
 
-.settingRowContainerAnimation {
-    animation: appear 220ms ease-in-out;
-    transition: all 220ms ease-in-out;
+.settingsWrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.settingsForm {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-}
-
-.settingsContentContainer {
-    display: flex;
-    flex-flow: column nowrap;
-    width: 80%;
-    padding: 3% 5%;
-    justify-content: flex-start;
-    align-items: center;
-    //box-shadow: 10px 10px 40px #D8D8D8;
-    margin-bottom: 5%;
-}
-
-.settingsSide {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: stretch;
-    justify-content: flex-start;
+.settingsRow {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between; 
+  margin-bottom: 15px;
 }
 
 .settingsColumn {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: flex-start;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.settingsLabelSimple {
-    font-weight: 400;
-    color: $background-dark;
-    font-size: 1.2rem;
+.settingsCard {
+  width: 70%;
+  padding: 3% 5%;
+  box-shadow: 10px 10px 40px #D8D8D8;
+  margin: 3%;
+  transition: all 220ms ease-in-out;
+  box-sizing: border-box;
+}
+
+.imagePreview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.imageBackground {
+  width: 70%;
+  object-fit: cover;
+  max-height: 500px;
+}
+
+.settingsButtonsRow {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.settingsButton {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 15px;
+  transition: all 120ms ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+
+  .settingsButtonIcon {
+    height: 3rem;
+    width: 3rem;
+  }
 }
 
 .settingsInput {
-    width: 200px;
-    max-width: 20vw;
+  max-width: 10vw;
 }
 
-.settingsButtons {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-
-    .settingsButton {
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        justify-content: flex-start;
-        margin: 0 10px;
-
-        .settingsButtonText {
-            font-weight: 700;
-            color: $primary;
-            margin-bottom: 5px;
-        }
-
-        .settingsButtonIcon {
-            margin: 0;
-            cursor: pointer;
-        }
-    }
+.slide-top-enter-active, .slide-top-leave-active {
+  transition: all 220ms ease-in-out;
 }
 
-.settingsCheckboxCosmetic {
-    z-index: 0;
-    height: 1.125rem;
-    width: 1.125rem;
-    margin: 0 0 0 0;
-    border-radius: 50%;
-    border: solid $primary 3px;
+.slide-top-enter-from, .slide-top-leave-to {
+  transform: translateY(50px);
+  opacity: 0;
+  max-height: 0px;
 }
 
-.settingsCheckbox {
-    z-index: 1;
-    height: 1.125rem;
-    width: 1.125rem;
-    margin-bottom: -1.125rem;
-    cursor: pointer;
-    opacity: 0;
-
-    &:checked ~ .settingsCheckboxCosmetic {
-        background-color: $primary;
-    }
+.slide-top-enter-to, .slide-top-leave-from {
+  transform: translateY(0px);
+  opacity: 1;
+  max-height: 50px;
 }
 
-.settings {
-padding: 90px 0 0 0;
-min-height: 74vh;
-margin: 0;
-overflow-x: hidden;
-display: flex;
-flex-flow: column nowrap;
-justify-content: flex-start;
-align-items: center;
-
+.slide-top-move {
+  transition: all 220ms ease-in-out;
 }
 
-.settingsSaveButtonContainer {
-    position: fixed;
-    bottom: 5px;
-    left: 5px;
-    height: 50px;
-    background-color: $primary;
-    display: flex;
-    flex-flow: row nowrap;
-    padding: 15px;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.25);
-    z-index: 999999;
-    box-sizing: border-box;
-    cursor: pointer;
-
-    .settingsSaveIcon {
-        height: 50px;
-    }
-
-    .settingsSaveButtonText {
-        font-weight: 700;
-        color: $background-light;
-        margin-left: 5px;
-        font-size: 1.2rem;
-    }
+@media (max-width: 600px) {
 }
 
-.settingsImagesPreview {
-    height: 75px;
-    width: 75px;    
-    object-fit: cover;
-    margin: 5px 5px 5px 0;
-}
-
-.list-enter-active {
-    transition: all 220ms ease-in-out;
-}
-
-.list-leave-active {
-    transition: all 220ms ease-in-out;
-}
-
-.list-move {
-    transition: all 220ms ease-in-out !important;
-}
-
-.list-enter-from {
-    opacity: 0;
-    transform: translate(50px, 0);
-    max-height: 0px;
-}
-
-.list-leave-to {
-    opacity: 0;
-    transform: translate(50px, 0);
-    max-height: 0px;
-}
-
-.list-enter-to {
-    opacity: 1;
-    transform: translate(0px, 0);
-    max-height: 250px
-}
-
-.list-leave-from {
-    opacity: 1;
-    transform: translate(0px, 0);
-    max-height: 250px
-}
-
-@keyframes appear {
-    from {
-        opacity: 0;
-        transform: translate(50px, 0);
-        max-height: 0;
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(0px, 0);
-        max-height: 250px
-    }
-}
-
-@media (max-width: 600px){
-
-    .settingsSaveButtonContainer {
-        border-radius: 50%;
-
-        .settingsSaveButtonText {
-            visibility: collapse;
-            display: none;
-        }
-    }
-    
-}
-  
-  
 </style>

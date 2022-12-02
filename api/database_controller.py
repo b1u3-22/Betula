@@ -312,7 +312,7 @@ def get_all_debts():
     debts = {}
 
     for i in range(len(result)):
-        debts[result[i][0]] = {'total': result[i][1], 'remaining': result[i][2], 'remainingPerFlat': result[i][3], 'repaymentPerFlat': result[i][3]}
+        debts[result[i][0]] = {'total': result[i][1], 'remaining': result[i][2], 'remainingPerFlat': result[i][3], 'repaymentPerFlat': result[i][4]}
 
     connection.close()
     return debts

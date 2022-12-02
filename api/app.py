@@ -46,6 +46,10 @@ def get_config():
 def get_homepage_config():
     return config_controller.get_homepage_config()
 
+@app.route("/getDashboardPageConfig", methods=["GET"])
+def get_dashboardpage_config():
+    return config_controller.get_dashboardpage_config()
+
 @app.route("/updateConfig", methods=["PATCH"])
 def update_config():
     updated_config = flask.request.json

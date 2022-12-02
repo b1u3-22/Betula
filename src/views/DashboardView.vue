@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard" id="top">
+  <div v-if="config.financeSection" class="dashboard" id="top">
     <div class="dashboardAddPostButton" @click="this.$router.push('add-post')">
       <img class="dashboardAddPostButtonIcon" :src="require('@/assets/icons/plus.svg')"/>
       <div class="dashboardAddPostButtonText">Přidat příspěvek</div>
@@ -13,15 +13,15 @@
           <div :class="{dashboardFinanctialQuickInfoShowed: financialRolledUp, dashboardFinanctialQuickInfoHidden: !financialRolledUp}" class="dashboardFinancialQuickInfo">
             <div class="dashboardFinancialQuickInfoContentContainer">
               <div class="dashboardFinancialQuickInfoTitle">Zůstatek na účtu</div>
-              <div class="dashboardFinancialQuickInfoText">{{ balance }}</div>
+              <div class="dashboardFinancialQuickInfoText">{{ config.financeSection.balance }}</div>
             </div>
             <div v-if="remainingTotalDebt !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <div class="dashboardFinancialQuickInfoTitle">Zbývající dluh</div>
               <div class="dashboardFinancialQuickInfoText"> {{ remainingTotalDebt }} </div>
             </div>
-            <div v-if="monthlyTotalRepainmentPerFlat !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
+            <div v-if="monthlyTotalRepaymentPerFlat !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <div class="dashboardFinancialQuickInfoTitle">Splátka na byt</div>
-              <div class="dashboardFinancialQuickInfoText">{{ monthlyTotalRepainmentPerFlat }}</div>
+              <div class="dashboardFinancialQuickInfoText">{{ monthlyTotalRepaymentPerFlat }}</div>
             </div>
           </div>
         </div>
@@ -33,11 +33,11 @@
               <div class="dashboardFinancialTextContainer">
                 <div class="dashboardFinancialPartContainer">
                   <h2 class="dashboardFinancialPartHeader">Číslo účtu</h2>
-                  <p class="dashboardFinancialContentText">{{ accountNumber }}</p>
+                  <p class="dashboardFinancialContentText">{{ config.financeSection.accountNumber }}</p>
                 </div>
                 <div class="dashboardFinancialPartContainer">
                   <h2 class="dashboardFinancialPartHeader">Zůstatek na účtu</h2>
-                  <p class="dashboardFinancialContentText">{{ balance }}</p>
+                  <p class="dashboardFinancialContentText">{{ config.financeSection.balance }}</p>
                 </div>
               </div>
             </div>
@@ -46,7 +46,7 @@
               <p class="dashboardFinancialDocumentText">Účetní uzávěrka za rok {{ new Date().getFullYear() - 1 }}</p>
             </div>
           </div>
-          <div v-if="debts.length" class="dashboardFinancialSubContainer">
+          <div v-if="debts" class="dashboardFinancialSubContainer">
             <h1 class="dashboardFinancialHeader">Půjčky</h1>
             <div class="dashboardFinancialDebtContainer">
               <template v-for="debt in debts" :key="debt">
@@ -55,19 +55,19 @@
                   <div class="dashboardFinancialTextContainer">
                     <div class="dashboardFinancialPartContainer">
                       <h2 class="dashboardFinancialPartHeader">Čerpaná částka</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.totalDebt }}</p>
+                      <p class="dashboardFinancialContentText">{{ debt.total }}</p>
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <h2 class="dashboardFinancialPartHeader">Zbývající částka</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.remainingDebt }}</p>
+                      <p class="dashboardFinancialContentText">{{ debt.remaining }}</p>
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <h2 class="dashboardFinancialPartHeader">Zbývající částka na byt</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.remainingDebtPerFlat }}</p>
+                      <p class="dashboardFinancialContentText">{{ debt.remainingPerFlat }}</p>
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <h2 class="dashboardFinancialPartHeader">Měsíční splátka na byt</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.repaimentPerFlat }}</p>
+                      <p class="dashboardFinancialContentText">{{ debt.repaymentPerFlat }}</p>
                     </div>
                   </div>
                 </div>
@@ -100,12 +100,11 @@ export default {
   data: function() {
     return {
       financialRolledUp: true,
-      accountNumber: "",
-      balance: 0,
-      debts: [],
+      debts: {},
       remainingTotalDebt: 0, 
-      monthlyTotalRepainmentPerFlat: 0,
-      posts: []
+      monthlyTotalRepaymentPerFlat: 0,
+      posts: [],
+      config: {}
     }
   },
   components: {
@@ -120,50 +119,30 @@ export default {
     if (!getCurrentInstance().parent.ctx.$parent.verified){
       this.$router.push("/login")
     }
+
+    axios
+      .get("/getAllDebts")
+      .then((response) => {
+        this.debts = response.data
+        for (const value of Object.values(response.data)){
+          console.log(value.remaining)
+          console.log(value.repaymentPerFlat)
+          this.remainingTotalDebt += value.remaining
+          this.monthlyTotalRepaymentPerFlat += value.repaymentPerFlat
+        }
+      });
+
+    axios
+      .get("/getDashboardPageConfig")
+      .then((response) => {
+        this.config = response.data
+      });
   },
 
   mounted: function(){
     window.scrollTo({top: 0, behavior: 'auto'});
 
-    axios
-      .get("http://127.0.0.1:5000/getAllDebts")
-      .then((response) => {
-        for (const [key, value] of Object.entries(response.data)){
-            this.debts.push({
-                totalDebt: value.total_debt,
-                remainingDebt: value.remaining_debt,
-                remainingDebtPerFlat: value.remaining_debt_per_flat,
-                repaimentPerFlat: value.repainment_per_flat,
-                debtId: key
-            })
-
-            this.remainingTotalDebt += value.total_debt;
-            this.monthlyTotalRepainmentPerFlat += value.repainment_per_flat;
-          }      
-      });
-
-      axios
-      .get("http://127.0.0.1:5000/getAllPosts")
-      .then((response) => {
-        for (const [key, value] of Object.entries(response.data)){
-            this.posts.push({
-                postTitle: value.postTitle,
-                postText: value.postText,
-                timestamp: value.timestamp,
-                postID: key
-            })
-          }      
-
-          console.log()
-      });
-
-    axios
-      .get("http://127.0.0.1:5000/getFinancialsGeneral")
-      .then((response) => {
-        console.log(response.data)
-          this.accountNumber = response.data.account_number.text;
-          this.balance = response.data.account_balance.text;
-      });
+    
   }
 }
 

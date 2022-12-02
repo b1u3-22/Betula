@@ -161,6 +161,7 @@ def delete_image_by_link():
     return flask.Response(status=200)
 
 database_controller.start_database()
+config_controller.init_config()
 
 if __name__ == "__main__":
     app.run(

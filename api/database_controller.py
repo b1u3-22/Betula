@@ -2,10 +2,14 @@ from datetime import datetime
 import sqlite3 as sqlite
 import uuid
 import os
+import shutil
 
 database_path = f"{os.path.abspath('../../data')}/data.db"
 
 def start_database():
+    if (not os.path.exists(database_path)):
+        shutil.copy("./data_default.db", database_path)
+
     connection = sqlite.connect(database_path)
     connection.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, permissions TEXT NOT NULL, email TEXT, status TEXT NOT NULL, dark_mode TEXT NOT NULL)")
     connection.execute("CREATE TABLE IF NOT EXISTS images(id INTEGER PRIMARY KEY, link TEXT NOT NULL, location TEXT NOT NULL, description TEXT, is_background TEXT NOT NULL, on_homepage TEXT NOT NULL)")

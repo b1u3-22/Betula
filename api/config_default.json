@@ -1,0 +1,52 @@
+{
+    "homePage": {
+        "landingSection": {
+            "title": "Informační systém",
+            "subtitle": "Pro bytová družstva",
+            "background": "https://picsum.photos/500"
+        },
+
+        "gallerySection": {
+            "visible": true,
+            "title": "Lorem ipsum",
+            "subtitle": "Galerie",
+            "text": "Lorem ipsum",
+            "images": {
+                "visible": true,
+                "images": ["https://picsum.photos/500", 
+                           "https://picsum.photos/500",
+                           "https://picsum.photos/500"]
+            }
+        },
+
+        "contactSection": {
+            "visible": true, 
+            "title": "Lorem ipsum",
+            "subtitle": "Kontakt",
+            "address": "Nowhere at the end of time",
+            "ico": "IČO",
+            "dic": "DIČ",
+            "email": "email@email.email",
+            "phone": 123456789,
+            "contactForm": {
+                "visible": true
+            }
+        }
+    },
+
+    "galleryPage": {
+        "title": "Lorem ipsum",
+        "subtitle": "Lorem ipsum"
+    },
+
+    "dashboardPage": {
+        "financeSection": {
+            "visible": true,
+            "accountNumber": 123456789,
+            "balance": 123456789,
+            "debts": {
+                "visible": true
+            }
+        }
+    }
+}

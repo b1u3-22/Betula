@@ -1,8 +1,12 @@
 import json
 import os
+import shutil
 
 FILE_PATH = f"{os.path.abspath('../../data')}/config.json"
 
+def init_config():
+    if (not os.path.exists(FILE_PATH)):
+        shutil.copy("./config_default.json", FILE_PATH)
 
 def get_config():
     with open(FILE_PATH, encoding="utf8") as config_file:

@@ -50,6 +50,10 @@ def get_homepage_config():
 def get_dashboardpage_config():
     return config_controller.get_dashboardpage_config()
 
+@app.route("/getGalleryPageConfig", methods=["GET"])
+def get_gallerypage_config():
+    return config_controller.get_gallerypage_config()
+
 @app.route("/updateConfig", methods=["PATCH"])
 def update_config():
     updated_config = flask.request.json

@@ -2,11 +2,11 @@
   <div class="gallery">
     <div class="galleryBigContainer">
       
-      <BigTitle style="margin: 0 0 25px 0" side="false" :smallText="generalInfo.main_gallery_subtitle" :bigText="generalInfo.main_gallery_title" />
+      <BigTitle style="margin: 0 0 25px 0" side="false" :smallText="config.subtitle" :bigText="config.title" />
 
       <div class="galleryMainContainer">
         <div class="galleryColumn">
-          <template v-for="image in column_0" :key="image.pictureID">
+          <template v-for="image in column_0" :key="image.id">
             <div class="galleryImageItem">
               <img class="galleryImage" :src="image.link" />
               <div v-if="image.description != '' && image.description != 'Titulek fotky'" class="galleryImageOverlay">{{ image.description }}</div>
@@ -14,7 +14,7 @@
           </template>
         </div>
         <div class="galleryColumn">
-          <template v-for="image in column_1" :key="image.pictureID">
+          <template v-for="image in column_1" :key="image.id">
             <div class="galleryImageItem">
               <img class="galleryImage" :src="image.link" />
               <div v-if="image.description != '' && image.description != 'Titulek fotky'" class="galleryImageOverlay">{{ image.description }}</div>
@@ -22,7 +22,7 @@
           </template>
         </div>
         <div class="galleryColumn">
-          <template v-for="image in column_2" :key="image.pictureID">
+          <template v-for="image in column_2" :key="image.id">
             <div class="galleryImageItem">
               <img class="galleryImage" :src="image.link" />
               <div v-if="image.description != '' && image.description != 'Titulek fotky'" class="galleryImageOverlay">{{ image.description }}</div>
@@ -49,51 +49,47 @@ export default {
       column_0: [],
       column_1: [],
       column_2: [],
-      generalInfo: {},
-      pictures: []
+      config: {},
+      images: []
     }
   },
 
   created: function() {
     axios
-      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .get("/getGalleryPageConfig")
       .then((response) => {
-        for (const [key, value] of Object.entries(response.data)){
-          this.generalInfo[key] = value.text
-        }
+        this.config = response.data
       });
 
-      
-  },
+      axios
 
-  mounted: function() {
-    window.scrollTo({top: 0, behavior: 'auto'});
-
-    axios
-    .get("http://127.0.0.1:5000/getAllPictures")
+    .get("http://127.0.0.1:5000/getAllImages")
     .then((response) => {
         for (const [key, value] of Object.entries(response.data)){
-            this.pictures.push({
-                pictureID: key,
+            this.images.push({
+                id: key,
                 link: value.link,
                 description: value.description,
             })
         }  
-        let imgs_per_clmn = Math.floor(this.pictures.length / 3);
-        console.log(this.pictures.length)
+        let imgs_per_clmn = Math.floor(this.images.length / 3);
 
         for (let i = 0; i < imgs_per_clmn; i++) {
-          this.column_0.push(this.pictures[i]);
+          this.column_0.push(this.images[i]);
         }
 
         for (let i = this.column_0.length; i < imgs_per_clmn + this.column_0.length; i++) {
-          this.column_1.push(this.pictures[i]);
+          this.column_1.push(this.images[i]);
         } 
 
-        for (let i = this.column_1.length + this.column_0.length; i < this.pictures.length; i++){
-          this.column_2.push(this.pictures[i]);
+        for (let i = this.column_1.length + this.column_0.length; i < this.images.length; i++){
+          this.column_2.push(this.images[i]);
         }
     });
+  },
+
+  mounted: function() {
+    window.scrollTo({top: 0, behavior: 'auto'});
   }
 }
 </script>
@@ -152,6 +148,7 @@ export default {
             color: $background-light;
             transition: all ease-in-out 220ms;
             cursor: pointer;
+            font-size: 1.5rem;
 
             &:hover {
               opacity: 0.85;

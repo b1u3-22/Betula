@@ -238,7 +238,7 @@ export default {
 
             .dashboardFinancialQuickInfoTitle {
               font-weight: 700;
-              font-size: 0.75rem;
+              font-size: 1rem;
               letter-spacing: 0.25em;
               color: $primary;
               margin: 0;
@@ -329,7 +329,7 @@ export default {
 
                 .dashboardFinancialPartHeader {
                   font-weight: 700;
-                  font-size: 0.75rem;
+                  font-size: 1rem;
                   letter-spacing: 0.25em;
                   color: $primary;
                   margin: 0;

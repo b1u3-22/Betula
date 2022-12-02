@@ -5,7 +5,7 @@
       <div class="dashboardAddPostButtonText">Přidat příspěvek</div>
     </div>
     <div class="dashboardMainContainer">
-      <div class="dashboardFinancialContainer">
+      <div v-if="config.financeSection.visible" class="dashboardFinancialContainer">
         <div class="dashboardFinancialHeaderContainer">
           <div class="dashboardFinancialButtonsContainer">
             <img :src="require(`@/assets/icons/arrow.svg`)" class="dashboardFinancialRollButton" :class="{dashboardFinancialButtonRollUp: financialRolledUp, dashboardFinancialButtonRollDown: !financialRolledUp}" @click="financialRolledUp = !financialRolledUp" />
@@ -15,11 +15,11 @@
               <div class="dashboardFinancialQuickInfoTitle">Zůstatek na účtu</div>
               <div class="dashboardFinancialQuickInfoText">{{ config.financeSection.balance }}</div>
             </div>
-            <div v-if="remainingTotalDebt !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
+            <div v-if="remainingTotalDebt !== 0 && config.financeSection.debts.visible" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <div class="dashboardFinancialQuickInfoTitle">Zbývající dluh</div>
               <div class="dashboardFinancialQuickInfoText"> {{ remainingTotalDebt }} </div>
             </div>
-            <div v-if="monthlyTotalRepaymentPerFlat !== 0" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
+            <div v-if="monthlyTotalRepaymentPerFlat !== 0 && config.financeSection.debts.visible" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <div class="dashboardFinancialQuickInfoTitle">Splátka na byt</div>
               <div class="dashboardFinancialQuickInfoText">{{ monthlyTotalRepaymentPerFlat }}</div>
             </div>
@@ -46,7 +46,7 @@
               <p class="dashboardFinancialDocumentText">Účetní uzávěrka za rok {{ new Date().getFullYear() - 1 }}</p>
             </div>
           </div>
-          <div v-if="!(Object.keys(debts).length === 0)" class="dashboardFinancialSubContainer">
+          <div v-if="(!(Object.keys(debts).length === 0)) && config.financeSection.debts.visible" class="dashboardFinancialSubContainer">
             <h1 class="dashboardFinancialHeader">Půjčky</h1>
             <div class="dashboardFinancialDebtContainer">
               <template v-for="debt in debts" :key="debt">

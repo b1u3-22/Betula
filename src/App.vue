@@ -153,6 +153,7 @@
 
   <router-view 
     @verifiedFromLogin="(username) => verifiedFromLogin(username)"
+    :verified="verified"
     />
 
   <footer>

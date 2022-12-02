@@ -46,7 +46,7 @@
               <p class="dashboardFinancialDocumentText">Účetní uzávěrka za rok {{ new Date().getFullYear() - 1 }}</p>
             </div>
           </div>
-          <div v-if="debts" class="dashboardFinancialSubContainer">
+          <div v-if="!(Object.keys(debts).length === 0)" class="dashboardFinancialSubContainer">
             <h1 class="dashboardFinancialHeader">Půjčky</h1>
             <div class="dashboardFinancialDebtContainer">
               <template v-for="debt in debts" :key="debt">
@@ -87,7 +87,6 @@
 <script>
 import ContentCard from '@/components/ContentCard.vue';
 import ButtonLink from '@/components/ButtonLink.vue';
-import { getCurrentInstance } from 'vue';
 import axios from 'axios';
 
 export default {
@@ -116,7 +115,8 @@ export default {
   },
 
   created: function(){
-    if (!getCurrentInstance().parent.ctx.$parent.verified){
+
+    if (!this.$props.verified){
       this.$router.push("/login")
     }
 

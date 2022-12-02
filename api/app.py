@@ -11,6 +11,14 @@ app = flask.Flask(__name__, static_folder = '../dist', static_url_path = '/')
 cors = CORS(app)
 
 @app.route("/", methods = ["GET"])
+@app.route("/home-gallery", methods = ["GET"])
+@app.route("/home-contact", methods = ["GET"])
+@app.route("/login", methods = ["GET"])
+@app.route("/dashboard", methods = ["GET"])
+@app.route("/gallery", methods = ["GET"])
+@app.route("/settings-general", methods = ["GET"])
+@app.route("/settings-finance", methods = ["GET"])
+@app.route("/settings-users", methods = ["GET"])
 def index():
     return app.send_static_file("index.html")
 

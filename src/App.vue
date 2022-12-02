@@ -195,7 +195,7 @@ export default {
       this.verified = true;
       this.username = username
       axios
-        .post("http://127.0.0.1:5000/getUserPermissions", {"username": this.username})
+        .post("/getUserPermissions", {"username": this.username})
         .then((response) => {
           if (response.data.permissions === "admin"){
             this.permissions = true;
@@ -235,7 +235,7 @@ export default {
 
   created: function() {
     axios
-      .get("http://127.0.0.1:5000/getHomePageConfig")
+      .get("/getHomePageConfig")
       .then((response) => {
         this.config = response.data;
       });

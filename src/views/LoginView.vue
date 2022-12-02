@@ -32,7 +32,7 @@ export default {
   methods: {
     verifyUser: function(){
      axios
-      .post("http://127.0.0.1:5000/verifyUser", {"username": this.username, "password": this.password})
+      .post("/verifyUser", {"username": this.username, "password": this.password})
       .then((response) => {
         if (!response.data.verified){
           this.$notify({

@@ -288,7 +288,7 @@ export default {
 html {
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 body {
@@ -305,25 +305,25 @@ h1 {
 h2 {
   font-size: 3.5rem;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 15px 0;
 }
 
 h3 {
   font-size: 2.5rem;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 15px 0;
 }
 
 h4 {
   font-size: 2rem;
   font-weight: 400;
-  margin: 0;
+  margin: 0 0 10px 0;
 }
 
 h5 {
   font-size: 1.5rem;
   font-weight: 400;
-  margin: 0;
+  margin: 0 0 5px 0;
 }
 
 p {
@@ -332,12 +332,12 @@ p {
   text-align: left;
 }
 
-input {
+input, textarea {
   border: none;
-  border-bottom: solid 2px $background-dark;
+  border-bottom: solid 2px $text-light;
   background-color: $background-light;
-  color: $background-dark;
-  font-size: 1.125rem;
+  color: $text-light;
+  font-size: 1.6rem;
   font-weight: 500;
   margin: 10px 0;
   transition: all 220ms ease-in-out;
@@ -356,12 +356,23 @@ input {
   }
 }
 
+
+textarea {
+  height: 15vh;
+}
+
 label {
   font-weight: 700;
   font-size: 1rem;
   text-align: left;
   color: $primary;
   margin-top: 10px;
+}
+
+.labelBlack {
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: $text-light;
 }
 
 #app {
@@ -412,7 +423,7 @@ label {
   flex-flow: row nowrap;
   justify-content: center;
   align-items: flex-start;
-  background-color: $background-dark;
+  background-color: $text-light;
   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.25);
   z-index: 999999;
 }
@@ -425,7 +436,7 @@ label {
   justify-content:  flex-start;
   align-items: flex-start;
   position: fixed;
-  background-color: $background-dark;
+  background-color: $text-light;
   z-index: 999999;
 
   .mobileNavHeader {
@@ -597,7 +608,7 @@ footer {
 
 @media (max-width: 1000px) {
   html {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 
@@ -630,6 +641,4 @@ footer {
     }
   }
 }
-
-
 </style>

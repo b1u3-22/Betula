@@ -1,14 +1,14 @@
 <template>
   <div class="dashboard" id="top">
     <div class="dashboardAddPostButton" @click="this.$router.push('add-post')">
-      <img class="dashboardAddPostButtonIcon" :src="require('@/assets/icons/circlePlusIcon.svg')"/>
+      <img class="dashboardAddPostButtonIcon" :src="require('@/assets/icons/plus.svg')"/>
       <div class="dashboardAddPostButtonText">Přidat příspěvek</div>
     </div>
     <div class="dashboardMainContainer">
       <div class="dashboardFinancialContainer">
         <div class="dashboardFinancialHeaderContainer">
           <div class="dashboardFinancialButtonsContainer">
-            <img :src="require(`@/assets/icons/circleArrowIcon.svg`)" class="dashboardFinancialRollButton" :class="{dashboardFinancialButtonRollUp: financialRolledUp, dashboardFinancialButtonRollDown: !financialRolledUp}" @click="financialRolledUp = !financialRolledUp" />
+            <img :src="require(`@/assets/icons/arrow.svg`)" class="dashboardFinancialRollButton" :class="{dashboardFinancialButtonRollUp: financialRolledUp, dashboardFinancialButtonRollDown: !financialRolledUp}" @click="financialRolledUp = !financialRolledUp" />
           </div>
           <div :class="{dashboardFinanctialQuickInfoShowed: financialRolledUp, dashboardFinanctialQuickInfoHidden: !financialRolledUp}" class="dashboardFinancialQuickInfo">
             <div class="dashboardFinancialQuickInfoContentContainer">

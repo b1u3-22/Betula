@@ -70,14 +70,14 @@ def get_all_users():
     users = {}
 
     for i in range(len(result)):
-        users[result[i][0]] = {"password": result[i][2], "permissions": result[i][3], "email": result[i][4], "status": result[i][5], "username": result[i][1]}
+        users[result[i][0]] = {"password": result[i][2], "admin": True if result[i][3] == "admin" else False, "email": result[i][4], "active": True if result[i][5] == "active" else False, "username": result[i][1]}
 
     connection.close()
     return users
 
-def insert_into_users(username, password, permissions, email, status):
+def insert_into_users(username, password, permissions, email, status, dark_mode):
     connection = sqlite.connect(database_path)
-    connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, ?, ?)", (username, password, permissions, email, status))
+    connection.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, ?, ?, ?)", (username, password, permissions, email, status, dark_mode))
     connection.commit()
     connection.close()
 
@@ -229,7 +229,7 @@ def get_all_images():
     images = {}
 
     for i in range(len(result)):
-        if (images[result[i][4]] != "true" and images[result[i][5]] != "true"):
+        if (result[i][4] != "true" and result[i][5] != "true"):
             images[result[i][0]] = {'link': result[i][1], 'description': result[i][3]}
 
     connection.close()
@@ -258,7 +258,7 @@ def get_background_image():
 
 def get_gallery_images():
     connection = sqlite.connect(database_path)
-    result = connection.execute("SELECT * FROM images WHERE on_mainpage = 'true'").fetchall()
+    result = connection.execute("SELECT * FROM images WHERE on_homepage = 'true'").fetchall()
     images = {}
 
     for i in range(len(result)):
@@ -269,21 +269,35 @@ def get_gallery_images():
 
 #------------------------------------------------------------------------------------------------------------------------------------
 
-def insert_into_images(link, location, description, is_background, on_mainpage):
+def insert_into_images(link, location, description, is_background, on_homepage):
     connection = sqlite.connect(database_path)
-    connection.execute("INSERT INTO images VALUES(NULL, ?, ?, ?, ?, ?)", (link, location, description, is_background, on_mainpage))
+    connection.execute("INSERT INTO images VALUES(NULL, ?, ?, ?, ?, ?)", (link, location, description, is_background, on_homepage))
     connection.commit()
     connection.close()
 
 def delete_from_images(id):
     connection = sqlite.connect(database_path)
+
+    location = connection.execute("SELECT location FROM images WHERE id = ?", (id, )).fetchone()[0]
+    os.remove(location)
+
     connection.execute("DELETE FROM images WHERE id = ?", (id, ))
     connection.commit()
     connection.close()
 
-def patch_image(id, description, is_background, on_mainpage):
+def delete_from_images_by_link(link):
     connection = sqlite.connect(database_path)
-    connection.execute("UPDATE images SET description = ?, is_background = ?, on_mainpage = ? WHERE id = ?", (description, is_background, on_mainpage, id))
+
+    location = connection.execute("SELECT location FROM images WHERE link = ?", (link, )).fetchone()[0]
+    os.remove(location)
+
+    connection.execute("DELETE FROM images WHERE link = ?", (link, ))
+    connection.commit()
+    connection.close()
+
+def patch_image(id, description, is_background, on_homepage):
+    connection = sqlite.connect(database_path)
+    connection.execute("UPDATE images SET description = ?, is_background = ?, on_homepage = ? WHERE id = ?", (description, is_background, on_homepage, id))
     connection.commit()
     connection.close()
 

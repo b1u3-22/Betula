@@ -14,6 +14,10 @@ cors = CORS(app)
 def index():
     return app.send_static_file("index.html")
 
+@app.route('/images/<path:path>', methods=["GET"])
+def send_image(path):
+    return flask.send_from_directory(os.path.abspath('../../photos'), path)
+
 @app.route("/verifyUser", methods = ["POST"])
 def verify_user():
     return database_controller.verify_user(flask.request.json["username"], flask.request.json["password"])
@@ -38,6 +42,11 @@ def get_all_images():
 def get_config():
     return config_controller.get_config()
 
+@app.route("/updateConfig", methods=["PATCH"])
+def update_config():
+    updated_config = flask.request.json
+    config_controller.update_config(updated_config)
+    return config_controller.get_config()
 
 @app.route("/updateDebts", methods=["PATCH"])
 def update_debts():
@@ -64,6 +73,83 @@ def update_debts():
                 debt["repaymentPerFlat"]
                 )
 
+    return database_controller.get_all_debts()
+
+@app.route("/updateUsers", methods=["PATCH"])
+def update_users():
+    updated_users = flask.request.json
+
+    for key, user in updated_users.items():
+        if key.startswith("deleted"):
+            database_controller.delete_from_users(re.findall(r'\d+', key)[0])
+
+        elif key.startswith("new"):
+            database_controller.insert_into_users(
+                user["username"],
+                user["password"],
+                "admin" if user["admin"] else "basic",
+                user["email"],
+                "active" if user["active"] else "disabled",
+                "false"
+                )
+
+        else:
+            database_controller.patch_user(
+                key, 
+                user["username"],
+                user["password"],
+                "admin" if user["admin"] else "basic",
+                user["email"],
+                "active" if user["active"] else "disabled"
+                )
+
+    return database_controller.get_all_users()
+
+@app.route("/updateImages", methods=["PATCH"])
+def update_images():
+    updated_images = flask.request.json
+
+    for key, image in updated_images.items():
+        if key.startswith("deleted"):
+            database_controller.delete_from_images(re.findall(r'\d+', key)[0])
+
+        else:
+            database_controller.patch_image(
+                key, 
+                image["description"],
+                "true" if "isBackground" in image and image["isBackground"] else "false",
+                "true" if "onHomepage" in image and image["onHomepage"] else "false"
+                )
+
+    return database_controller.get_all_images()
+
+def upload_image(file, is_background = "false", on_homepage = "false"):
+    image = Image.open(io.BytesIO(file))
+    image_name = f"{database_controller.generate_image_name()}.{image.format.lower()}"
+    image_path = f"{os.path.abspath('../../photos')}/{image_name}"
+    image_link = f"/images/{image_name}"
+    image.save(image_path)
+    database_controller.insert_into_images(image_link, image_path, "", is_background, on_homepage)
+    
+    return image_link
+
+
+@app.route("/uploadImage", methods=["PUT"])
+def upload_gallery_image():
+    return upload_image(flask.request.data)
+
+@app.route("/uploadBackgroundImage", methods=["PUT"])
+def upload_background_image():
+    return upload_image(flask.request.data, is_background = "true")
+
+@app.route("/uploadHomepageGalleryImage", methods=["PUT"])
+def upload_homepage_gallery_image():
+    return upload_image(flask.request.data, on_homepage = "true")
+
+
+@app.route("/deleteImageByLink", methods=["PATCH"])
+def delete_image_by_link():
+    database_controller.delete_from_images_by_link(flask.request.json["link"])
     return flask.Response(status=200)
 
 database_controller.start_database()

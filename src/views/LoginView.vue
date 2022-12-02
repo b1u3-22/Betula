@@ -91,7 +91,7 @@ export default {
 
     .loginFormTitle {
       font-weight: 700;
-      color: $background-dark;
+      color: $text-light;
       font-size: 2.2rem;
       margin: 0 0 25px 0;
     }
@@ -105,10 +105,10 @@ export default {
 
       .loginFormInput {
         border: none;
-        border-bottom: solid 2px $background-dark;
+        border-bottom: solid 2px $text-light;
         background-color: $background-light;
         width: 100%;
-        color: $background-dark;
+        color: $text-light;
         font-size: 1.125rem;
         font-weight: 500;
         margin: 0 0 22px 0;

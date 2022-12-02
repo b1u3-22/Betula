@@ -155,7 +155,7 @@ export default {
 
             &:hover {
               opacity: 0.85;
-              background-color: $background-dark;
+              background-color: $text-light;
             } //   TODO: FOR FUTURE USE
           }
         }

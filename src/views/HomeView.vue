@@ -236,7 +236,7 @@ export default {
   .homeContactSubtitle {
     font-size: 2.2rem;
     font-weight: 700;
-    color: $background-dark;
+    color: $text-light;
   }
 
   .homeContactContentContainer {
@@ -272,7 +272,7 @@ export default {
         .homeContactItemText {
           font-size: 1.25rem;
           font-weight: 400;
-          color: $background-dark
+          color: $text-light
         }
       }
     }
@@ -295,10 +295,10 @@ export default {
 
       .homeContactFormInput {
         border: none;
-        border-bottom: solid 2px $background-dark;
+        border-bottom: solid 2px $text-light;
         background-color: $background-light;
         width: 100%;
-        color: $background-dark;
+        color: $text-light;
         font-size: 1.125rem;
         font-weight: 500;
         margin: 0 0 22px 0;

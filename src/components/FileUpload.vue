@@ -1,7 +1,11 @@
 <template>
     <div class="fileUploadContainer" @dragenter.prevent="setActive" @dragover.prevent="setActive" @dragleave.prevent="setInactive" @drop.prevent="onDrop">
         <template v-if="!active">
-            <h4 class="fileUploadTitle">Přetáhněte své soubory</h4>
+            <h4 class="fileUploadTitle">
+                <slot>
+
+                </slot>
+            </h4>
             <p class="fileUploadText">Nebo</p>
             <label class="fileUploadButton">
              Klikněte sem

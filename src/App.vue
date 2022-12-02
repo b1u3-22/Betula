@@ -164,12 +164,11 @@
         <a href="/home-contact" class="footerItem">Kontakty</a>
         <a href="/dashboard" class="footerItem">Systém</a>
       </div>
-      <div class="footerMenuContainer">
+      <div class="footerMenuContainer" v-if="config.contactSection">
         <h4 class="footerTitle">Kontakt</h4>
-        <p class="footerItem">{{ generalInfo.address }}</p>
-        <p class="footerItem">{{ generalInfo.mobile_phone_0 }}</p>
-        <p class="footerItem">{{ generalInfo.mobile_phone_1 }}</p>
-        <p class="footerItem">{{ generalInfo.email_0 }}</p>
+        <p class="footerItem">{{ config.contactSection.address }}</p>
+        <p class="footerItem">{{ config.contactSection.phone }}</p>
+        <p class="footerItem">{{ config.contactSection.email }}</p>
       </div>
     </div>
     <div class="footerCopyright">© Jiří Sedlák {{ new Date().getFullYear() }}</div>
@@ -225,7 +224,7 @@ export default {
   data: function () {
       return {
         typeOfNav: "home",
-        generalInfo: {},
+        config: {},
         verified: false,
         permissions: false,
         username: "",
@@ -236,11 +235,9 @@ export default {
 
   created: function() {
     axios
-      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .get("http://127.0.0.1:5000/getHomePageConfig")
       .then((response) => {
-        for (const [key, value] of Object.entries(response.data)){
-          this.generalInfo[key] = value.text
-        }
+        this.config = response.data;
       });
   },
 

@@ -1,44 +1,41 @@
 <template>
-  <div class="home">
-    <img :src="backgroundImage" class="landingPageImage" />
+  <div class="home" v-if="config.landingSection">
+    <img :src="config.landingSection.background" class="landingPageImage" />
     <div id="home" class="landingPageContainer">
-      <h1 class="homeTitle">{{ generalInfo.title }}</h1>
-      <h2 class="homeSubtitle">{{ generalInfo.subtitle }}</h2>
+      <h1 class="homeTitle">{{ config.landingSection.title }}</h1>
+      <h2 class="homeSubtitle">{{ config.landingSection.subtitle }}</h2>
     </div>
-    <div id="home-gallery" class="homeGalleryContainer">
+    <div v-if="config.gallerySection.visible" id="home-gallery" class="homeGalleryContainer">
       <div class="homeGalleryLeftContainer">
-        <BigTitle side="true" :smallText="generalInfo.gallery_subtitle" :bigText="generalInfo.gallery_title"/>
-        <p class="homeGalleryText">{{ generalInfo.gallery_text }}</p>
+        <BigTitle side="true" :smallText="config.gallerySection.subtitle" :bigText="config.gallerySection.title"/>
+        <p class="homeGalleryText">{{ config.gallerySection.text }}</p>
         <ButtonLink style="margin: 0 0 0 56px;" link="gallery">Celá galerie</ButtonLink>
       </div>
-      <div class="homeGalleryRightContainer">
+      <div v-if="config.gallerySection.images.visible" class="homeGalleryRightContainer">
           <figure>
-            <img :src="galleryImages[0]"/>
-            <img :src="galleryImages[1]"/>
-            <img :src="galleryImages[2]"/>
+            <img :src="config.gallerySection.images.images[0]"/>
+            <img :src="config.gallerySection.images.images[1]"/>
+            <img :src="config.gallerySection.images.images[2]"/>
           </figure>
       </div>
     </div>
-    <div id="home-contact" class="homeContactContainer">
-      <BigTitle side="false" :smallText="generalInfo.contact_subtitle" :bigText="generalInfo.contact_title" />
+    <div v-if="config.contactSection.visible" id="home-contact" class="homeContactContainer">
+      <BigTitle side="false" :smallText="config.contactSection.subtitle" :bigText="config.contactSection.title" />
       <div class="homeContactContentContainer">
         <div class="homeContactLeftContainer">
           <h3 class="homeContactSubtitle">Kontaktní informace</h3>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/house.svg`)" />
-            <div class="homeContactItemText">{{ generalInfo.address }}</div>
+            <div class="homeContactItemText">{{ config.contactSection.address }}</div>
           </div>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/phone.svg`)" />
-            <div class="homeContactItemText">{{ generalInfo.mobile_phone_0 }}</div>
+            <div class="homeContactItemText">{{ config.contactSection.phone }}</div>
           </div>
-          <div class="homeContactItemContainer">
-            <img class="homeContactItemIcon" :src="require(`@/assets/icons/phone.svg`)" />
-            <div class="homeContactItemText">{{ generalInfo.mobile_phone_1 }}</div>
-          </div>
+          <!--TODO: ADD ICO AND DIC-->
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/mail.svg`)" />
-            <div class="homeContactItemText">{{ generalInfo.email_0 }}</div>
+            <div class="homeContactItemText">{{ config.contactSection.email }}</div>
           </div>
         </div>
         <form class="homeContactForm">
@@ -73,41 +70,22 @@ export default {
   },
   data: function(){
     return {
-      generalInfo: {},
-      backgroundImage: "",
-      galleryImages: []
+      config: {}
     }
   },
   mounted: function() {
     let path = this.$route.path.replace('/', '');
     path === '' ? path = 'home' : '';
     if (path.includes('home')){
-        document.getElementById(path).scrollIntoView({behavior: "smooth"})
+        //document.getElementById(path).scrollIntoView({behavior: "smooth"})
     }
   },
 
   created: function() {
     axios
-      .get("http://127.0.0.1:5000/getGeneralInfo")
+      .get("/getHomePageConfig")
       .then((response) => {
-        for (const [key, value] of Object.entries(response.data)){
-          this.generalInfo[key] = value.text
-        }
-      });
-
-    axios
-    .get("http://127.0.0.1:5000/getGalleryImages")
-    .then((response) => {
-      for (let image of Object.entries(response.data)){
-        this.galleryImages.push(image[1].link)  
-      }
-    });
-
-    axios
-    .get("http://127.0.0.1:5000/getBackgroundImage")
-    .then((response) => {
-        this.backgroundImage = response.data.link
-
+        this.config = response.data;
       });
   },
 

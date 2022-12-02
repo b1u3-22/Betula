@@ -42,6 +42,10 @@ def get_all_images():
 def get_config():
     return config_controller.get_config()
 
+@app.route("/getHomePageConfig", methods=["GET"])
+def get_homepage_config():
+    return config_controller.get_homepage_config()
+
 @app.route("/updateConfig", methods=["PATCH"])
 def update_config():
     updated_config = flask.request.json

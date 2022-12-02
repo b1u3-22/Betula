@@ -413,6 +413,7 @@ export default {
                       "/uploadBackgroundImage",
                       (response) => {
                         this.config.data.homePage.landingSection.background = response.data
+                        this.autoUpdateConfig()
                       });
     },
 

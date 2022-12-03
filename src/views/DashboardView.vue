@@ -44,6 +44,7 @@
             <div class="dashboardFinancialDocumentContainer">
               <ButtonLink link="/futurepdf" target="_blank">Uzávěrka</ButtonLink>
               <p>Účetní uzávěrka za rok {{ new Date().getFullYear() - 1 }}</p>
+              <p><i>Zůstatek na účtu obsahuje i zálohy na vodné a stočné</i></p>
             </div>
           </div>
           <div v-if="(!(Object.keys(debts).length === 0)) && config.financeSection.debts.visible" class="dashboardFinancialSubContainer">

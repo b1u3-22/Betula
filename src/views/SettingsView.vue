@@ -424,8 +424,10 @@ export default {
 
     uploadImages: function(images){
       for (let image of images){
-        this.uploadImage(image, "/uploadImage", this.getImages())
+        this.uploadImage(image, "/uploadImage");
       }
+
+      this.getImages();
     },
 
     getFileFromObject: async function(object){

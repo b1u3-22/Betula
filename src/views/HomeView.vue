@@ -1,28 +1,33 @@
 <template>
   <div class="home" v-if="config.landingSection">
-    <img :src="config.landingSection.background" class="landingPageImage" />
+    <img v-if="config.landingSection.background" :src="config.landingSection.background" class="landingPageImage" />
+    <img v-else :src="require('@/assets/images/noImageNoLogo.jpg')" class="landingPageImage" />
     <div id="home" class="landingPageContainer">
       <h1 class="homeTitle">{{ config.landingSection.title }}</h1>
       <h2 class="homeSubtitle">{{ config.landingSection.subtitle }}</h2>
     </div>
-    <div v-if="config.gallerySection.visible" id="home-gallery" class="homeGalleryContainer">
-      <div class="homeGalleryLeftContainer">
-        <BigTitle side="true" :smallText="config.gallerySection.subtitle" :bigText="config.gallerySection.title"/>
-        <p class="homeGalleryText">{{ config.gallerySection.text }}</p>
-        <ButtonLink style="margin: 0 0 0 56px;" link="gallery">Celá galerie</ButtonLink>
+    <div v-if="config.gallerySection.visible" id="home-gallery" class="homeGalleryContainer"
+     :style="config.gallerySection.images.visible ? 'justify-content: flex-end;' : 'justify-content: center;'">
+      <div class="homeGalleryLeftContainer" :style="config.gallerySection.images.visible ? 'margin: 0 10em 0 0; align-items: flex-start;' : 'margin: 0; align-items: center;'" >
+        <BigTitle :side="config.gallerySection.images.visible ? 'true' : 'false'" :smallText="config.gallerySection.subtitle" :bigText="config.gallerySection.title"/>
+        <p class="homeGalleryText" :style="config.gallerySection.images.visible ? 'margin: 25px 0 20px 60px;' : 'margin: 25px 0 20px 0;'">{{ config.gallerySection.text }}</p>
+        <ButtonLink :style="config.gallerySection.images.visible ?  'margin: 0 0 0 56px;' : 'margin: 0;'" link="gallery">Celá galerie</ButtonLink>
       </div>
       <div v-if="config.gallerySection.images.visible" class="homeGalleryRightContainer">
           <figure>
-            <img :src="config.gallerySection.images.images[0]"/>
-            <img :src="config.gallerySection.images.images[1]"/>
-            <img :src="config.gallerySection.images.images[2]"/>
+            <img v-if="config.gallerySection.images.images[0]" :src="config.gallerySection.images.images[0]"/>
+            <img v-else :src="require('@/assets/images/noImageNoLogo.jpg')"/>
+            <img v-if="config.gallerySection.images.images[1]" :src="config.gallerySection.images.images[0]"/>
+            <img v-else :src="require('@/assets/images/noImage.jpg')"/>
+            <img v-if="config.gallerySection.images.images[2]" :src="config.gallerySection.images.images[0]"/>
+            <img v-else :src="require('@/assets/images/noImageNoLogo.jpg')"/>
           </figure>
       </div>
     </div>
     <div v-if="config.contactSection.visible" id="home-contact" class="homeContactContainer">
       <BigTitle side="false" :smallText="config.contactSection.subtitle" :bigText="config.contactSection.title" />
       <div class="homeContactContentContainer">
-        <div class="homeContactLeftContainer">
+        <div class="homeContactLeftContainer" :style="config.contactSection.contactForm.visible ? 'width: 30%' : 'widtch: fit-content'">
           <h3 class="homeContactSubtitle">Kontaktní informace</h3>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/house.svg`)" />
@@ -32,14 +37,21 @@
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/phone.svg`)" />
             <div class="homeContactItemText">{{ config.contactSection.phone }}</div>
           </div>
-          <!--TODO: ADD ICO AND DIC-->
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/mail.svg`)" />
             <div class="homeContactItemText">{{ config.contactSection.email }}</div>
           </div>
+          <div class="homeContactItemContainer">
+            <img class="homeContactItemIcon" :src="require(`@/assets/icons/ico.svg`)" />
+            <div class="homeContactItemText">{{ config.contactSection.ico }}</div>
+          </div>
+          <div class="homeContactItemContainer">
+            <img class="homeContactItemIcon" :src="require(`@/assets/icons/dic.svg`)" />
+            <div class="homeContactItemText">{{ config.contactSection.dic }}</div>
+          </div>
         </div>
-        <form class="homeContactForm">
-          <h3 class="homeContactSubtitle">Kontaktní formulář</h3>
+        <form v-if="config.contactSection.contactForm.visible" class="homeContactForm">
+          <h3>Kontaktní formulář</h3>
           <label class="homeContactFormLabel" for="email">Váš email *</label>
           <input class="homeContactFormInput" type="email" id="email" name="email" placeholder="jannovak@seznam.cz">
           <label class="homeContactFormLabel" for="subject">Co Vás zajímá *</label>
@@ -151,7 +163,7 @@ export default {
   flex-flow: row wrap;
   width: 100vw;
   height: fit-content;
-  margin: 7% 0 0 0;
+  margin: 7% 0 7% 0;
   align-items:center;
   justify-content: flex-end;
 

@@ -22,7 +22,7 @@
                   <img class="settingsButtonIcon" :src="require('@/assets/icons/upload.svg')" /> 
                   <input style="display: none" type="file" @input="backgroundImageInput" name="settingsBackgroundUpload" id="settingsBackgroundUpload" />
                 </label>
-                <div @click="deleteImageByLink(config.data.homePage.landingSection.background, ()=> {config.data.homePage.landingSection.background = ''})" class="settingsButton">
+                <div @click="deleteBackgroundImage()" class="settingsButton">
                   <label>Smazat</label>
                   <img class="settingsButtonIcon" :src="require('@/assets/icons/delete.svg')" />
                 </div>
@@ -63,7 +63,7 @@
                       <img class="settingsButtonIcon" :src="require('@/assets/icons/upload.svg')" />
                       <input style="display: none" type="file" @input="homePageGalleryImageInput($event, index)" :index="index" :name="'settingsHomepageImageUpload' + index" :id="'settingsHomepageImageUpload' + index" />
                     </label>
-                    <div @click="deleteImageByLink(config.data.homePage.gallerySection.images.images[index], ()=> {config.data.homePage.gallerySection.images.images[index]= ''})" class="settingsButton">
+                    <div @click="deleteHomeGalleryImage(index)" class="settingsButton">
                       <label>Smazat</label>
                       <img class="settingsButtonIcon" :src="require('@/assets/icons/delete.svg')" />
                     </div>
@@ -333,6 +333,38 @@ export default {
       this.autoUpdateImages();
     },
 
+    deleteBackgroundImage: function() {
+      if (this.config.data.homePage.landingSection.background != ""){
+          this.deleteImageByLink(this.config.data.homePage.landingSection.background, () => {
+          this.config.data.homePage.landingSection.background = '';
+          this.autoUpdateConfig();
+        })
+      }
+      else {
+        this.$notify({
+            type: "warn",
+            title: "Chyba v nastavení",
+            text: "Toto pozadí nelze smazat"
+          })
+      }
+    },
+
+    deleteHomeGalleryImage: function(index) {
+      if (this.config.data.homePage.gallerySection.images.images[index] != ""){
+        this.deleteImageByLink(this.config.data.homePage.gallerySection.images.images[index], () => {
+          this.config.data.homePage.gallerySection.images.images[index]= '';
+          this.autoUpdateConfig();
+        })
+      }
+      else {
+        this.$notify({
+            type: "warn",
+            title: "Chyba v nastavení",
+            text: "Tuto fotografii nelze smazat"
+          })
+      }
+    },
+
     getDebts: function() {
       axios.get("/getAllDebts")
         .then((response) => {
@@ -428,8 +460,6 @@ export default {
     deleteImageByLink: function(link, callback){
       axios.patch("/deleteImageByLink", {"link": link})
       callback()
-
-      console.log(this.config.data.homePage.landingSection.background)
     },
 
     updateConfig: function(){

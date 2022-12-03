@@ -640,6 +640,9 @@ export default {
 }
 
 @media (max-width: 600px) {
+  .settingsCard {
+    width: 100%;
+  }
 }
 
 </style>

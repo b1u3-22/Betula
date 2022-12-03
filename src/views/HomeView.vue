@@ -27,7 +27,7 @@
     <div v-if="config.contactSection.visible" id="home-contact" class="homeContactContainer">
       <BigTitle side="false" :smallText="config.contactSection.subtitle" :bigText="config.contactSection.title" />
       <div class="homeContactContentContainer">
-        <div class="homeContactLeftContainer" :style="config.contactSection.contactForm.visible ? 'width: 30%' : 'widtch: fit-content'">
+        <div class="homeContactLeftContainer">
           <h3 class="homeContactSubtitle">Kontaktní informace</h3>
           <div class="homeContactItemContainer">
             <img class="homeContactItemIcon" :src="require(`@/assets/icons/house.svg`)" />
@@ -447,14 +447,21 @@ export default {
       flex-flow: column nowrap;
 
       .homeContactLeftContainer {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: flex-start;
+        padding: 0 15px;
+        box-sizing: border-box;
         width: 100%;
+        margin-bottom: 50px;
 
         .homeContactSubtitle {
           text-align: center;
+          width: 100%;
         }
 
         .homeContactItemContainer {
-          width: 100%;
+          width: fit-content;
           align-items: center;
           justify-content: center;
         }

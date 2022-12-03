@@ -12,62 +12,62 @@
           </div>
           <div :class="{dashboardFinanctialQuickInfoShowed: financialRolledUp, dashboardFinanctialQuickInfoHidden: !financialRolledUp}" class="dashboardFinancialQuickInfo">
             <div class="dashboardFinancialQuickInfoContentContainer">
-              <div class="dashboardFinancialQuickInfoTitle">Zůstatek na účtu</div>
-              <div class="dashboardFinancialQuickInfoText">{{ config.financeSection.balance }}</div>
+              <label>Zůstatek na účtu</label>
+              <h4>{{ config.financeSection.balance }}</h4>
             </div>
             <div v-if="remainingTotalDebt !== 0 && config.financeSection.debts.visible" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
-              <div class="dashboardFinancialQuickInfoTitle">Zbývající dluh</div>
-              <div class="dashboardFinancialQuickInfoText"> {{ remainingTotalDebt }} </div>
+              <label>Zbývající dluh</label>
+              <h4> {{ remainingTotalDebt }} </h4>
             </div>
             <div v-if="monthlyTotalRepaymentPerFlat !== 0 && config.financeSection.debts.visible" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
-              <div class="dashboardFinancialQuickInfoTitle">Splátka na byt</div>
-              <div class="dashboardFinancialQuickInfoText">{{ monthlyTotalRepaymentPerFlat }}</div>
+              <label>Splátka na byt</label>
+              <h4>{{ monthlyTotalRepaymentPerFlat }}</h4>
             </div>
           </div>
         </div>
         <div class="dashboardFinancialHelperContainer " :class="{dashboardFinancialRollUp: financialRolledUp, dashboardFinancialRollDown: !financialRolledUp}">
           <div class="dashboardFinancialSubContainer">
-            <h1 class="dashboardFinancialHeader">Družstevní účet</h1>
+            <h3>Družstevní účet</h3>
             <div class="dashboardFinancialContentContainer">
               <div class="dashboardFinancialLine" />
               <div class="dashboardFinancialTextContainer">
                 <div class="dashboardFinancialPartContainer">
-                  <h2 class="dashboardFinancialPartHeader">Číslo účtu</h2>
-                  <p class="dashboardFinancialContentText">{{ config.financeSection.accountNumber }}</p>
+                  <label>Číslo účtu</label>
+                  <h5>{{ config.financeSection.accountNumber }}</h5>
                 </div>
                 <div class="dashboardFinancialPartContainer">
-                  <h2 class="dashboardFinancialPartHeader">Zůstatek na účtu</h2>
-                  <p class="dashboardFinancialContentText">{{ config.financeSection.balance }}</p>
+                  <label>Zůstatek na účtu</label>
+                  <h5>{{ config.financeSection.balance }}</h5>
                 </div>
               </div>
             </div>
             <div class="dashboardFinancialDocumentContainer">
               <ButtonLink link="/futurepdf" target="_blank">Uzávěrka</ButtonLink>
-              <p class="dashboardFinancialDocumentText">Účetní uzávěrka za rok {{ new Date().getFullYear() - 1 }}</p>
+              <p>Účetní uzávěrka za rok {{ new Date().getFullYear() - 1 }}</p>
             </div>
           </div>
           <div v-if="(!(Object.keys(debts).length === 0)) && config.financeSection.debts.visible" class="dashboardFinancialSubContainer">
-            <h1 class="dashboardFinancialHeader">Půjčky</h1>
+            <h3>Půjčky</h3>
             <div class="dashboardFinancialDebtContainer">
               <template v-for="debt in debts" :key="debt">
                 <div class="dashboardFinancialContentContainer">
                   <div class="dashboardFinancialLine" />
                   <div class="dashboardFinancialTextContainer">
                     <div class="dashboardFinancialPartContainer">
-                      <h2 class="dashboardFinancialPartHeader">Čerpaná částka</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.total }}</p>
+                      <label>Čerpaná částka</label>
+                      <h5>{{ debt.total }}</h5>
                     </div>
                     <div class="dashboardFinancialPartContainer">
-                      <h2 class="dashboardFinancialPartHeader">Zbývající částka</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.remaining }}</p>
+                      <label>Zbývající částka</label>
+                      <h5 class="dashboardFinancialContentText">{{ debt.remaining }}</h5>
                     </div>
                     <div class="dashboardFinancialPartContainer">
-                      <h2 class="dashboardFinancialPartHeader">Zbývající částka na byt</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.remainingPerFlat }}</p>
+                      <label>Zbývající částka na byt</label>
+                      <h5 class="dashboardFinancialContentText">{{ debt.remainingPerFlat }}</h5>
                     </div>
                     <div class="dashboardFinancialPartContainer">
-                      <h2 class="dashboardFinancialPartHeader">Měsíční splátka na byt</h2>
-                      <p class="dashboardFinancialContentText">{{ debt.repaymentPerFlat }}</p>
+                      <label>Měsíční splátka na byt</label>
+                      <h5>{{ debt.repaymentPerFlat }}</h5>
                     </div>
                   </div>
                 </div>
@@ -116,9 +116,9 @@ export default {
 
   created: function(){
 
-    if (!this.$props.verified){
-      this.$router.push("/login")
-    }
+    //if (!this.$props.verified){
+    //  this.$router.push("/login")
+    //}
 
     axios
       .get("/getAllDebts")
@@ -235,22 +235,6 @@ export default {
             justify-content: flex-start;
             align-items: flex-start;
             margin: 0 50px 0 0;
-
-            .dashboardFinancialQuickInfoTitle {
-              font-weight: 700;
-              font-size: 1rem;
-              letter-spacing: 0.25em;
-              color: $primary;
-              margin: 0;
-              text-align: left;
-            }
-
-            .dashboardFinancialQuickInfoText {
-              font-weight: 700;
-              font-size: 1.5rem;
-              margin: 0;
-              text-align: left;
-            }
           }
         }
       }
@@ -278,20 +262,7 @@ export default {
             align-items: flex-start;
             justify-content: flex-start;
             margin-top: 20%;
-
-            .dashboardFinancialDocumentText {
-              text-align: left;
-              font-weight: 400;
-              font-size: 1rem;
-            }
           }
-
-          .dashboardFinancialHeader {
-            font-weight: 700;
-            font-size: 2.5rem;
-            text-align: left;
-          }
-
           .dashboardFinancialDebtContainer {
             display: flex;
             flex-flow: row nowrap;
@@ -309,7 +280,7 @@ export default {
             .dashboardFinancialLine {
               width: 6px;
               background-color: $primary;
-              margin: 0 10px 0 0;
+              margin: 0 10px -15% 0;
             }
 
             .dashboardFinancialTextContainer {
@@ -326,22 +297,6 @@ export default {
                 flex-flow: column nowrap;
                 align-items: flex-start;
                 justify-content: flex-start;
-
-                .dashboardFinancialPartHeader {
-                  font-weight: 700;
-                  font-size: 1rem;
-                  letter-spacing: 0.25em;
-                  color: $primary;
-                  margin: 0;
-                  text-align: left;
-                }
-
-                .dashboardFinancialContentText {
-                  font-weight: 700;
-                  font-size: 1.5rem;
-                  margin: 5px 0 25px 0;
-                  text-align: left;
-                }
               }
             }
           }

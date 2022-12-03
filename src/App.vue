@@ -314,13 +314,13 @@ h3 {
 
 h4 {
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 600;
   margin: 0 0 10px 0;
 }
 
 h5 {
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 700;
   margin: 0 0 5px 0;
 }
 
@@ -364,7 +364,6 @@ label {
   font-size: 1rem;
   text-align: left;
   color: $primary;
-  margin-top: 10px;
 }
 
 .labelBlack {

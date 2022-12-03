@@ -8,10 +8,10 @@
     </div>
     <div v-if="config.gallerySection.visible" id="home-gallery" class="homeGalleryContainer"
      :style="config.gallerySection.images.visible ? 'justify-content: flex-end;' : 'justify-content: center;'">
-      <div class="homeGalleryLeftContainer" :style="config.gallerySection.images.visible ? 'margin: 0 10em 0 0; align-items: flex-start;' : 'margin: 0; align-items: center;'" >
-        <BigTitle :side="config.gallerySection.images.visible ? 'true' : 'false'" :smallText="config.gallerySection.subtitle" :bigText="config.gallerySection.title"/>
-        <p class="homeGalleryText" :style="config.gallerySection.images.visible ? 'margin: 25px 0 20px 60px;' : 'margin: 25px 0 20px 0;'">{{ config.gallerySection.text }}</p>
-        <ButtonLink :style="config.gallerySection.images.visible ?  'margin: 0 0 0 56px;' : 'margin: 0;'" link="gallery">Celá galerie</ButtonLink>
+      <div class="homeGalleryLeftContainer" :style="config.gallerySection.images.visible ? '' : 'margin: 0; padding-left: 0; align-items: center; width: 100%'" >
+        <BigTitle :style="config.gallerySection.images.visible ? '' : 'margin-left: 0;'" :side="config.gallerySection.images.visible ? 'true' : 'false'" :smallText="config.gallerySection.subtitle" :bigText="config.gallerySection.title"/>
+        <p>{{ config.gallerySection.text }}</p>
+        <ButtonLink link="gallery">Celá galerie</ButtonLink>
       </div>
       <div v-if="config.gallerySection.images.visible" class="homeGalleryRightContainer">
           <figure>
@@ -174,6 +174,11 @@ export default {
     justify-content: flex-start;
     width: 30%;
     margin: 0 10em 0 0;
+    padding-left: 56px;
+
+    .bigTitleContainer {
+      margin-left: -56px;
+    }
 
     .homeGalleryText {
       margin: 25px 0 20px 60px;
@@ -387,6 +392,15 @@ export default {
 
 }
 
+
+@media (max-width: 1000px) {
+  .homeGalleryContainer {
+    .homeGalleryLeftContainer {
+      width: 25%;
+    }
+  }
+}
+
 @media (max-width: 600px) {
   .homeGalleryContainer {
     flex-flow: column nowrap;
@@ -395,6 +409,11 @@ export default {
       width: 100%;
       margin: 0;
       align-items: center;
+      padding-left: 0;
+
+      .bigTitleContainer {
+        margin-left: 0;
+      }
 
       .homeGalleryText {
         margin: 25px 60px 20px 60px;

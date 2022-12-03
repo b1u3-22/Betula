@@ -47,6 +47,7 @@ export default {
     height: 2.5rem;
     width: 5.4rem;
     transition: all 120ms ease-in-out;
+    margin: 10px;
 
     .toggleCircle {
         background-color: $text-dark;

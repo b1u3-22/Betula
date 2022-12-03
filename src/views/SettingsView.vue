@@ -13,7 +13,7 @@
               <input type="text" v-model="config.data.homePage.landingSection.subtitle" />
             </div>    
             <h3>Pozadí</h3>
-            <div class="settingsRow">
+            <div class="settingsRow settingsNoLine">
               <img v-if="config.data.homePage.landingSection.background" class="imagePreview" :src="config.data.homePage.landingSection.background" />
               <img v-else class="imagePreview" :src="require('@/assets/images/noImage.jpg')" />
               <div class="settingsButtonsRow">
@@ -54,7 +54,7 @@
                 <ToggleButton @change="autoUpdateConfig()" :isChecked="config.data.homePage.gallerySection.images.visible" v-model:checked="config.data.homePage.gallerySection.images.visible" />
               </div>  
               <div class="settingsColumn" v-if="config.data.homePage.gallerySection.images.visible" >
-                <div class="settingsRow" v-for="(image, index) of config.data.homePage.gallerySection.images.images" :key="image">
+                <div class="settingsRow settingsNoLine" v-for="(image, index) of config.data.homePage.gallerySection.images.images" :key="image">
                   <img v-if="image" class="imagePreview" :src="image" />
                   <img v-else class="imagePreview" :src="require('@/assets/images/noImage.jpg')" />
                   <div class="settingsButtonsRow">
@@ -132,7 +132,7 @@
               <h3>Fotografie</h3>
               <FileUpload @uploadFiles="uploadImages" >Nahrajte nové fotografie přetáhnutím</FileUpload>
               <template v-for="(image, key) of images.data" :key="key">
-                <div v-if="!key.startsWith('deleted')" class="settingsRow" style="margin-top: 15px">
+                <div v-if="!key.startsWith('deleted')" class="settingsRow settingsNoLine" style="margin-top: 15px">
                   <div class="settingsRow" style="justify-content: flex-start">
                     <img class="imagePreview" :src="image.link" style="margin-right: 15px" />
                     <div class="settingsColumn" style="width: fit-content; align-items: flex-start">
@@ -157,7 +157,7 @@
               <ToggleButton @change="autoUpdateConfig()" :isChecked="config.data.dashboardPage.financeSection.visible" v-model:checked="config.data.dashboardPage.financeSection.visible" />
             </div> 
             <div v-if="config.data.dashboardPage.financeSection.visible" class="settingsColumn">
-              <div class="settingsRow">
+              <div class="settingsRow settingsNoLine">
                 <label class="labelBlack">Číslo účtu</label>
                 <input type="text" v-model="config.data.dashboardPage.financeSection.accountNumber" />
               </div> 
@@ -172,7 +172,7 @@
               <div v-if="config.data.dashboardPage.financeSection.debts.visible" class="settingsColumn">
                 <h3>Půjčky</h3>
                 <template v-for="(debt, key) of debts.data" :key="key">
-                  <div v-if="!key.startsWith('deleted')" class="settingsRow">
+                  <div v-if="!key.startsWith('deleted')" class="settingsRow settingsNoLine">
                     <div class="settingsColumn" style="align-items: flex-start">
                       <label>Čerpaná částka</label>
                       <input class="settingsInput" type="text" v-model="debt.total" />
@@ -195,7 +195,7 @@
                     </div>
                   </div>
                 </template>
-                <div class="settingsRow" style="justify-content: center">
+                <div class="settingsRow settingsNoLine" style="justify-content: center">
                   <ButtonAction style="margin-right: 15px" @click="addDebt">Přidat novou půjčku</ButtonAction>
                 </div>
               </div>
@@ -204,7 +204,7 @@
           <form @change="autoUpdateUsers()" class="settingsColumn settingsCard">
             <h2>Sekce uživatelských účtů</h2>
             <template v-for="(user, key) of users.data" :key="key">
-              <div v-if="!key.startsWith('deleted')" class="settingsRow">
+              <div v-if="!key.startsWith('deleted')" class="settingsRow settingsNoLine">
                 <div class="settingsColumn settingsItemColumn">
                   <label>Uživatelské jméno</label>
                   <input class="settingsInput" type="text" v-model="user.username" />
@@ -231,7 +231,7 @@
                 </div>
               </div>
             </template>
-            <div class="settingsRow" style="justify-content: center">
+            <div class="settingsRow settingsNoLine" style="justify-content: center">
               <ButtonAction style="margin-right: 15px" @click="addUser">Přidat nového uživatele</ButtonAction>
             </div>
           </form>
@@ -515,6 +515,11 @@ export default {
   align-items: center;
   justify-content: space-between; 
   margin-bottom: 15px;
+  border-bottom: $shadows-light solid 1px;
+}
+
+.settingsNoLine {
+  border-bottom: none;
 }
 
 .settingsColumn {

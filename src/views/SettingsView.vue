@@ -148,9 +148,6 @@
                   </div>
                 </div>
               </template>
-              <div class="settingsRow" style="justify-content: center">
-                <ButtonAction style="margin-right: 15px" @click="updateImages">Uložit fotografie</ButtonAction>
-              </div>
           </form>
           <BigTitle bigText="Systémové stránky" smallText="Nastavení" side="false"/>
           <form @change="autoUpdateDebts(); autoUpdateConfig()"  class="settingsColumn settingsCard">

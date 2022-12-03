@@ -154,6 +154,7 @@
   <router-view 
     @verifiedFromLogin="(username) => verifiedFromLogin(username)"
     :verified="verified"
+    :permissions="permissions"
     />
 
   <footer>

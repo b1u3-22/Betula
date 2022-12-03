@@ -254,7 +254,15 @@ export default {
     ToggleButton,
     FileUpload,
     ButtonAction
-},
+  },
+  props: {
+    verified: {
+      type: Boolean
+    },
+    permissions: {
+      type: Boolean
+    }
+  },
   data: function(){
     return {
       config: {timeout: null, data: {}},
@@ -294,7 +302,6 @@ export default {
     getConfig: function() {
       axios.get("/getConfig")
         .then((response) => {
-          console.log(response);
           this.config.data = response.data;
         })
     },
@@ -383,7 +390,6 @@ export default {
       axios.get("/getAllImages")
         .then((response) => {
           this.images.data = response.data
-          console.log(response.data)
         })
     },
 
@@ -449,8 +455,6 @@ export default {
     },
 
     homePageGalleryImageInput: async function(e, index){
-      console.log(e.target.files[0]);
-      console.log(index)
       this.uploadImage(await this.getFileFromObject(e.target.files[0]),
                       "/uploadHomepageGalleryImage",
                       (response) => {
@@ -467,7 +471,6 @@ export default {
     updateConfig: function(){
       axios.patch("/updateConfig", this.config.data)
       .then(() => {
-        console.log("Config saved");
       })
     },
 
@@ -506,6 +509,10 @@ export default {
   },
 
   created: function() {
+    if (!this.$props.verified || !this.$props.permissions){
+      this.$router.push("/login")
+    }
+
     this.getConfig();
     this.getDebts();
     this.getUsers();

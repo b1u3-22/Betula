@@ -117,17 +117,15 @@ export default {
 
   created: function(){
 
-    //if (!this.$props.verified){
-    //  this.$router.push("/login")
-    //}
+    if (!this.$props.verified){
+      this.$router.push("/login")
+    }
 
     axios
       .get("/getAllDebts")
       .then((response) => {
         this.debts = response.data
         for (const value of Object.values(response.data)){
-          console.log(value.remaining)
-          console.log(value.repaymentPerFlat)
           this.remainingTotalDebt += value.remaining
           this.monthlyTotalRepaymentPerFlat += value.repaymentPerFlat
         }

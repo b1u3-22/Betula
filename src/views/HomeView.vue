@@ -17,9 +17,9 @@
           <figure>
             <img v-if="config.gallerySection.images.images[0]" :src="config.gallerySection.images.images[0]"/>
             <img v-else :src="require('@/assets/images/noImageNoLogo.jpg')"/>
-            <img v-if="config.gallerySection.images.images[1]" :src="config.gallerySection.images.images[0]"/>
+            <img v-if="config.gallerySection.images.images[1]" :src="config.gallerySection.images.images[1]"/>
             <img v-else :src="require('@/assets/images/noImage.jpg')"/>
-            <img v-if="config.gallerySection.images.images[2]" :src="config.gallerySection.images.images[0]"/>
+            <img v-if="config.gallerySection.images.images[2]" :src="config.gallerySection.images.images[2]"/>
             <img v-else :src="require('@/assets/images/noImageNoLogo.jpg')"/>
           </figure>
       </div>

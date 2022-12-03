@@ -63,7 +63,7 @@ export default {
 
       axios
 
-    .get("http://127.0.0.1:5000/getAllImages")
+    .get("/getAllImages")
     .then((response) => {
         for (const [key, value] of Object.entries(response.data)){
             this.images.push({

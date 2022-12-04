@@ -2,9 +2,10 @@
     <img src="assets/readme_banner.png"/>
 </p>
 <p align="center">
-  <img src="https://img.shields.io/tokei/lines/github/b1u3-22/betula?style=flat-square">
-  <img src="https://img.shields.io/github/last-commit/b1u3-22/betula?style=flat-square">
-  <img src="https://img.shields.io/codacy/grade/0d411bbe46ec4c7598650cfd9668aadf?label=grade&style=flat-square">
+  <img src="https://img.shields.io/tokei/lines/github/b1u3-22/betula?label=počet řádků&style=flat-square">
+  <img src="https://img.shields.io/github/last-commit/b1u3-22/betula?label=poslední commit&style=flat-square">
+  <img src="https://img.shields.io/codacy/grade/0d411bbe46ec4c7598650cfd9668aadf?label=známka&style=flat-square">
+  <img src="https://img.shields.io/github/repo-size/b1u3-22/betula?label=velikost repozitáře&style=flat-square">
 </p>
 <p align="center">
     English version can be found
@@ -44,26 +45,26 @@ Samozřejmě zde uživatelé také vidí příspěvky, které mohou přidávat s
 ### Nastavení
 Celý systém lze nastavit právě z této stránky \
 Změny mohou provádět ppouze správci a lze změnit následující:
-  * Hlavní stránka
-      * Emaily
-      * Telefonní čísla
-      * Obrázek na pozadí
-      * Popis
-      * Obrázky malé galerie
-  * Gallery 
+* Hlavní stránka
+    * Emaily
+    * Telefonní čísla
+    * Obrázek na pozadí
+    * Popis
+    * Obrázky malé galerie
+* Galerie
       * Fotky
       * Informace o fotkách
-  * Dashboard
-      * Stav účtu
-      * Správa půjček
-          * Přidání nebo odebrání
-          * Zbývající částky
-          * Měsíční splátka
-      * Správa uživatelů
-          * Přidání a odebrání
-          * Změna hesla 
-          * Email
-          * Oprávnění
+* Systémová stránka
+    * Stav účtu
+    * Správa půjček
+        * Přidání nebo odebrání
+        * Zbývající částky
+        * Měsíční splátka
+    * Správa uživatelů
+        * Přidání a odebrání
+        * Změna hesla 
+        * Email
+        * Oprávnění
 
 ## Instalace :cd:
 Betulu lze nainstalovat pomocí **Dockeru** :whale2: použitím jedné z automaticky postavených image

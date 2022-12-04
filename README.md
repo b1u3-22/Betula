@@ -5,6 +5,7 @@
   <img src="https://img.shields.io/tokei/lines/github/b1u3-22/betula?style=flat-square">
   <img src="https://img.shields.io/github/last-commit/b1u3-22/betula?style=flat-square">
   <img src="https://img.shields.io/codacy/grade/0d411bbe46ec4c7598650cfd9668aadf?label=grade&style=flat-square">
+  <img src="https://img.shields.io/github/repo-size/b1u3-22/betula?style=flat-square">
 </p>
 <p align="center">
     Českou verzi můžete nalézt
@@ -40,23 +41,23 @@ The heart of the system and also the first page where only the members of the as
 
 ### Settings
 You can change practicaly anything from here:
-  * Main page
-      * Emails
-      * Phones
-      * Background image
-      * Description 
-      * Gallery images
-  * Gallery 
-      * Images
-      * Info about images
-      * Dashboard
-      * Current state of bank account
-      * Add or remove debts
-      * Manage users
-          * Add or remove user
-          * Their password 
-          * Email
-          * Permissions
+* Main page
+    * Emails
+    * Phones
+    * Background image
+    * Description 
+    * Gallery images
+* Gallery 
+    * Images
+    * Info about images
+    * Dashboard
+    * Current state of bank account
+    * Add or remove debts
+    * Manage users
+        * Add or remove user
+        * Their password 
+        * Email
+        * Permissions
 
 ## Installation :cd:
 Betula can be installed using **Docker** :whale2: using one of the automatically built images

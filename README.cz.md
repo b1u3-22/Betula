@@ -2,6 +2,11 @@
     <img src="assets/readme_banner.png"/>
 </p>
 <p align="center">
+  <img src="https://img.shields.io/tokei/lines/github/b1u3-22/betula?style=flat-square">
+  <img src="https://img.shields.io/github/last-commit/b1u3-22/betula?style=flat-square">
+  <img src="https://img.shields.io/codacy/grade/0d411bbe46ec4c7598650cfd9668aadf?label=grade&style=flat-square">
+</p>
+<p align="center">
     English version can be found
     <a href="README.md"> here</a>
 </p>
@@ -39,37 +44,37 @@ Samozřejmě zde uživatelé také vidí příspěvky, které mohou přidávat s
 ### Nastavení
 Celý systém lze nastavit právě z této stránky \
 Změny mohou provádět ppouze správci a lze změnit následující:
-* Hlavní stránka
-    * Emaily
-    * Telefonní čísla
-    * Obrázek na pozadí
-    * Popis
-    * Obrázky malé galerie
-* Gallery 
-    * Fotky
-    * Informace o fotkách
-* Dashboard
-    * Stav účtu
-    * Správa půjček
-        * Přidání nebo odebrání
-        * Zbývající částky
-        * Měsíční splátka
-    * Správa uživatelů
-        * Přidání a odebrání
-        * Změna hesla 
-        * Email
-        * Oprávnění
+  * Hlavní stránka
+      * Emaily
+      * Telefonní čísla
+      * Obrázek na pozadí
+      * Popis
+      * Obrázky malé galerie
+  * Gallery 
+      * Fotky
+      * Informace o fotkách
+  * Dashboard
+      * Stav účtu
+      * Správa půjček
+          * Přidání nebo odebrání
+          * Zbývající částky
+          * Měsíční splátka
+      * Správa uživatelů
+          * Přidání a odebrání
+          * Změna hesla 
+          * Email
+          * Oprávnění
 
 ## Instalace :cd:
 Betulu lze nainstalovat pomocí **Dockeru** :whale2: použitím jedné z automaticky postavených image
 *(Pokud si zvolíte image s tagem **latest**, prosím dejte pozor na to, že tyto vydání mohou obsahovat škodlivé změny. Proto doporučuji používat image s tagem **stable**)*
 
 ### Instalace pomocí `docker-compsose`
-```
+```docker
 version: "3.4"
 services:
   betula:
-    image: ghcr.io/b1u3-22/betula:stable
+    image: /b1u322/betula:stable # nebo /b1u322/betula:latest
     container_name: betula
     ports:
       - 80:80

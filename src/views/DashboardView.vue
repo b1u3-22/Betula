@@ -13,15 +13,15 @@
           <div :class="{dashboardFinanctialQuickInfoShowed: financialRolledUp, dashboardFinanctialQuickInfoHidden: !financialRolledUp}" class="dashboardFinancialQuickInfo">
             <div class="dashboardFinancialQuickInfoContentContainer">
               <label>Zůstatek na účtu</label>
-              <h4>{{ config.financeSection.balance }}</h4>
+              <h4>{{ config.financeSection.balance + "Kč" }}</h4>
             </div>
             <div v-if="remainingTotalDebt !== 0 && config.financeSection.debts.visible" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <label>Zbývající dluh</label>
-              <h4> {{ remainingTotalDebt }} </h4>
+              <h4> {{ remainingTotalDebt + "Kč" }} </h4>
             </div>
             <div v-if="monthlyTotalRepaymentPerFlat !== 0 && config.financeSection.debts.visible" class="dashboardFinancialQuickInfoContentContainer dashboardNoMobile">
               <label>Splátka na byt</label>
-              <h4>{{ monthlyTotalRepaymentPerFlat }}</h4>
+              <h4>{{ monthlyTotalRepaymentPerFlat + "Kč" }}</h4>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
                 </div>
                 <div class="dashboardFinancialPartContainer">
                   <label>Zůstatek na účtu</label>
-                  <h5>{{ config.financeSection.balance }}</h5>
+                  <h5>{{ config.financeSection.balance + "Kč" }}</h5>
                 </div>
               </div>
             </div>
@@ -56,19 +56,19 @@
                   <div class="dashboardFinancialTextContainer">
                     <div class="dashboardFinancialPartContainer">
                       <label>Čerpaná částka</label>
-                      <h5>{{ debt.total }}</h5>
+                      <h5>{{ debt.total + "Kč" }}</h5>
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <label>Zbývající částka</label>
-                      <h5 class="dashboardFinancialContentText">{{ debt.remaining }}</h5>
+                      <h5 class="dashboardFinancialContentText">{{ debt.remaining + "Kč" }}</h5>
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <label>Zbývající částka na byt</label>
-                      <h5 class="dashboardFinancialContentText">{{ debt.remainingPerFlat }}</h5>
+                      <h5 class="dashboardFinancialContentText">{{ debt.remainingPerFlat + "Kč" }}</h5>
                     </div>
                     <div class="dashboardFinancialPartContainer">
                       <label>Měsíční splátka na byt</label>
-                      <h5>{{ debt.repaymentPerFlat }}</h5>
+                      <h5>{{ debt.repaymentPerFlat + "Kč" }}</h5>
                     </div>
                   </div>
                 </div>

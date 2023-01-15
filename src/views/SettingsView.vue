@@ -105,7 +105,7 @@
                 </div> 
                 <div class="settingsRow">
                   <label class="labelBlack">Telefonní číslo</label>
-                  <input type="text" v-model="config.data.homePage.contactSection.phone" />
+                  <input type="number" v-model="config.data.homePage.contactSection.phone" />
                 </div> 
                 <div class="settingsRow">
                   <label class="labelBlack">Zobrazovat kontaktní formulář</label>
@@ -159,11 +159,11 @@
             <div v-if="config.data.dashboardPage.financeSection.visible" class="settingsColumn">
               <div class="settingsRow settingsNoLine">
                 <label class="labelBlack">Číslo účtu</label>
-                <input type="text" v-model="config.data.dashboardPage.financeSection.accountNumber" />
+                <input type="number" v-model="config.data.dashboardPage.financeSection.accountNumber" />
               </div> 
               <div class="settingsRow">
                 <label class="labelBlack">Zůstatek na účtu</label>
-                <input type="text" v-model="config.data.dashboardPage.financeSection.balance" />
+                <input type="number" v-model="config.data.dashboardPage.financeSection.balance" />
               </div> 
               <div class="settingsRow">
                 <label class="labelBlack">Zobrazovat půjčky</label>
@@ -175,19 +175,19 @@
                   <div v-if="!key.startsWith('deleted')" class="settingsRow settingsNoLine">
                     <div class="settingsColumn" style="align-items: flex-start">
                       <label>Čerpaná částka</label>
-                      <input class="settingsInput" type="text" v-model="debt.total" />
+                      <input class="settingsInput" type="number" v-model="debt.total" />
                     </div>
                     <div class="settingsColumn" style="align-items: flex-start">
                       <label>Zbývající částka</label>
-                      <input class="settingsInput" type="text" v-model="debt.remaining" />
+                      <input class="settingsInput" type="number" v-model="debt.remaining" />
                     </div>
                     <div class="settingsColumn" style="align-items: flex-start">
                       <label>Částka na byt</label>
-                      <input class="settingsInput" type="text" v-model="debt.remainingPerFlat" />
+                      <input class="settingsInput" type="number" v-model="debt.remainingPerFlat" />
                     </div>
                     <div class="settingsColumn" style="align-items: flex-start">
                       <label>Splátka na byt</label>
-                      <input class="settingsInput" type="text" v-model="debt.repaymentPerFlat" />
+                      <input class="settingsInput" type="number" v-model="debt.repaymentPerFlat" />
                     </div>
                     <div @click="deleteDebt(key)" class="settingsButton">
                       <label>Smazat</label>
